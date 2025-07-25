@@ -1,9 +1,5 @@
 # 🗺️ 2D Adventure RPG — **Java Edition**
 
-![Preview geral do jogo](assets/screens/game_start_screen.png)
-
----
-
 ## 🌟 Visão & Objetivos
 
 ![Preview Geral do Jogo](assets/screens/game_start_screen.png)
