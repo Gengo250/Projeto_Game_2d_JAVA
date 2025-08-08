@@ -129,13 +129,11 @@ public class Player extends Entity {
   }
   public void interactNPC(int i){
     if(i != 999){
-      System.out.println("you are hiting an npc");
+      gp.gameState = gp.dialogueState;
+      gp.npc[i].speak();
     }
   }
   public void draw(Graphics2D g2){
-
-    //g2.setColor(Color.white);
-    //g2.fillRect(x, y, gp.tileSize, gp.tileSize);
 
     BufferedImage image = null;
 
