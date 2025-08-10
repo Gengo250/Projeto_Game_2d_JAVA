@@ -57,6 +57,7 @@ public class UI {
   g2.drawString(text, x, y);
  }
  public void dawDialogueScreen(){
+
     //WINDOW
     int x = gp.tileSize*2;
     int y =  gp.tileSize/2;
@@ -64,10 +65,15 @@ public class UI {
     int height = gp.tileSize*4;
     drawSubWindow(x, y, width, height);
 
-    g2.setFont(g2.getFont().deriveFont(Font.PLAIN,32));
+    g2.setFont(g2.getFont().deriveFont(Font.PLAIN,28F));
     x += gp.tileSize;
     y += gp.tileSize;
-    g2.drawString(currentDialogue, x, y);
+
+    // BREAK LINE DIALOGUE
+    for(String line : currentDialogue.split("\n")){
+      g2.drawString(line, x, y);
+      y += 40;
+    } 
 
  }
  public void drawSubWindow(int x, int y, int width, int height){
