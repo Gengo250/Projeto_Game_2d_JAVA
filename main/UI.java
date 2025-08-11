@@ -3,13 +3,17 @@ package main;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.FontFormatException;
 import java.awt.Graphics2D;
+import java.awt.RenderingHints;
+import java.io.IOException;
+import java.io.InputStream;
 
 
 public class UI {
   GamePanel gp;
   Graphics2D g2;
-  Font arial_40, arial_80B;
+  Font minecraft, vRCOSD;
   public boolean messageOn = false;
   public String message = "";
   int massageCounter = 0;
@@ -20,8 +24,17 @@ public class UI {
   public UI(GamePanel gp){
     this.gp = gp;
 
-    arial_40 = new Font("Arial", Font.PLAIN, 40);
-    arial_80B = new Font("Arial", Font.BOLD, 80);
+    
+    try{
+      InputStream is = getClass().getResourceAsStream("/res/font/Minecraft.ttf");
+      minecraft = Font.createFont(Font.TRUETYPE_FONT, is);
+      is = getClass().getResourceAsStream("/res/font/VCR_OSD_MONO_1.001.ttf");
+      vRCOSD = Font.createFont(Font.TRUETYPE_FONT, is);
+    } catch(FontFormatException e){
+      e.printStackTrace();
+    } catch(IOException e){
+      e.printStackTrace();
+    }
   }
   public void showMessage(String text){
     message = text;
@@ -30,7 +43,9 @@ public class UI {
   public void draw(Graphics2D g2){
     this.g2 = g2;
 
-    g2.setFont(arial_40);
+    g2.setFont(minecraft);
+    //g2.setFont(vRCOSD);
+    g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
     g2.setColor(Color.white);
 
     //PLAY STATE
@@ -65,7 +80,7 @@ public class UI {
     int height = gp.tileSize*4;
     drawSubWindow(x, y, width, height);
 
-    g2.setFont(g2.getFont().deriveFont(Font.PLAIN,28F));
+    g2.setFont(g2.getFont().deriveFont(Font.PLAIN,25F));
     x += gp.tileSize;
     y += gp.tileSize;
 
