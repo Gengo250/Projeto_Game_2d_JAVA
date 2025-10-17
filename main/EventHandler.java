@@ -21,9 +21,10 @@ public class EventHandler {
   }
 
   public void checkEvent(){
-    if(hit(27, 16, "right") == true){
-      // event happens
-      damagePit(gp.dialogueState);
+     //if(hit(27, 16, "right") == true){damagePit(gp.dialogueState);}
+    
+      if(hit(27, 16, "right") == true){
+      teleport(gp.dialogueState);
     }
     if(hit(23, 12, "up") == true){
       healingPool(gp.dialogueState);
@@ -50,6 +51,12 @@ public class EventHandler {
 
     return hit;
   }
+public void teleport(int gameState){
+  gp.gameState = gameState;
+  gp.ui.currentDialogue = "Teleport";
+  gp.player.worldX = gp.tileSize*37;
+  gp.player.worldY = gp.tileSize*10;
+}
 public void  damagePit(int gameState){
   gp.gameState = gameState;
   gp.ui.currentDialogue = "You fall into a pit!";
