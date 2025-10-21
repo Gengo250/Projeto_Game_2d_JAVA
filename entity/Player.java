@@ -1,5 +1,6 @@
 package entity;
 
+import java.awt.AlphaComposite;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
@@ -42,6 +43,8 @@ public class Player extends Entity {
   public void setDefaultValues(){
     worldX = gp.tileSize * 23;
     worldY = gp.tileSize * 21;
+    //worldX = gp.tileSize * 10;
+    //worldY = gp.tileSize * 13;
     speed = 4;
     direction = "down";
 
@@ -95,13 +98,18 @@ public class Player extends Entity {
              int ncpIndex = gp.cChecker.checkEntity(this, gp.npc);
              interactNPC(ncpIndex);
 
+             //CHECK MONSTER COLLISION
+             int monsterIndex = gp.cChecker.checkEntity(this, gp.monster);
+             contactMonster(monsterIndex);
+             
+
              //CHECK EVENT 
              gp.eHandler.checkEvent();
 
-             gp.keyH.enterPressed = false;
+             
 
               //IF COLLISION IS FALSE, PLAYER CAN MOVE
-              if(collisionOn == false){
+              if(collisionOn == false && gp.keyH.enterPressed == false){
                 switch(direction){
                   case "up":
                     worldY -= speed;
@@ -117,20 +125,36 @@ public class Player extends Entity {
                   break;
                 }
               }
+              gp.keyH.enterPressed = false;
           
-              spriteCounter++;
-              if(spriteCounter > 12){
-                if(spriteNum == 1){
-                  spriteNum = 2;
-                }
-                else if(spriteNum == 2 ){
-                  spriteNum = 1;
-                }
+                // --------- CORREÇÃO 1: alternância do sprite 1 ↔ 2 ------------
+            spriteCounter++;
+            if (spriteCounter > 12) {
+                spriteNum = (spriteNum == 1) ? 2 : 1;
                 spriteCounter = 0;
-              }
+            }
+            // ----------------------------------------------------------------
+
+        } else {
+            // --------- CORREÇÃO 2: lógica de idle/stand --------------------
+            standCounter++;
+            if (standCounter > 20) {
+                spriteNum = 1;        // frame neutro quando parado
+                spriteCounter = 0;
+                standCounter = 0;
+            }
+            // ----------------------------------------------------------------
+        }
+        //This needs to be outside of key if statement!
+        if(invencible == true){
+          invencibleCounter++;
+          if(invencibleCounter > 60){
+            invencible = false;
+            invencibleCounter = 0;
+          }
+        } 
   }
             
-  }
   public void pickUpObject(int i){
     if(i != 999){
    
@@ -142,6 +166,14 @@ public class Player extends Entity {
         gp.gameState = gp.dialogueState;
         gp.npc[i].speak();
       } 
+    }
+  }
+  public void contactMonster(int i){
+    if(i != 999){
+      if(invencible == false){
+         life -= 1;
+         invencible = true;
+      }
     }
   }
   public void draw(Graphics2D g2){
@@ -179,10 +211,20 @@ public class Player extends Entity {
       } if(spriteNum == 2){
         image = right2;
       }
-      
       break;
     }
+    if(invencible == true){
+      g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.3f));
+    }
     g2.drawImage(image, sreenX, screenY, null);
+
+    //Reset alpha
+    g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
+
+    // DEBUG 
+    //g2.setFont(new Font("Arial", Font.PLAIN, 26));
+    //g2.setColor(Color.white);
+    //g2.drawString("Invencible: "+invencibleCounter, 10, 400);
   }
 
 }
