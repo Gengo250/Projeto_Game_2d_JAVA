@@ -228,6 +228,7 @@ public class Player extends Entity {
               gp.npc[i].speak();
       }
     else {
+        gp.playeSE(7);
         attacking = true;
       }
     } 
@@ -235,6 +236,7 @@ public class Player extends Entity {
   public void contactMonster(int i){
     if(i != 999){
       if(invencible == false){
+         gp.playeSE(6);
          life -= 1;
          invencible = true;
       }
@@ -243,6 +245,7 @@ public class Player extends Entity {
   public void  damegeMonter(int i){
     if( i != 999){
       if(gp.monster[i].invencible == false){
+         gp.playeSE(5);
         gp.monster[i].life -= 1;
         gp.monster[i].invencible = true;
 
