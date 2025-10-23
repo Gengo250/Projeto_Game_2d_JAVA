@@ -18,6 +18,7 @@ public class Player extends Entity {
   public final int screenY;
  // public int hasKey = 0;
   int standCounter = 0;
+  public boolean attackCanceled = false;
 
   public Player(GamePanel gp, KeyHandler keyH){
     super(gp);
@@ -140,6 +141,12 @@ public class Player extends Entity {
                   break;
                 }
               }
+              if(keyH.enterPressed == true && attackCanceled == false){
+                gp.playeSE(7);
+                attacking = true;
+                spriteCounter = 0;
+              }
+              attackCanceled = false;
               gp.keyH.enterPressed = false;
           
                 // --------- CORREÇÃO 1: alternância do sprite 1 ↔ 2 ------------
@@ -224,13 +231,11 @@ public class Player extends Entity {
   public void interactNPC(int i){
     if(gp.keyH.enterPressed == true){
         if(i != 999){
+              attackCanceled = true;
               gp.gameState = gp.dialogueState;
               gp.npc[i].speak();
       }
-    else {
-        gp.playeSE(7);
-        attacking = true;
-      }
+    
     } 
   }
   public void contactMonster(int i){
