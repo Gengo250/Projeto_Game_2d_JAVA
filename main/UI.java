@@ -60,8 +60,8 @@ public class UI {
   public void draw(Graphics2D g2){
     this.g2 = g2;
 
-    g2.setFont(minecraft);
-    //g2.setFont(vRCOSD);
+    //g2.setFont(minecraft);
+    g2.setFont(vRCOSD);
     g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
     g2.setColor(Color.white);
 
@@ -272,7 +272,7 @@ public class UI {
   // CREATE A FRAME
   final int frameX = gp.tileSize * 2;
   final int frameY = gp.tileSize;
-  final int frameWidth  = gp.tileSize * 5 + 4; // +4 cresce para a direita
+  final int frameWidth  = gp.tileSize * 5 + 40; // +4 cresce para a direita
   final int frameHeight = gp.tileSize * 10;
   drawSubWindow(frameX, frameY, frameWidth, frameHeight);
 

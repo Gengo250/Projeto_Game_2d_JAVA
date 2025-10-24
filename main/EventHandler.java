@@ -98,6 +98,7 @@ public void healingPool(int col, int row, int gameState){
     gp.playeSE(2);
     gp.ui.currentDialogue = "You drink the water. \nYour life has been recovered.";
     gp.player.life = gp.player.maxLife;
+    gp.aSetter.setMonster();
 
   }
 }
