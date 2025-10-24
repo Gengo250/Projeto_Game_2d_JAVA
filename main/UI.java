@@ -9,6 +9,7 @@ import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 
 import entity.Entity;
 import object.OBJ_Heart;
@@ -21,8 +22,10 @@ public class UI {
   Font minecraft, vRCOSD;
   BufferedImage heart_full, heart_half, heart_blank;
   public boolean messageOn = false;
-  public String message = "";
-  int massageCounter = 0;
+  //public String message = "";
+  //int massageCounter = 0;
+  ArrayList<String> message = new ArrayList<>();
+  ArrayList<Integer> messageCounter = new ArrayList<>();
   public boolean gameFinished = false;
   public String currentDialogue = "";
   public int commandNum = 0;
@@ -50,9 +53,9 @@ public class UI {
     heart_half = heart.image2;
     heart_blank = heart.image3;
   }
-  public void showMessage(String text){
-    message = text;
-    messageOn = true;
+  public void addMessage(String text){
+    message.add(text);
+    messageCounter.add(0);
   }
   public void draw(Graphics2D g2){
     this.g2 = g2;
@@ -70,6 +73,7 @@ public class UI {
     //PLAY STATE
     if(gp.gameState == gp.playState){
       drawPlayLife();
+      drawMessage();
     }
 
     //PAUSE STATE  
@@ -116,10 +120,30 @@ public class UI {
     i++;
     x += gp.tileSize;
    }
+ }
+ public void drawMessage(){
+  int messageX = gp.tileSize;
+  int messageY = gp.tileSize*4;
+  g2.setFont(g2.getFont().deriveFont(Font.BOLD, 32F));
+  for(int i = 0; i < message.size(); i++){
+    if(message.get(i) != null){
 
+      g2.setColor(Color.black);
+      g2.drawString(message.get(i), messageX+2, messageY+2);
 
+      g2.setColor(Color.white);
+      g2.drawString(message.get(i), messageX, messageY);
+      int couter = messageCounter.get(i) + 1;
+      messageCounter.set(i, couter);
+      messageY += 50;
 
+      if(messageCounter.get(i) > 180){
+        message.remove(i);
+        messageCounter.remove(i);
+      }
 
+    }
+  }
  }
  public void  drawTitleScreen(){
   if(titleScreenState == 0){
@@ -338,7 +362,6 @@ public class UI {
   }
 
 }
-
  public void drawSubWindow(int x, int y, int width, int height){
   Color c = new Color(0,0,0,210);
   g2.setColor(c);

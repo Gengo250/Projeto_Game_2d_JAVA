@@ -226,7 +226,7 @@ public class Player extends Entity {
       solidArea.height = attackArea.height;
       // Check monster collision with the updated worldX, worldY and solidArea 
       int monsterIndex = gp.cChecker.checkEntity(this, gp.monster);
-      damegeMonter(monsterIndex);
+      damageMonter(monsterIndex);
 
       worldX = currentWordX;
       worldY = currentWordY;
@@ -260,21 +260,37 @@ public class Player extends Entity {
     if(i != 999){
       if(invencible == false){
          gp.playeSE(6);
-         life -= 1;
+
+         
+          int damage = gp.monster[i].attack - defense;
+          if(damage < 0){
+            damage = 0;
+          }
+         life -= damage;
          invencible = true;
       }
     }
   }
-  public void  damegeMonter(int i){
+  public void  damageMonter(int i){
     if( i != 999){
       if(gp.monster[i].invencible == false){
-         gp.playeSE(5);
-        gp.monster[i].life -= 1;
-        gp.monster[i].invencible = true;
-        gp.monster[i].damageReaction();
+          gp.playeSE(5);
+
+          int damage = attack - gp.monster[i].defense;
+          if(damage < 0){
+            damage = 0;
+          }
+          gp.monster[i].life -= damage;
+          gp.ui.addMessage(damage + " damage!");
+          gp.monster[i].invencible = true;
+          gp.monster[i].damageReaction();
 
         if(gp.monster[i].life <= 0){
           gp.monster[i].dying = true;
+          gp.ui.addMessage("killed the " + gp.monster[i].name + "!");
+          gp.ui.addMessage("EXP " + gp.monster[i].exp);
+          exp += gp.monster[i].exp;
+          
         }
       }
     }
