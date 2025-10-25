@@ -4,8 +4,11 @@ import java.awt.AlphaComposite;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+
 import main.GamePanel;
 import main.KeyHandler;
+import object.OBJ_Key;
 import object.OBJ_Shield_Wood;
 import object.OBJ_Sword_Normal;
 
@@ -18,9 +21,10 @@ public class Player extends Entity {
 
   public final int sreenX;
   public final int screenY;
- // public int hasKey = 0;
   int standCounter = 0;
   public boolean attackCanceled = false;
+  public ArrayList<Entity> invetory = new ArrayList<>();
+  public final int maxInventorySize = 20;
 
   public Player(GamePanel gp, KeyHandler keyH){
     super(gp);
@@ -45,6 +49,7 @@ public class Player extends Entity {
     setDefaultValues();
     getPlayerImage();
     getPlayerAttckImage();
+    setItems();
   }
 
   public void setDefaultValues(){
@@ -68,6 +73,12 @@ public class Player extends Entity {
     currentyShield = new OBJ_Shield_Wood(gp);
     attack = getAttack(); // the total attack value is decided by strength and weapon
     defense = getDefense(); // the total defense value is decided by dexterity and shield
+  }
+  public void setItems(){
+    invetory.add(currenWeapon);
+    invetory.add(currentyShield);
+    invetory.add(new OBJ_Key(gp));
+    invetory.add(new OBJ_Key(gp));
   }
   public int getAttack(){
     return attack = strength * currenWeapon.attackValue;
