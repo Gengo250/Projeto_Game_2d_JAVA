@@ -8,6 +8,7 @@ import java.util.ArrayList;
 
 import main.GamePanel;
 import main.KeyHandler;
+import object.OBJ_Fireball;
 import object.OBJ_Key;
 import object.OBJ_Shield_Wood;
 import object.OBJ_Sword_Normal;
@@ -72,6 +73,7 @@ public class Player extends Entity {
     coin = 0;
     currenWeapon = new OBJ_Sword_Normal(gp);
     currentyShield = new OBJ_Shield_Wood(gp);
+    projectile = new OBJ_Fireball(gp);
     attack = getAttack(); // the total attack value is decided by strength and weapon
     defense = getDefense(); // the total defense value is decided by dexterity and shield
   }
@@ -207,8 +209,19 @@ public class Player extends Entity {
                 spriteCounter = 0;
                 standCounter = 0;
             }
-            // ----------------------------------------------------------------
         }
+        if(gp.keyH.shotKeyPressed == true && projectile.alive == false && shotAvailableCounter == 30){
+          // SET DEFUALT COORDINATES DIRECTION AND USER
+          projectile.set(worldX, worldY, direction, true, this);
+
+          // ADD IT TO THE LIST
+          gp.projectileList.add(projectile);
+
+          shotAvailableCounter = 0;
+
+          gp.playeSE(10);
+        }
+
         //This needs to be outside of key if statement!
         if(invencible == true){
           invencibleCounter++;
@@ -217,6 +230,9 @@ public class Player extends Entity {
             invencibleCounter = 0;
           }
         } 
+        if(shotAvailableCounter < 30){
+          shotAvailableCounter++;
+        }
   }
 
   public void attacking(){
@@ -250,7 +266,7 @@ public class Player extends Entity {
       solidArea.height = attackArea.height;
       // Check monster collision with the updated worldX, worldY and solidArea 
       int monsterIndex = gp.cChecker.checkEntity(this, gp.monster);
-      damageMonter(monsterIndex);
+      damageMonter(monsterIndex, attack);
 
       worldX = currentWordX;
       worldY = currentWordY;
@@ -292,7 +308,7 @@ public class Player extends Entity {
   }
   public void contactMonster(int i){
     if(i != 999){
-      if(invencible == false){
+      if(invencible == false && gp.monster[i].dying == false){
          gp.playeSE(6);
 
          
@@ -305,7 +321,7 @@ public class Player extends Entity {
       }
     }
   }
-  public void  damageMonter(int i){
+  public void damageMonter(int i, int attack){
     if( i != 999){
       if(gp.monster[i].invencible == false){
           gp.playeSE(5);
