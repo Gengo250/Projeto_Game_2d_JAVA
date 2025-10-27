@@ -13,17 +13,17 @@ import java.util.ArrayList;
 
 import entity.Entity;
 import object.OBJ_Heart;
+import object.OBJ_ManaCrystal;
 
 
 
 public class UI {
+
   GamePanel gp;
   Graphics2D g2;
   Font minecraft, vRCOSD;
-  BufferedImage heart_full, heart_half, heart_blank;
+  BufferedImage heart_full, heart_half, heart_blank, crystal_full, crystal_blanck;
   public boolean messageOn = false;
-  //public String message = "";
-  //int massageCounter = 0;
   ArrayList<String> message = new ArrayList<>();
   ArrayList<Integer> messageCounter = new ArrayList<>();
   public boolean gameFinished = false;
@@ -54,6 +54,9 @@ public class UI {
     heart_full = heart.image;
     heart_half = heart.image2;
     heart_blank = heart.image3;
+    Entity crystal = new OBJ_ManaCrystal(gp);
+    crystal_full = crystal.image;
+    crystal_blanck = crystal.image2;
   }
   public void addMessage(String text){
     message.add(text);
@@ -122,6 +125,25 @@ public class UI {
     }
     i++;
     x += gp.tileSize;
+   }
+   //DRAW MAX MANA 
+   x = (gp.tileSize/2)-5;
+   y = (int) (gp.tileSize*1.5);
+   i = 0;
+   while(i < gp.player.maxMana){
+    g2.drawImage(crystal_blanck, x, y, null);
+    i++;
+    x += 35;
+   }
+
+   //DRAW MANA
+   x = (gp.tileSize/2)-5;
+   y = (int) (gp.tileSize*1.5);
+   i = 0;
+   while(i < gp.player.mana){
+    g2.drawImage(crystal_full, x, y, null);
+    i++;
+    x += 35;
    }
  }
  public void drawMessage(){
@@ -276,7 +298,7 @@ public class UI {
   final int frameX = gp.tileSize * 2;
   final int frameY = gp.tileSize;
   final int frameWidth  = gp.tileSize * 5 + 40; // +4 cresce para a direita
-  final int frameHeight = gp.tileSize * 10;
+  final int frameHeight = gp.tileSize * 10 + 40;
   drawSubWindow(frameX, frameY, frameWidth, frameHeight);
 
   // TEXT
@@ -290,6 +312,7 @@ public class UI {
   // NAMES
   g2.drawString("Level", textX, textY);             textY += lineHeight;
   g2.drawString("Life", textX, textY);              textY += lineHeight;
+  g2.drawString("Mana", textX, textY);              textY += lineHeight;
   g2.drawString("Strength", textX, textY);          textY += lineHeight;
   g2.drawString("Dexterity", textX, textY);         textY += lineHeight;
   g2.drawString("Attack", textX, textY);            textY += lineHeight;
@@ -315,6 +338,10 @@ public class UI {
   g2.drawString(value, textX, textY);
 
   value = gp.player.life + "/" + gp.player.maxLife;
+  textX = getXforAlingToRightText(value, tailX);
+  g2.drawString(value, textX, textY += lineHeight);
+
+  value = gp.player.mana + "/" + gp.player.maxMana;
   textX = getXforAlingToRightText(value, tailX);
   g2.drawString(value, textX, textY += lineHeight);
 

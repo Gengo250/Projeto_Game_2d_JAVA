@@ -1,5 +1,6 @@
 package object;
 
+import entity.Entity;
 import entity.Projectile;
 import main.GamePanel;
 
@@ -29,5 +30,15 @@ GamePanel gp;
     left2 = setup("/res/projectile/fireball_left_2", gp.tileSize, gp.tileSize);
     right1 = setup("/res/projectile/fireball_right_1", gp.tileSize, gp.tileSize);
     right2 = setup("/res/projectile/fireball_right_2", gp.tileSize, gp.tileSize);
+  }
+  public boolean haveResource(Entity user){
+    boolean haveResource = false;
+    if(user.mana >= useCost){
+      haveResource = true;
+    }
+    return haveResource;
+  }
+  public void subtractResouce(Entity user){
+    user.mana -= useCost;
   }
 }
