@@ -3,6 +3,7 @@ package main;
 import entity.NPC_OldMan;
 import monster.MON_GreenSlime;
 import object.OBJ_Axe;
+import object.OBJ_Coin_Bronze;
 import object.OBJ_Key;
 import object.OBJ_Potion_Red;
 import object.OBJ_Shield_Blue;
@@ -42,6 +43,13 @@ public class AssetSetter {
     gp.obj[i].worldX = gp.tileSize*38;
     gp.obj[i].worldY = gp.tileSize*21;
     i++;
+
+    gp.obj[i] = new OBJ_Coin_Bronze(gp);
+    gp.obj[i].worldX = gp.tileSize*37;
+    gp.obj[i].worldY = gp.tileSize*22;
+    i++;
+
+
 
 
   }

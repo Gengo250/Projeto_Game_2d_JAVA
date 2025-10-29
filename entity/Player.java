@@ -289,7 +289,14 @@ public class Player extends Entity {
             
   public void pickUpObject(int i){
     if(i != 999){
-      String text;
+      // PICKUP ONLY ITEMS
+      if(gp.obj[i].type == type_pickupOnly){
+        gp.obj[i].use(this);
+        gp.obj[i] = null;
+      }
+      // INVENTORY ITEMS
+      else{
+        String text;
       if(invetory.size() != maxInventorySize){
         invetory.add(gp.obj[i]);
         gp.playeSE(1);
@@ -300,7 +307,8 @@ public class Player extends Entity {
       }
       gp.ui.addMessage(text);
       gp.obj[i] = null;
-    }
+      }
+    } 
   }
 
   public void interactNPC(int i){
