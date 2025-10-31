@@ -53,6 +53,7 @@ public class GamePanel  extends JPanel implements Runnable{
   public AssetSetter aSetter = new AssetSetter(this);
   public UI ui = new UI(this);
   public EventHandler eHandler = new EventHandler(this);
+  Config config = new Config(this);
   Thread gameThread;
  
   //ENTITY AND OBJECT
@@ -96,7 +97,10 @@ public class GamePanel  extends JPanel implements Runnable{
     tempScreen = new BufferedImage(screenWidth, screenHeight, BufferedImage.TYPE_INT_ARGB);
     g2 = (Graphics2D)tempScreen.getGraphics();
 
-    //setFullScreen();
+    if(fullScreenOn == true){
+      setFullScreen();
+    }
+    
 
 
   }
@@ -123,7 +127,7 @@ public class GamePanel  extends JPanel implements Runnable{
     long lastTime = System.nanoTime();
     long currentTime;
     long timer = 0;
-    int drawCount = 0;
+    
     
 
     while(gameThread != null){
@@ -139,12 +143,11 @@ public class GamePanel  extends JPanel implements Runnable{
         drawToTempScreen(); // draw everything to the buffere
         drawToScreen();// draw the buffered to the screen
         delta --;
-        drawCount++;
+       
        
       }
       if(timer >= 1000000000){
         //System.out.println("FPS: "+ drawCount);
-        drawCount = 0;
         timer = 0;
       }
       
