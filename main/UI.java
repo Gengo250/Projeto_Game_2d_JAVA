@@ -97,8 +97,13 @@ public class UI {
       drawCharacterScreen();
       drawInventory();
     }
+    //OPTIONS STATE
     if(gp.gameState == gp.optionState){
       drawOptionScreen();
+    }
+    // GAMEOVER STATE
+    if(gp.gameState == gp.gameOverState){
+      drawGameOverScreen();
     }
  }
  public void drawPlayLife(){
@@ -500,6 +505,49 @@ public void drawInventory(){
       textY += 32;
     }
   }
+}
+public void drawGameOverScreen(){
+    // FUNDO ESCURO
+  g2.setColor(new Color(0, 0, 0, 150));
+  g2.fillRect(0, 0, gp.screenWidth, gp.screenHeight);
+
+  // ===== GAME OVER =====
+  String text = "GAME OVER";
+  g2.setFont(g2.getFont().deriveFont(Font.BOLD, 99F));
+
+  // posição base: um pouco acima do centro
+  int y = gp.screenHeight / 2 - gp.tileSize * 2;
+  int x = getXforCenteredText(text);
+
+  // sombra
+  g2.setColor(Color.black);
+  g2.drawString(text, x + 5, y + 5);
+
+  // texto principal
+  g2.setColor(Color.white);
+  g2.drawString(text, x, y);
+
+  // ===== MENU =====
+  g2.setFont(g2.getFont().deriveFont(50F));
+
+  // Retry
+  text = "Retry";
+  x = getXforCenteredText(text);
+  y += gp.tileSize * 3; // desce a partir do GAME OVER
+  g2.drawString(text, x, y);
+  if(commandNum == 0){
+    g2.drawString(">", x-40, y);
+  }
+
+  // Quit
+  text = "Quit";
+  x = getXforCenteredText(text);
+  y += 55;
+  g2.drawString(text, x, y);
+  if(commandNum == 1){
+    g2.drawString(">", x-40, y);
+  }
+
 }
 public void drawOptionScreen(){
   g2.setColor(Color.white);
