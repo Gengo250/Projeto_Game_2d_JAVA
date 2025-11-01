@@ -4,7 +4,7 @@ import java.awt.AlphaComposite;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
+
 
 import main.GamePanel;
 import main.KeyHandler;
@@ -24,8 +24,6 @@ public class Player extends Entity {
   public final int screenY;
   int standCounter = 0;
   public boolean attackCanceled = false;
-  public ArrayList<Entity> invetory = new ArrayList<>();
-  public final int maxInventorySize = 20;
 
   public Player(GamePanel gp, KeyHandler keyH){
     super(gp);
@@ -55,12 +53,10 @@ public class Player extends Entity {
   }
 
   public void setDefaultValues(){
-    //worldX = gp.tileSize * 23;
-    //worldY = gp.tileSize * 21;
+  
     worldX = gp.tileSize * 12;
     worldY = gp.tileSize * 13;
-    //worldX = gp.tileSize * 10;
-    //worldY = gp.tileSize * 13;
+    gp.currentMap = 0;
     speed = 4;
     direction = "down";
 
@@ -75,7 +71,7 @@ public class Player extends Entity {
     dexterity = 1; // the more dexterity he has, the less damage he receives
     exp = 0;
     nextLevelExp = 5;
-    coin = 0;
+    coin = 1000;
     currenWeapon = new OBJ_Sword_Normal(gp);
     currentyShield = new OBJ_Shield_Wood(gp);
     projectile = new OBJ_Fireball(gp);
@@ -93,11 +89,11 @@ public class Player extends Entity {
      invencible = false;
   }
   public void setItems(){
-    invetory.clear();
-    invetory.add(currenWeapon);
-    invetory.add(currentyShield);
-    invetory.add(new OBJ_Key(gp));
-    invetory.add(new OBJ_Key(gp));
+    inventory.clear();
+    inventory.add(currenWeapon);
+    inventory.add(currentyShield);
+    inventory.add(new OBJ_Key(gp));
+    inventory.add(new OBJ_Key(gp));
   }
   public int getAttack(){
     return attack = strength * currenWeapon.attackValue;
@@ -329,8 +325,8 @@ public class Player extends Entity {
       // INVENTORY ITEMS
       else{
         String text;
-      if(invetory.size() != maxInventorySize){
-        invetory.add(gp.obj[gp.currentMap][i]);
+      if(inventory.size() != maxInventorySize){
+        inventory.add(gp.obj[gp.currentMap][i]);
         gp.playeSE(1);
         text = "Got a " + gp.obj[gp.currentMap][i].name + "!";
       }
@@ -425,9 +421,9 @@ public class Player extends Entity {
     }
   }
   public void selectItem(){
-    int itemIndex = gp.ui.getItemIndexOnSlot();
-    if(itemIndex < invetory.size()){
-      Entity selectedItem = invetory.get(itemIndex);
+    int itemIndex = gp.ui.getItemIndexOnSlot(gp.ui.playerslotCol, gp.ui.playerslotRow);
+    if(itemIndex < inventory.size()){
+      Entity selectedItem = inventory.get(itemIndex);
       if(selectedItem.type == type_sword || selectedItem.type == type_axe){
         currenWeapon = selectedItem;
         attack = getAttack();
@@ -439,7 +435,7 @@ public class Player extends Entity {
       }
       if(selectedItem.type == type_consumable){
         selectedItem.use(this);
-        invetory.remove(itemIndex);
+        inventory.remove(itemIndex);
       }
     }
   }
