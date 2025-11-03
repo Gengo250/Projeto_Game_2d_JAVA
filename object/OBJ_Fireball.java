@@ -20,6 +20,7 @@ GamePanel gp;
     attack = 2;
     useCost = 1;
     alive = false;
+    knokBackPower = 2;
     getImage();
   }
   public void getImage(){

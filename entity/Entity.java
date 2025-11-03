@@ -37,6 +37,7 @@ public class Entity {
   public boolean dying = false;
   boolean hpBarOn = false;
   public boolean onPath = false;
+  public boolean knokBack = false;
 
   //COUNTER
   public int spriteCounter = 0;
@@ -45,9 +46,12 @@ public class Entity {
   public int shotAvailableCounter = 0;
   int dyingCounter = 0;
   int hpBarCounter = 0;
+  int knokBackCounter = 0;
+
 
   //CHARACTER ATTIBUTES
   public String name;
+  public int defualtSpeed;
   public int speed;
   public int maxLife;
   public int life;
@@ -75,6 +79,7 @@ public class Entity {
   public String description = "";
   public int useCost;
   public int price;
+  public int knokBackPower = 0;
   
   //TYPE
   public int type; // 0 = player, 1 = npc , 2 = monster
@@ -117,7 +122,6 @@ public class Entity {
   }
   public void use(Entity entity){}
   public void checkDrop(){
-
   }
   public void dropItem(Entity droppedItem){
     for(int i = 0; i < gp.obj[1].length;i++){
@@ -180,26 +184,43 @@ public class Entity {
 
   public void update(){
 
-    setAction();
-    checkCollisio();
+    if(knokBack == true){
+      checkCollisio();
+      if(collisionOn == true){
+        knokBackCounter = 0;
+        knokBack = false;
+        speed = defualtSpeed;
+      }
+      else if(collisionOn == false){
+        switch(gp.player.direction){
+          case "up": worldY -= speed; break;
+          case "down": worldY += speed; break;
+          case "left": worldX -= speed; break;
+          case "right": worldX += speed; break;
+        }
+      }
+      knokBackCounter++;
+      if(knokBackCounter == 10){
+        knokBackCounter = 0;
+        knokBack = false;
+        speed = defualtSpeed;
+      }
+    }
+    else {
+       setAction();
+       checkCollisio();
     
     //IF COLLISION IS FALSE, PLAYER CAN MOVE
      if(collisionOn == false){
       switch(direction){
-        case "up":
-          worldY -= speed;
-        break;
-        case "down":
-          worldY += speed;
-        break;
-        case "left":
-          worldX -= speed;
-        break;
-        case "right":
-          worldX += speed;
-        break;
+        case "up": worldY -= speed; break;
+        case "down": worldY += speed; break;
+        case "left": worldX -= speed; break;
+        case "right": worldX += speed;break;
+        }
       }
     }
+   
 
     spriteCounter++;
     if(spriteCounter > 24){

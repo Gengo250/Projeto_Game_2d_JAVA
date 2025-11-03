@@ -57,7 +57,8 @@ public class Player extends Entity {
     worldX = gp.tileSize * 26;
     worldY = gp.tileSize * 12;
     gp.currentMap = 0;
-    speed = 4;
+    defualtSpeed = 4;
+    speed = defualtSpeed;
     direction = "down";
 
     // PLAYER STATUS
@@ -303,7 +304,7 @@ public class Player extends Entity {
       solidArea.height = attackArea.height;
       // Check monster collision with the updated worldX, worldY and solidArea 
       int monsterIndex = gp.cChecker.checkEntity(this, gp.monster);
-      damageMonter(monsterIndex, attack);
+      damageMonter(monsterIndex, attack, currenWeapon.knokBackPower);
 
       int iTileIndex = gp.cChecker.checkEntity(this, gp.iTile);
       damageInteractiveTile(iTileIndex);
@@ -373,11 +374,14 @@ public class Player extends Entity {
       }
     }
   }
-  public void damageMonter(int i, int attack){
+  public void damageMonter(int i, int attack, int knokBackPower){
     if( i != 999){
       if(gp.monster[gp.currentMap][i].invencible == false){
           gp.playeSE(5);
 
+          if(knokBackPower > 0){
+            knokBack(gp.monster[gp.currentMap][i], knokBackPower);
+          }
           int damage = attack - gp.monster[gp.currentMap][i].defense;
           if(damage < 0){
             damage = 0;
@@ -396,6 +400,12 @@ public class Player extends Entity {
         }
       }
     }
+  }
+  public void knokBack(Entity entity, int knokBackPower){
+    entity.direction = direction;
+    entity.speed += knokBackPower;
+    entity.knokBack = true;
+
   }
   public void damageInteractiveTile(int i){
     if(i != 999 && gp.iTile[gp.currentMap][i].destructible == true 
