@@ -17,7 +17,7 @@ public class OBJ_Potion_Red extends Entity{
     description = "[Life Posion]\nHeals your life by " + value + ".";
     price = 35;
    }
-   public void use(Entity entity){
+   public boolean use(Entity entity){
     gp.gameState = gp.dialogueState;
     gp.ui.currentDialogue = "You drink the " + name + "!\n" + "Your life has been recovered by " + value + ".";
     entity.life += value;
@@ -25,6 +25,7 @@ public class OBJ_Potion_Red extends Entity{
        gp.player.life = gp.player.maxLife;
     }
      gp.playeSE(2);
+     return true;
   
    }
 }

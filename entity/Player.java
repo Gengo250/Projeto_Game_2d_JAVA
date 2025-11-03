@@ -107,8 +107,8 @@ public class Player extends Entity {
 
     up1 = setup("/res/player/boy_up_1", gp.tileSize, gp.tileSize);
     up2 = setup("/res/player/boy_up_2", gp.tileSize, gp.tileSize);
-    down1 = setup("/res/player/boy_down_1", gp.tileSize, gp.tileSize);
-    down2 = setup("/res/player/boy_down_2", gp.tileSize, gp.tileSize);
+    down1 = setup("/res/player/padre_down_1", gp.tileSize, gp.tileSize);
+    down2 = setup("/res/player/padre_down_2", gp.tileSize, gp.tileSize);
     left1 = setup("/res/player/boy_left_1", gp.tileSize, gp.tileSize);
     left2 = setup("/res/player/boy_left_2", gp.tileSize, gp.tileSize);
     right1 = setup("/res/player/boy_right_1", gp.tileSize, gp.tileSize);
@@ -332,6 +332,13 @@ public class Player extends Entity {
         gp.obj[gp.currentMap][i].use(this);
         gp.obj[gp.currentMap][i] = null;
       }
+      //OBSTACLE
+      else if(gp.obj[gp.currentMap][i].type == type_obstacle){
+        if(keyH.enterPressed == true){
+          attackCanceled = true;
+          gp.obj[gp.currentMap][i].interact();
+        }
+      }
       // INVENTORY ITEMS
       else{
         String text;
@@ -461,8 +468,9 @@ public class Player extends Entity {
         defense = getDefense();
       }
       if(selectedItem.type == type_consumable){
-        selectedItem.use(this);
-        inventory.remove(itemIndex);
+        if(selectedItem.use(this) == true){
+           inventory.remove(itemIndex);
+        }
       }
     }
   }
