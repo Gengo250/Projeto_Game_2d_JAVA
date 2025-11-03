@@ -233,8 +233,13 @@ public class Player extends Entity {
           //SUBTRACT THE COST (MANA, AMMO, ETC)
           projectile.subtractResouce(this);
 
-          // ADD IT TO THE LIST
-          gp.projectileList.add(projectile);
+         // CHECK VACANCY
+         for(int i = 0; i < gp.projectile[1].length; i++){
+          if(gp.projectile[gp.currentMap][i] == null){
+            gp.projectile[gp.currentMap][i] =  projectile;
+            break;
+          }
+         }
 
           shotAvailableCounter = 0;
 
@@ -303,6 +308,10 @@ public class Player extends Entity {
       int iTileIndex = gp.cChecker.checkEntity(this, gp.iTile);
       damageInteractiveTile(iTileIndex);
 
+      int projectileIndex = gp.cChecker.checkEntity(this, gp.projectile);
+      damageProjectile(projectileIndex);
+
+      //After cheking collision, restore the original data
       worldX = currentWordX;
       worldY = currentWordY;
       solidArea.width = solidAreaWidth;
@@ -402,6 +411,14 @@ public class Player extends Entity {
       if(gp.iTile[gp.currentMap][i].life == 0){
         gp.iTile[gp.currentMap][i] = gp.iTile[gp.currentMap][i].getDestroyedForm();
       }
+    }
+  }
+  public void damageProjectile(int i){
+    if(i != 999){
+      Entity projectile = gp.projectile[gp.currentMap][i];
+      projectile.alive =  false;
+      generatorParticule(projectile, projectile);
+      
     }
   }
   public void checkLevelUp(){
