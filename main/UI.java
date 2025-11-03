@@ -194,79 +194,76 @@ public class UI {
   }
  }
 public void drawTitleScreen() {
+// --- TELA DE TÍTULO (STATE 0) SIMPLIFICADA ---
+if (titleScreenState == 0) {
+    // FUNDO
+    g2.setColor(Color.BLACK);
+    g2.fillRect(0, 0, gp.screenWidth, gp.screenHeight);
 
-    if (titleScreenState == 0) {
-        // FUNDO
-        g2.setColor(new Color(0, 0, 0));
-        g2.fillRect(0, 0, gp.screenWidth, gp.screenHeight);
+    // ===== TÍTULO =====
+    final int TITLE_SIZE = 72;
+    g2.setFont(g2.getFont().deriveFont(Font.BOLD, TITLE_SIZE));
 
-        // TITLE NAME (dividido em 2 partes com o boneco no meio)
-        g2.setFont(g2.getFont().deriveFont(Font.BOLD, 72F));
-        String textLeft = "Blue Boy";
-        String textRight = "Adventure";
+    String title = "TOCANTINS'S LEGENDS";
+    int titleX = getXforCenteredText(title);
+    int titleY = gp.tileSize * 3;
 
-        // mede os textos
-        int wLeft = g2.getFontMetrics().stringWidth(textLeft);
-        int wRight = g2.getFontMetrics().stringWidth(textRight);
+    // sombra
+    g2.setColor(Color.GRAY);
+    g2.drawString(title, titleX + 4, titleY + 4);
 
-        // tamanho do boneco
-        int boyWidth = gp.tileSize * 2;
-        int boyHeight = gp.tileSize * 2;
+    // texto principal
+    g2.setColor(Color.WHITE);
+    g2.drawString(title, titleX, titleY);
 
-        // espaço entre texto e boneco
-        int gap = gp.tileSize / 2;
+    // ===== BONECO (EMBAIXO DO TÍTULO) =====
+    int boyWidth  = gp.tileSize * 2;
+    int boyHeight = gp.tileSize * 2;
 
-        // largura total do conjunto: esquerda + gap + boneco + gap + direita
-        int totalWidth = wLeft + gap + boyWidth + gap + wRight;
+    // gap logo abaixo do título (menor que antes)
+    int gapBelowTitle = gp.tileSize / 2;
 
-        // y base do título
-        int y = gp.tileSize * 3;
+    // centraliza horizontalmente
+    int boyX = (gp.screenWidth - boyWidth) / 2;
 
-        // x inicial pra centralizar o conjunto todo
-        int startX = (gp.screenWidth - totalWidth) / 2;
+    // posiciona logo abaixo da linha de base do título
+    // (usa a descida da fonte pra não colar demais)
+    int boyY = titleY + g2.getFontMetrics().getDescent() + gapBelowTitle;
 
-        // SOMBRA
-        g2.setColor(Color.gray);
-        g2.drawString(textLeft, startX + 5, y + 5);
-        int rightTextX = startX + wLeft + gap + boyWidth + gap;
-        g2.drawString(textRight, rightTextX + 5, y + 5);
+    g2.drawImage(gp.player.down1, boyX, boyY, boyWidth, boyHeight, null);
 
-        // COR PRINCIPAL
-        g2.setColor(Color.white);
-        g2.drawString(textLeft, startX, y);
-        g2.drawString(textRight, rightTextX, y);
+    // ===== MENU (ESPACAMENTO MAIS JUSTO) =====
+    final int MENU_SIZE = 44;
+    g2.setFont(g2.getFont().deriveFont(Font.BOLD, MENU_SIZE));
 
-        // BLUE BOY IMAGE (no meio dos dois textos)
-        int boyX = startX + wLeft + gap;
-        int boyY = y - boyHeight + 10; // desce um pouco pra não cortar
-        g2.drawImage(gp.player.down1, boyX, boyY, boyWidth, boyHeight, null);
+    // altura de linha mais compacta (menos "pulado")
+    final int lineHeight = (int)(MENU_SIZE * 1.0);
 
-        // MENU
-        g2.setFont(g2.getFont().deriveFont(Font.BOLD, 48F));
+    final int menuTopGap = (int)(gp.tileSize * 1.6);
+    int y = boyY + boyHeight + menuTopGap;
 
-        String text = "NEW GAME";
-        int x = getXforCenteredText(text);
-        y += gp.tileSize * 3.5;
-        g2.drawString(text, x, y);
-        if (commandNum == 0) {
-            g2.drawString(">", x - gp.tileSize, y);
-        }
+    String text;
+    int x;
 
-        text = "LOAD GAME";
-        x = getXforCenteredText(text);
-        y += gp.tileSize;
-        g2.drawString(text, x, y);
-        if (commandNum == 1) {
-            g2.drawString(">", x - gp.tileSize, y);
-        }
+    // NEW GAME
+    text = "NEW GAME";
+    x = getXforCenteredText(text);
+    g2.drawString(text, x, y);
+    if (commandNum == 0) g2.drawString(">", x - gp.tileSize, y);
 
-        text = "QUIT";
-        x = getXforCenteredText(text);
-        y += gp.tileSize;
-        g2.drawString(text, x, y);
-        if (commandNum == 2) {
-            g2.drawString(">", x - gp.tileSize, y);
-        }
+    // LOAD GAME
+    y += lineHeight;
+    text = "LOAD GAME";
+    x = getXforCenteredText(text);
+    g2.drawString(text, x, y);
+    if (commandNum == 1) g2.drawString(">", x - gp.tileSize, y);
+
+    // QUIT
+    y += lineHeight;
+    text = "QUIT";
+    x = getXforCenteredText(text);
+    g2.drawString(text, x, y);
+    if (commandNum == 2) g2.drawString(">", x - gp.tileSize, y);
 
     } else if (titleScreenState == 1) {
         // LIMPA A TELA TAMBÉM AQUI
