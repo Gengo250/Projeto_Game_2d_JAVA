@@ -4,6 +4,7 @@ import entity.NPC_Merchant;
 import entity.NPC_OldMan;
 import monster.MON_GreenSlime;
 import object.OBJ_Axe;
+import object.OBJ_Chest;
 import object.OBJ_Coin_Bronze;
 import object.OBJ_Door;
 import object.OBJ_Heart;
@@ -79,6 +80,11 @@ public class AssetSetter {
     gp.obj[mapNum][i] = new OBJ_Door(gp);
     gp.obj[mapNum][i].worldX = gp.tileSize*12;
     gp.obj[mapNum][i].worldY = gp.tileSize*12;
+    i++;
+
+    gp.obj[mapNum][i] = new OBJ_Chest(gp, new OBJ_Potion_Red(gp));
+    gp.obj[mapNum][i].worldX = gp.tileSize*12;
+    gp.obj[mapNum][i].worldY = gp.tileSize*9;
     i++;
 
 
