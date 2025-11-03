@@ -1,4 +1,5 @@
 package entity;
+import java.awt.Rectangle;
 import java.util.Random;
 
 import main.GamePanel;
@@ -8,8 +9,19 @@ public class NPC_OldMan extends Entity{
   public NPC_OldMan(GamePanel gp){
     super(gp);
 
+    type = type_npc;
+
     direction = "down";
     speed = 1;
+
+
+    solidArea = new Rectangle();
+    solidArea.x = 8;
+    solidArea.y = 16;
+    solidAreaDefaultX = solidArea.x;
+    solidAreaDefaultY = solidArea.y;
+    solidArea.width = 30;
+    solidArea.height = 30;
 
     getImage();
     setDialogue();
@@ -32,32 +44,44 @@ public class NPC_OldMan extends Entity{
     dialogues[2] = "I used to be a great wizard but now...\nI'm a bit too old for talking an adventure.";
     dialogues[3] = "Well, good luck on you.";
   }
-  public void setAction(){
+  public void setAction(){ 
+    if(onPath == true){
+      int goalCol = (gp.player.worldX + gp.player.solidArea.x)/gp.tileSize;
+      int goalRow = (gp.player.worldY + gp.player.solidArea.y)/gp.tileSize;
+      //int goalCol = 12; -- casa dele
+      //int goalRow = 9; -- casa dele
 
-    actionLockCounter++;
-    if(actionLockCounter == 120){
-      Random random = new Random();
-      int i = random.nextInt(100)+1; //pick up number from 1 to 100
-  
-      if(i <= 25){
-        direction = "up";
-      }
-      if(i > 25 && i <= 50){
-        direction = "down";
-      }
-      if (i > 50 && i <= 75)  {
-        direction = "left";
-  
-      }
-      if(i > 75 && i <=100){
-        direction = "right";
-      }
-
-      actionLockCounter = 0;
-    }  
+    searchPath(goalCol, goalRow);
+ 
   }
+  else {
+    actionLockCounter++;
+
+     if (actionLockCounter == 120) {
+            Random random = new Random();
+            int i = random.nextInt(100) + 1; // pick up number from 1 to 100
+            if (i <= 25) {
+                direction = "up";
+            }
+            if (i > 25 && i <= 50) {
+                direction = "down";
+            }
+            if (i > 50 && i <= 75) {
+                direction = "left";
+            }
+            if (i > 75 && i <= 100) {
+                direction = "right";
+            }
+            actionLockCounter = 0;
+      }
+  }
+       
+}
   public void speak(){
     // Do this character specific stuff 
     super.speak();
+    onPath = true;
+   
+
   }
 }
