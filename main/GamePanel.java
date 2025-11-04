@@ -17,6 +17,7 @@ import javax.swing.JPanel;
 import ai.PathFind;
 import entity.Entity;
 import entity.Player;
+import environment.EnvironmentManager;
 import tile.TileManager;
 import tile_interactive.InteractiveTile;
 
@@ -29,7 +30,7 @@ public class GamePanel  extends JPanel implements Runnable{
   public final int maxScreenCol = 20;
   public final int maxScreenRow = 12;
   public final int screenWidth = tileSize * maxScreenCol; //960 pixels
-  public final int screenHeight = tileSize * maxScreenRow;
+  public final int screenHeight = tileSize * maxScreenRow; // 576 pixel
 
   // WORLD SETTINGS
   public final int maxWorldCol = 50;
@@ -58,6 +59,7 @@ public class GamePanel  extends JPanel implements Runnable{
   public EventHandler eHandler = new EventHandler(this);
   Config config = new Config(this);
   public PathFind pFinder = new PathFind(this);
+  EnvironmentManager eManager = new EnvironmentManager(this);
   Thread gameThread;
  
   //ENTITY AND OBJECT
@@ -100,7 +102,8 @@ public class GamePanel  extends JPanel implements Runnable{
     aSetter.setMonster();
     aSetter.setInteractiveTile();
     pFinder.instantiateNodes();
-    //playMusic(0);
+    eManager.setup();
+    
     gameState = titleState;
 
     tempScreen = new BufferedImage(screenWidth, screenHeight, BufferedImage.TYPE_INT_ARGB);
@@ -295,6 +298,9 @@ public class GamePanel  extends JPanel implements Runnable{
     }
     //EMPTY ENTITY LIST
     entityList.clear();
+
+    // ENVIRONMENT
+    eManager.draw(g2);
 
     //UI
     ui.draw(g2);
