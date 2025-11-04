@@ -485,7 +485,8 @@ public void drawInventory(Entity entity, boolean cursor) {
 
         // EQUIP CURSOR
         if (entity.inventory.get(i) == entity.currenWeapon ||
-            entity.inventory.get(i) == entity.currentyShield) {
+            entity.inventory.get(i) == entity.currentyShield || 
+            entity.inventory.get(i) == entity.currentyLight) {
             g2.setColor(new Color(240, 190, 90));
             g2.fillRoundRect(slotX, slotY, gp.tileSize, gp.tileSize, 10, 10);
         }

@@ -10,6 +10,7 @@ import main.GamePanel;
 import main.KeyHandler;
 import object.OBJ_Fireball;
 import object.OBJ_Key;
+import object.OBJ_Lantern;
 import object.OBJ_Shield_Wood;
 import object.OBJ_Sword_Normal;
 
@@ -24,6 +25,7 @@ public class Player extends Entity {
   public final int screenY;
   int standCounter = 0;
   public boolean attackCanceled = false;
+  public boolean lightUpdated = false;
 
   public Player(GamePanel gp, KeyHandler keyH){
     super(gp);
@@ -94,7 +96,7 @@ public class Player extends Entity {
     inventory.add(currenWeapon);
     inventory.add(currentyShield);
     inventory.add(new OBJ_Key(gp));
-    inventory.add(new OBJ_Key(gp));
+    inventory.add(new OBJ_Lantern(gp));
   }
   public int getAttack(){
     return attack = strength * currenWeapon.attackValue;
@@ -465,6 +467,15 @@ public class Player extends Entity {
       if(selectedItem.type == type_shield){
         currentyShield = selectedItem;
         defense = getDefense();
+      }
+      if(selectedItem.type == type_light){
+        if(currentyLight == selectedItem){
+          currentyLight = null;
+        }
+        else {
+          currentyLight = selectedItem;
+        }
+        lightUpdated = true;
       }
       if(selectedItem.type == type_consumable){
         if(selectedItem.use(this) == true){
