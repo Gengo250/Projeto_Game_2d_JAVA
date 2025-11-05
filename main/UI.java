@@ -21,7 +21,7 @@ public class UI {
 
   GamePanel gp;
   Graphics2D g2;
-  Font minecraft, vRCOSD;
+  public Font minecraft, vRCOSD;
   BufferedImage heart_full, heart_half, heart_blank, crystal_full, crystal_blanck, coin;
   public boolean messageOn = false;
   ArrayList<String> message = new ArrayList<>();

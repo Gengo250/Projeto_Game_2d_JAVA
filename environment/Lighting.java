@@ -96,7 +96,7 @@ public class Lighting {
       }
     }
       if(dayState == dusk){
-        filterAlpha += 0.0001f;
+        filterAlpha += 0.001f;
 
         if(filterAlpha > 1f){
           filterAlpha = 1f;
@@ -111,7 +111,7 @@ public class Lighting {
         }
       }
       if(dayState == dawn){
-        filterAlpha -= 0.0001f;
+        filterAlpha -= 0.001f;
 
         if(filterAlpha < 0f){
           filterAlpha = 0;
