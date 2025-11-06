@@ -13,7 +13,7 @@ public class OBJ_Potion_Red extends Entity{
     type = type_consumable;
     name = "Life Potion";
     value = 5;
-    down1 = setup("/res/objects/potion_red", gp.tileSize, gp.tileSize);
+    down1 = setup("/res/objects/cabaca", gp.tileSize, gp.tileSize);
     description = "[Life Posion]\nHeals your life by " + value + ".";
     price = 35;
     stackble = true;

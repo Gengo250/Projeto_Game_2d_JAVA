@@ -22,7 +22,13 @@ public class CollisionChecker {
 
     int tileNum1, tileNum2;
 
-    switch(entity.direction){
+    // Use a temporal direction when it's being knockbacked
+    String direction = entity.direction;
+    if(entity.knokBack == true){
+      direction = entity.knockBackDirecion;
+    }
+
+    switch(direction){
       case "up":
 
        entityTopRow = (entityTopWorldY - entity.speed)/gp.tileSize;
@@ -111,13 +117,17 @@ public class CollisionChecker {
 }
 //NPC OR MONSTER 
 public int checkEntity(Entity entity, Entity[][] target){
-  int index = 999;                          // 999 = não colidiu
+  int index = 999;                         
+
+    String direction = entity.direction;
+    if(entity.knokBack == true){
+      direction = entity.knockBackDirecion;
+    }
 
   for (int i = 0; i < target[1].length; i++) {
       if (target[gp.currentMap][i] != null) {
 
-          /* ---------- prepara áreas sólidas absolutas ---------- */
-          // player (entity)
+       
           entity.solidArea.x = entity.worldX + entity.solidAreaDefaultX;
           entity.solidArea.y = entity.worldY + entity.solidAreaDefaultY;
 
@@ -125,8 +135,7 @@ public int checkEntity(Entity entity, Entity[][] target){
           target[gp.currentMap][i].solidArea.x = target[gp.currentMap][i].worldX + target[gp.currentMap][i].solidAreaDefaultX;
           target[gp.currentMap][i].solidArea.y = target[gp.currentMap][i].worldY + target[gp.currentMap][i].solidAreaDefaultY;
 
-          /* ---------- simula o próximo passo do player ---------- */
-          switch (entity.direction) {
+          switch (direction) {
               case "up":
                entity.solidArea.y -= entity.speed;
                break;
