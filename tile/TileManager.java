@@ -18,7 +18,7 @@ public class TileManager {
   GamePanel gp;
   public Tile[] tile;
   public int mapTileNum[][][];
-  boolean drawPath = false;
+  boolean drawPath = true; //DEBUG AGRO = true -> ON || AGRO = false -> Off
   ArrayList<String> fileNames = new ArrayList<>();
   ArrayList<String> collsionsStatus = new ArrayList<>();
 

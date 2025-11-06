@@ -85,7 +85,7 @@ public class Player extends Entity {
     defense = getDefense(); // the total defense value is decided by dexterity and shield
   }
   public void setDefaultPositions(){
-    worldX = gp.tileSize * 12;
+    worldX = gp.tileSize * 24;
     worldY = gp.tileSize * 33;
     direction = "down";
   }
@@ -223,20 +223,16 @@ public class Player extends Entity {
               }
               attackCanceled = false;
               gp.keyH.enterPressed = false;
-          
-                // --------- CORREÇÃO 1: alternância do sprite 1 ↔ 2 ------------
             spriteCounter++;
             if (spriteCounter > 12) {
                 spriteNum = (spriteNum == 1) ? 2 : 1;
                 spriteCounter = 0;
             }
-            // ----------------------------------------------------------------
 
         } else {
-            // --------- CORREÇÃO 2: lógica de idle/stand --------------------
             standCounter++;
             if (standCounter > 20) {
-                spriteNum = 1;        // frame neutro quando parado
+                spriteNum = 1;        
                 spriteCounter = 0;
                 standCounter = 0;
             }
