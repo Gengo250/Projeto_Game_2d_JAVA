@@ -37,14 +37,8 @@ public class UI {
   int subState = 0;
   int counter = 0;
   public Entity npc;
-  private String currentLine = null;
-  private final StringBuilder typeBuf = new StringBuilder(128);
-  private int typeCharIndex = 0;
-  private long nextCharAtNs = 0L;
-  private int TYPE_DELAY_MS = 18;             // velocidade por caractere
-  private long lastTypeSoundAtNs = 0L;
-  private int TYPE_SOUND_COOLDOWN_MS = 35;    // evita tocar som em TODA letra
-  private boolean typing = false;
+  public int charIndex = 0;
+  public String combinedText = "";
 
 
 
@@ -338,118 +332,57 @@ if (titleScreenState == 0) {
 
   g2.drawString(text, x, y);
  }
- // Inicia a digitação de uma linha nova
-private void startDialogueLine(String text) {
-    currentLine = (text != null) ? text : "";
-    typeBuf.setLength(0);
-    typeCharIndex = 0;
-    nextCharAtNs = System.nanoTime() + TYPE_DELAY_MS * 1_000_000L;
-    typing = true;
-    currentDialogue = "";
-}
-
-// Atualiza a tipagem respeitando um delay independente do FPS
-private void updateTyping() {
-    if (!typing || currentLine == null) return;
-
-    long now = System.nanoTime();
-    while (typeCharIndex < currentLine.length() && now >= nextCharAtNs) {
-        char c = currentLine.charAt(typeCharIndex++);
-        typeBuf.append(c);
-        currentDialogue = typeBuf.toString();
-        nextCharAtNs += TYPE_DELAY_MS * 1_000_000L;
-
-        // toca SE só às vezes e ignora espaço
-        if (c != ' ' && now - lastTypeSoundAtNs >= TYPE_SOUND_COOLDOWN_MS * 1_000_000L) {
-            gp.playeSE(17); // usa o mesmo método que já existe no seu projeto
-            lastTypeSoundAtNs = now;
-        }
-    }
-    if (typeCharIndex >= currentLine.length()) {
-        typing = false;
-    }
-}
-
-// Completa a linha imediatamente
-private void skipTyping() {
-    if (!typing || currentLine == null) return;
-    currentDialogue = currentLine;
-    typeBuf.setLength(0);
-    typeBuf.append(currentLine);
-    typeCharIndex = currentLine.length();
-    typing = false;
-}
-
-// Reseta o estado de tipagem (usar quando for avançar ou sair)
-private void resetTyping() {
-    currentLine = null;
-    typeBuf.setLength(0);
-    typeCharIndex = 0;
-    typing = false;
-    currentDialogue = "";
-}
-
+ 
 public void drawDialogueScreen(){
 
-    // WINDOW
+    //WINDOW
     int x = gp.tileSize*3;
     int y =  gp.tileSize/2;
     int width = gp.screenWidth - (gp.tileSize*6);
     int height = gp.tileSize*4;
     drawSubWindow(x, y, width, height);
 
-    g2.setFont(g2.getFont().deriveFont(Font.PLAIN, 25F));
+    g2.setFont(g2.getFont().deriveFont(Font.PLAIN,25F));
     x += gp.tileSize;
     y += gp.tileSize;
 
-    // Se por algum motivo não há NPC setado, só não desenha texto
-    if (npc == null) {
-        return;
-    }
+    if(npc.dialogues[npc.dialogueSet][npc.dialogueIndex] != null){
+      
+      currentDialogue = npc.dialogues[npc.dialogueSet][npc.dialogueIndex];
 
-    // Pega a linha atual com segurança (evita NPE/IndexOutOfBounds)
-    String line = null;
-    if (npc.dialogues != null
-        && npc.dialogueSet >= 0 && npc.dialogueSet < npc.dialogues.length
-        && npc.dialogues[npc.dialogueSet] != null
-        && npc.dialogueIndex >= 0 && npc.dialogueIndex < npc.dialogues[npc.dialogueSet].length) {
-        line = npc.dialogues[npc.dialogueSet][npc.dialogueIndex];
-    }
+      //char characters[] = npc.dialogues[npc.dialogueSet][npc.dialogueIndex].toCharArray();
 
-    if (line != null) {
-        // Se mudou de fala, (re)inicia a tipagem dessa linha
-        if (currentLine == null || !line.equals(currentLine)) {
-            startDialogueLine(line);
+      //if(charIndex < characters.length){
+       // gp.playeSE(17);
+       // String s = String.valueOf(characters[charIndex]);
+        //combinedText = combinedText + s;
+        //currentDialogue = combinedText;
+        //charIndex++;
+      //}
+      if(gp.keyH.enterPressed == true){
+        charIndex = 0;
+        combinedText = "";
+        if(gp.gameState == gp.dialogueState){
+          npc.dialogueIndex++;
+          gp.keyH.enterPressed = false;
         }
-
-        // Avança a tipagem conforme o relógio
-        updateTyping();
-
-        // ENTER: se ainda está digitando, completa; se já terminou, avança a fala
-        if (gp.keyH.enterPressed) {
-            if (typing) {
-                skipTyping();
-            } else {
-                npc.dialogueIndex++;
-                resetTyping();
-            }
-            gp.keyH.enterPressed = false;
-        }
-    } else {
-        // Acabaram as falas desse set
-        npc.dialogueIndex = 0;
-        resetTyping();
-        if (gp.gameState == gp.dialogueState) {
-            gp.gameState = gp.playState;
-        }
+      }
+    }
+    else {
+      npc.dialogueIndex = 0;
+      if(gp.gameState == gp.dialogueState){
+        gp.gameState = gp.playState;
+      }
     }
 
-    // Desenha o texto (quebra linhas por '\n')
-    for (String ln : currentDialogue.split("\n")) {
-        g2.drawString(ln, x, y);
-        y += 40;
-    }
+    // BREAK LINE DIALOGUE
+    for(String line : currentDialogue.split("\n")){
+      g2.drawString(line, x, y);
+      y += 40;
+    } 
+
 }
+
 
  public void drawCharacterScreen() {
   // CREATE A FRAME

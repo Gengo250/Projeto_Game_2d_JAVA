@@ -463,6 +463,7 @@ public class Player extends Entity {
 
       gp.playeSE(8);
       gp.gameState = gp.dialogueState;
+      setDialogue();
       startDialogue(this, 0);
     }
   }
