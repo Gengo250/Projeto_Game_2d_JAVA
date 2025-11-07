@@ -13,7 +13,7 @@ public class OBJ_Lantern extends Entity{
     down1 = setup("/res/objects/tocha", gp.tileSize, gp.tileSize);
     description = "[Lantern]\nIlluminnates your \nsurroundings";
     price = 70;
-    lightRadius = 120;
+    lightRadius = 200;
     
   }
 }

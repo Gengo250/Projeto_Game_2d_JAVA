@@ -850,7 +850,7 @@ public void drawTransition(){
   counter++;
   g2.setColor(new Color(0,0,0,counter*5));
   g2.fillRect(0, 0, gp.screenWidth, gp.screenHeight);
-  if(counter == 50){
+  if(counter == 50){ // the transition is done
     counter = 0;
     gp.gameState = gp.playState;
     gp.currentMap = gp.eHandler.tempMap;
@@ -859,6 +859,7 @@ public void drawTransition(){
 
     gp.eHandler.previusEventX = gp.player.worldX;
     gp.eHandler.previusEventY = gp.player.worldY;
+    gp.changeArea();
 
   }
 }

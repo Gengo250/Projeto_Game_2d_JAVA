@@ -62,13 +62,11 @@ public class TileManager {
       System.out.println("Exception!");
     }
    
-    //loadMap("/res/maps/worldmapV2.txt", 0);
     loadMap("/res/maps/worldmap.txt", 0);
-     //loadMap("/res/maps/dungeon01.txt", 0);
     loadMap("/res/maps/indoor01.txt", 1);
+    loadMap("/res/maps/dungeon01.txt", 2);
+    loadMap("/res/maps/dungeon02.txt", 3);
 
-    //loadMap("/res/maps/worldV3.txt",0);
-    //loadMap("/res/maps/interior01.txt", 1);
   }
   public void getTileImage(){
     for(int i = 0; i < fileNames.size();i++){
