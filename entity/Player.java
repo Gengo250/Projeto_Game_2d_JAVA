@@ -49,10 +49,6 @@ public class Player extends Entity {
     //attackArea.height = 36;
 
     setDefaultValues();
-    getImage();
-    getAttckImage();
-    getGuardImage();
-    setItems();
   }
 
   public void setDefaultValues(){
@@ -81,20 +77,30 @@ public class Player extends Entity {
     coin = 1000;
     currenWeapon = new OBJ_Sword_Normal(gp);
     currentyShield = new OBJ_Shield_Wood(gp);
+    currentyLight = null;
     projectile = new OBJ_Fireball(gp);
     attack = getAttack(); // the total attack value is decided by strength and weapon
     defense = getDefense(); // the total defense value is decided by dexterity and shield
+
+    getImage();
+    getAttckImage();
+    getGuardImage();
+    setItems();
   }
   public void setDefaultPositions(){
     worldX = gp.tileSize * 24;
     worldY = gp.tileSize * 33;
     direction = "down";
   }
-  public void restoreLifeAndMana(){
+  public void restoreStatus(){
      life = maxLife;
      mana = maxMana;
      invencible = false;
      transparent = false;
+     attacking = false;
+     guarding = false;
+     knokBack = false;
+     lightUpdated = true;
   }
   public void setItems(){
     inventory.clear();
@@ -112,6 +118,24 @@ public class Player extends Entity {
   public int getDefense(){
     attackArea = currenWeapon.attackArea;
     return defense = dexterity * currentyShield.defenseValue;
+  }
+  public int getCurrentWeaponSlot(){
+    int currentWeaponSlot = 0;
+    for(int i = 0; i < inventory.size();i++){
+      if(inventory.get(i) == currenWeapon){
+        currentWeaponSlot = i;
+      }
+    }
+    return currentWeaponSlot;
+  }
+    public int getCurrentShieldSlot(){
+    int currentShieldSlot = 0;
+    for(int i = 0; i < inventory.size();i++){
+      if(inventory.get(i) == currenWeapon){
+        currentShieldSlot = i;
+      }
+    }
+    return currentShieldSlot;
   }
   public void getImage(){
 
@@ -216,11 +240,13 @@ public class Player extends Entity {
             int objIndex     = gp.cChecker.checkObject(this, true);
             int npcIndex     = gp.cChecker.checkEntity(this, gp.npc);
             int monsterIndex = gp.cChecker.checkEntity(this, gp.monster);
+            int iTileIndex = gp.cChecker.checkEntity(this, gp.iTile);
 
            
             pickUpObject(objIndex);        // coleta/usa item
             interactNPC(npcIndex);         // fala com NPC se ENTER
             contactMonster(monsterIndex);  // dano por contato, etc.
+            damageInteractiveTile(iTileIndex);
 
              //CHECK EVENT 
              gp.eHandler.checkEvent();

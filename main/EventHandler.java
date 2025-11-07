@@ -106,10 +106,11 @@ public void healingPool(int gameState){
     gp.gameState = gameState;
     gp.player.attackCanceled = true;
     gp.playeSE(2);
-    gp.ui.currentDialogue = "You drink the water. \nYour life and mana has been recovered.";
+    gp.ui.currentDialogue = "You drink the water. \nYour life and mana has been recovered.\n" + "(The progress has been saved)";
     gp.player.life = gp.player.maxLife;
     gp.player.mana = gp.player.maxMana;
     gp.aSetter.setMonster();
+    gp.saveLoad.save();
 
   }
 }

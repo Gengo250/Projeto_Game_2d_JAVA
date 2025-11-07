@@ -45,6 +45,8 @@ public class Entity {
   public boolean guarding = false;
   public boolean transparent = false;
   public boolean offBalance = false;
+  public Entity loot;
+  public boolean opened = false;
 
   //COUNTER
   public int spriteCounter = 0;
@@ -132,7 +134,7 @@ public class Entity {
      int goalRow = (gp.player.worldY + gp.player.solidArea.y)/gp.tileSize;
      return goalRow;
   }
-  
+  public void setLoot(Entity loot){}
   public void setAction(){}
   public void damageReaction(){
     
@@ -475,9 +477,13 @@ public class Entity {
               offBalance = true;
               spriteCounter =- 60;
             }
-            damage /= 3;
-            gp.playeSE(15);
-          }  else {
+            else {
+              //normal guard
+              damage /= 3;
+              gp.playeSE(15);
+            }
+          }  
+           else {
             //Not guarding 
              gp.playeSE(6);
              if(damage < 0){

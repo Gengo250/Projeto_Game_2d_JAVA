@@ -793,6 +793,7 @@ public void options_endGameConfirmation(int frameX, int frameY){
     if(gp.keyH.enterPressed == true){
       subState = 0;
       gp.gameState = gp.titleState;
+      gp.resetGame(true);
       titleScreenState = 0;
       commandNum = 0;
     }

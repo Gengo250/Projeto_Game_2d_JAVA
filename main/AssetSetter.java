@@ -5,7 +5,6 @@ import entity.NPC_OldMan;
 import monster.MON_GreenSlime;
 import monster.MON_Orc;
 import object.OBJ_Axe;
-import object.OBJ_Chest;
 import object.OBJ_Coin_Bronze;
 import object.OBJ_Door;
 import object.OBJ_Heart;
