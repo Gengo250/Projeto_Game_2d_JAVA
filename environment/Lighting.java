@@ -90,13 +90,13 @@ public class Lighting {
     if(dayState == day){
       dayCounter ++;
 
-      if(dayCounter > 600){ //time definetion // 10 minutos = 36000 // 600 = 10 segundos
+      if(dayCounter > 36000){ //time definetion // 10 minutos = 36000 // 600 = 10 segundos
         dayState = dusk;
         dayCounter = 0;
       }
     }
       if(dayState == dusk){
-        filterAlpha += 0.001f;
+        filterAlpha += 0.0001f;
 
         if(filterAlpha > 1f){
           filterAlpha = 1f;
@@ -105,13 +105,13 @@ public class Lighting {
       }
       if(dayState == night){
         dayCounter++;
-        if(dayCounter > 600){
+        if(dayCounter > 36000){
           dayState = dawn;
           dayCounter = 0;
         }
       }
       if(dayState == dawn){
-        filterAlpha -= 0.001f;
+        filterAlpha -= 0.0001f;
 
         if(filterAlpha < 0f){
           filterAlpha = 0;

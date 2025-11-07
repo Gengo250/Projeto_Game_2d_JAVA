@@ -62,6 +62,7 @@ public class TileManager {
       System.out.println("Exception!");
     }
    
+    //loadMap("/res/maps/worldmapV2.txt", 0);
     loadMap("/res/maps/worldmap.txt", 0);
      //loadMap("/res/maps/dungeon01.txt", 0);
     loadMap("/res/maps/indoor01.txt", 1);
