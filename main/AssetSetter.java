@@ -5,6 +5,7 @@ import entity.NPC_OldMan;
 import monster.MON_GreenSlime;
 import monster.MON_Orc;
 import object.OBJ_Axe;
+import object.OBJ_Chest;
 import object.OBJ_Coin_Bronze;
 import object.OBJ_Door;
 import object.OBJ_Heart;
@@ -100,6 +101,12 @@ public class AssetSetter {
     i++;
 
     gp.obj[mapNum][i] = new OBJ_Potion_Red(gp);
+    gp.obj[mapNum][i].worldX = gp.tileSize*20;
+    gp.obj[mapNum][i].worldY = gp.tileSize*20;
+    i++;
+
+    gp.obj[mapNum][i] = new OBJ_Chest(gp);
+    gp.obj[mapNum][i].setLoot(new OBJ_Potion_Red(gp)); 
     gp.obj[mapNum][i].worldX = gp.tileSize*20;
     gp.obj[mapNum][i].worldY = gp.tileSize*20;
     i++;

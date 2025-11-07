@@ -40,8 +40,11 @@ public class NPC_Merchant extends Entity{
 
   }
   public void setDialogue(){
-    dialogues[0] = "He he, so you found me.\nI have some good items for sale\nDo you want trade?.";
-    dialogues[1] = "Come back anytime.";
+    dialogues[0][0] = "He he, so you found me.\nI have some good items for sale\nDo you want trade?.";
+    dialogues[1][0] = "Come back \nanytime!";
+    dialogues[2][0] = "You don't have enough coin\nyou need more coin.";
+    dialogues[3][0] = "You cannot any more";
+    dialogues[4][0] = "You can't sell \nequipped items!";
   }
   public void setItems(){
     inventory.add(new OBJ_Potion_Red(gp));
@@ -52,7 +55,7 @@ public class NPC_Merchant extends Entity{
     inventory.add(new OBJ_Key(gp));
   }
   public void speak(){
-    super.speak();
+    facePlayer();
     gp.gameState = gp.tradeState;
     gp.ui.npc = this;
   }

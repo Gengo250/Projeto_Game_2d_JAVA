@@ -17,11 +17,15 @@ public class OBJ_Potion_Red extends Entity{
     description = "[Life Posion]\nHeals your life by " + value + ".";
     price = 35;
     stackble = true;
+
+    setDialogue();
+   }
+   public void setDialogue(){
+      dialogues[0][0] = "You drink the " + name + "!\n" + "Your life has been recovered by " + value + ".";
    }
    public boolean use(Entity entity){
-    gp.gameState = gp.dialogueState;
-    gp.ui.currentDialogue = "You drink the " + name + "!\n" + "Your life has been recovered by " + value + ".";
-    entity.life += value;
+      startDialogue(this, 0);
+       entity.life += value;
     if(gp.player.life > gp.player.maxLife){
        gp.player.life = gp.player.maxLife;
     }
