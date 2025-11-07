@@ -6,12 +6,13 @@ import main.GamePanel;
 
 public class OBJ_Key extends Entity{
   GamePanel gp;
+  public static final String objName = "Key";
   public OBJ_Key( GamePanel gp){
 
     super(gp);
     this.gp = gp;
 
-    name = "Key";
+    name = objName;
     type = type_consumable;
     down1 = setup("/res/objects/chave", gp.tileSize, gp.tileSize);
     description = "[" + name + "]\nIt opens a door.";

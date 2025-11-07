@@ -4,11 +4,12 @@ import entity.Entity;
 import main.GamePanel;
 
 public class OBJ_Lantern extends Entity{
+  public static final String objName = "Lantern";
   public OBJ_Lantern(GamePanel gp){
     super(gp);
 
     type = type_light;
-    name = "Lantern";
+    name = objName;
     down1 = setup("/res/objects/tocha", gp.tileSize, gp.tileSize);
     description = "[Lantern]\nIlluminnates your \nsurroundings";
     price = 70;

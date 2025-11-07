@@ -8,41 +8,14 @@ import java.io.ObjectOutputStream;
 
 import entity.Entity;
 import main.GamePanel;
-import object.OBJ_Axe;
-import object.OBJ_Boots;
-import object.OBJ_Chest;
-import object.OBJ_Door;
-import object.OBJ_Key;
-import object.OBJ_Lantern;
-import object.OBJ_Potion_Red;
-import object.OBJ_Shield_Blue;
-import object.OBJ_Shield_Wood;
-import object.OBJ_Sword_Normal;
-import object.OBJ_Tent;
+
 
 public class SaveLoad {
   GamePanel gp;
   public SaveLoad(GamePanel gp){
     this.gp = gp;
   }
-  public Entity getObject(String itemName){
-    Entity obj = null;
 
-    switch(itemName){
-      case "Woodcutter's Axe": obj = new OBJ_Axe(gp); break;
-      case "Key": obj = new OBJ_Key(gp); break;
-      case "Boots": obj = new OBJ_Boots(gp); break;
-      case "Lantern": obj = new OBJ_Lantern(gp); break;
-      case "Life Potion": obj = new OBJ_Potion_Red(gp); break;
-      case "Blue Shield": obj = new OBJ_Shield_Blue(gp); break;
-      case "Wood Shield": obj = new OBJ_Shield_Wood(gp); break;
-      case "Normal Sword": obj = new OBJ_Sword_Normal(gp); break;
-      case "Tent": obj = new OBJ_Tent(gp); break;
-      case "Door": obj = new OBJ_Door(gp); break;
-      case "Chest": obj = new OBJ_Chest(gp); break;
-    }
-    return obj;
-  }
  public void save(){
     try (ObjectOutputStream oos =
             new ObjectOutputStream(new FileOutputStream(new File("save.data")))) {
@@ -124,11 +97,11 @@ public class SaveLoad {
         gp.player.exp          = ds.exp;
         gp.player.nextLevelExp = ds.nextLevelExp;
         gp.player.coin         = ds.coin;
-
+                
         // Inventário
         gp.player.inventory.clear();
         for (int i = 0; i < ds.itemNames.size(); i++) {
-            Entity e = getObject(ds.itemNames.get(i));
+            Entity e = gp.eGenerator.getObject(ds.itemNames.get(i));
             if (e != null) {
                 e.amount = ds.itemAmounts.get(i);
                 gp.player.inventory.add(e);
@@ -166,7 +139,7 @@ public class SaveLoad {
                     continue;
                 }
 
-                Entity obj = getObject(name);
+                Entity obj = gp.eGenerator.getObject(name);
                 if (obj == null) {             // nome não mapeado? limpa slot
                     gp.obj[mapNum][i] = null;
                     continue;
@@ -178,7 +151,7 @@ public class SaveLoad {
                 String lootName = (ds.mapObjectLootNames != null && ds.mapObjectLootNames[mapNum] != null)
                                   ? ds.mapObjectLootNames[mapNum][i] : null;
                 if (lootName != null && !"NA".equalsIgnoreCase(lootName)) {
-                    obj.loot = getObject(lootName);
+                    obj.loot = gp.eGenerator.getObject(lootName);
                 }
 
                 obj.opened = ds.mapObjectOpened[mapNum][i];
