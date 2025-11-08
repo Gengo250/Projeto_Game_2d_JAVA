@@ -126,42 +126,48 @@ public class SaveLoad {
         gp.player.getAttckImage(); // (se o nome correto for getAttackImage, ajuste aqui)
 
         // Objetos do mapa
-        for (int mapNum = 0; mapNum < gp.maxMap; mapNum++) {
-            int len = gp.obj[mapNum].length;
-            for (int i = 0; i < len; i++) {
+     
+for (int mapNum = 0; mapNum < gp.maxMap; mapNum++) {
+    int len = gp.obj[mapNum].length;
+    for (int i = 0; i < len; i++) {
 
-                String name = (ds.mapObjectNames != null && ds.mapObjectNames[mapNum] != null)
-                              ? ds.mapObjectNames[mapNum][i] : null;
+        String name = (ds.mapObjectNames != null && ds.mapObjectNames[mapNum] != null)
+                      ? ds.mapObjectNames[mapNum][i] : null;
 
-                // <<< AQUI ESTAVA O BUG: checar NOME e "NA", não o loot >>>
-                if (name == null || "NA".equals(name)) {
-                    gp.obj[mapNum][i] = null;   // slot vazio → não recria
-                    continue;
-                }
-
-                Entity obj = gp.eGenerator.getObject(name);
-                if (obj == null) {             // nome não mapeado? limpa slot
-                    gp.obj[mapNum][i] = null;
-                    continue;
-                }
-
-                obj.worldX = ds.mapObjectWorldX[mapNum][i];
-                obj.worldY = ds.mapObjectWorldY[mapNum][i];
-
-                String lootName = (ds.mapObjectLootNames != null && ds.mapObjectLootNames[mapNum] != null)
-                                  ? ds.mapObjectLootNames[mapNum][i] : null;
-                if (lootName != null && !"NA".equalsIgnoreCase(lootName)) {
-                    obj.loot = gp.eGenerator.getObject(lootName);
-                }
-
-                obj.opened = ds.mapObjectOpened[mapNum][i];
-                if (obj.opened) {
-                    obj.down1 = obj.image2;    // ex.: baú aberto
-                }
-
-                gp.obj[mapNum][i] = obj;
-            }
+        // slot vazio no save → não recria
+        if (name == null || "NA".equals(name)) {
+            gp.obj[mapNum][i] = null;
+            continue;
         }
+
+        // recria o objeto do mundo
+        Entity obj = gp.eGenerator.getObject(name);
+        if (obj == null) {
+            gp.obj[mapNum][i] = null;
+            continue;
+        }
+
+        obj.worldX = ds.mapObjectWorldX[mapNum][i];
+        obj.worldY = ds.mapObjectWorldY[mapNum][i];
+        obj.opened = ds.mapObjectOpened[mapNum][i];
+        if (obj.opened) {
+            obj.down1 = obj.image2; // ex.: baú aberto
+        }
+
+        // 1) Primeiro coloca o objeto no array do mapa
+        gp.obj[mapNum][i] = obj;
+
+        // 2) Depois seta o loot via setter (é AQUI que entra a sua linha!)
+        String lootName = (ds.mapObjectLootNames != null && ds.mapObjectLootNames[mapNum] != null)
+                          ? ds.mapObjectLootNames[mapNum][i] : null;
+        if (lootName != null && !"NA".equalsIgnoreCase(lootName)) {
+            gp.obj[mapNum][i].setLoot(gp.eGenerator.getObject(lootName));
+            //            ^^^^^^^^^^^^^              ^^^^^^^^^^^
+            //            usa o setter               usa eGenerator (com "er")
+        }
+    }
+}
+
 
     } catch (Exception e) {
         System.out.println("Load Exception!");

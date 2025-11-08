@@ -69,12 +69,15 @@ public class CollisionChecker {
     }
   }
   public int checkObject(Entity entity, boolean player) {
-    int index = 999;                          // 999 = não colidiu
+    int index = 999;    
+    
+    String direction = entity.direction;
+    if(entity.knokBack == true){
+      direction = entity.knockBackDirecion;
+    }
 
     for (int i = 0; i < gp.obj[1].length; i++) {
         if (gp.obj[gp.currentMap][i] != null) {
-
-            /* ---------- prepara áreas sólidas absolutas ---------- */
             // player (entity)
             entity.solidArea.x = entity.worldX + entity.solidAreaDefaultX;
             entity.solidArea.y = entity.worldY + entity.solidAreaDefaultY;
@@ -83,21 +86,12 @@ public class CollisionChecker {
             gp.obj[gp.currentMap][i].solidArea.x = gp.obj[gp.currentMap][i].worldX + gp.obj[gp.currentMap][i].solidAreaDefaultX;
             gp.obj[gp.currentMap][i].solidArea.y = gp.obj[gp.currentMap][i].worldY + gp.obj[gp.currentMap][i].solidAreaDefaultY;
 
-            /* ---------- simula o próximo passo do player ---------- */
-            switch (entity.direction) {
-                case "up":
-                 entity.solidArea.y -= entity.speed;
-                 break;
-                case "down":
-                 entity.solidArea.y += entity.speed;
-                 break;
-                case "left":
-                 entity.solidArea.x -= entity.speed;
-                 break;
-                case "right":
-                 entity.solidArea.x += entity.speed;
-                 break;
-            }
+            switch (direction) {
+                case "up": entity.solidArea.y -= entity.speed; break;
+                case "down": entity.solidArea.y += entity.speed; break;
+                case "left": entity.solidArea.x -= entity.speed; break;
+                case "right": entity.solidArea.x += entity.speed; break;
+              }
                if(entity.solidArea.intersects(gp.obj[gp.currentMap][i].solidArea)){
                   if(gp.obj[gp.currentMap][i].collision == true){
                     entity.collisionOn = true;
