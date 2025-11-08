@@ -123,7 +123,6 @@ public class Player extends Entity {
     return attack = strength * currenWeapon.attackValue;
   }
   public int getDefense(){
-    attackArea = currenWeapon.attackArea;
     return defense = dexterity * currentyShield.defenseValue;
   }
   public int getCurrentWeaponSlot(){
@@ -138,7 +137,7 @@ public class Player extends Entity {
     public int getCurrentShieldSlot(){
     int currentShieldSlot = 0;
     for(int i = 0; i < inventory.size();i++){
-      if(inventory.get(i) == currenWeapon){
+      if(inventory.get(i) == currentyShield){
         currentShieldSlot = i;
       }
     }
@@ -186,6 +185,16 @@ public class Player extends Entity {
       attackLeft2 = setup("/res/player/boy_axe_left_2", gp.tileSize*2, gp.tileSize);
       attackRight1 = setup("/res/player/boy_axe_right_1", gp.tileSize*2, gp.tileSize);  
       attackRight2 = setup("/res/player/boy_axe_right_2", gp.tileSize*2, gp.tileSize);
+    }
+        if(currenWeapon.type == type_pickaxe){
+      attackUp1 = setup("/res/player/boy_pick_up_1", gp.tileSize, gp.tileSize*2);
+      attackUp2 = setup("/res/player/boy_pick_up_2", gp.tileSize, gp.tileSize*2);
+      attackDown1 = setup("/res/player/boy_pick_down_1", gp.tileSize, gp.tileSize*2);
+      attackDown2 = setup("/res/player/boy_pick_down_2", gp.tileSize, gp.tileSize*2);
+      attackLeft1 = setup("/res/player/boy_pick_left_1", gp.tileSize*2, gp.tileSize);
+      attackLeft2 = setup("/res/player/boy_pick_left_2", gp.tileSize*2, gp.tileSize);
+      attackRight1 = setup("/res/player/boy_pick_right_1", gp.tileSize*2, gp.tileSize);  
+      attackRight2 = setup("/res/player/boy_pick_right_2", gp.tileSize*2, gp.tileSize);
     }
   }
   public void getGuardImage(){
@@ -247,13 +256,14 @@ public class Player extends Entity {
             int objIndex     = gp.cChecker.checkObject(this, true);
             int npcIndex     = gp.cChecker.checkEntity(this, gp.npc);
             int monsterIndex = gp.cChecker.checkEntity(this, gp.monster);
-            int iTileIndex = gp.cChecker.checkEntity(this, gp.iTile);
 
-           
+            // IMPORTANTÍSSIMO: checar iTile para marcar collisionOn
+            gp.cChecker.checkEntity(this, gp.iTile); // retorno ignorado de propósito
+
             pickUpObject(objIndex);        // coleta/usa item
             interactNPC(npcIndex);         // fala com NPC se ENTER
             contactMonster(monsterIndex);  // dano por contato, etc.
-            damageInteractiveTile(iTileIndex);
+            
 
              //CHECK EVENT 
              gp.eHandler.checkEvent();
@@ -373,13 +383,14 @@ public class Player extends Entity {
   }
 
   public void interactNPC(int i){
-    if(gp.keyH.enterPressed == true){
-        if(i != 999){
+     if(i != 999){
+      if(gp.keyH.enterPressed == true){
+       
               attackCanceled = true;
               gp.npc[gp.currentMap][i].speak();
-      }
-    
-    } 
+          }
+          gp.npc[gp.currentMap][i].move(direction);
+      } 
   }
   public void contactMonster(int i){
     if(i != 999){
@@ -439,6 +450,7 @@ public class Player extends Entity {
       generatorParticule(gp.iTile[gp.currentMap][i], gp.iTile[gp.currentMap][i]);
 
       if(gp.iTile[gp.currentMap][i].life == 0){
+        //gp.iTile[gp.currentMap][i].checkDrop(); --> idea para usar
         gp.iTile[gp.currentMap][i] = gp.iTile[gp.currentMap][i].getDestroyedForm();
       }
     }
@@ -471,7 +483,7 @@ public class Player extends Entity {
     int itemIndex = gp.ui.getItemIndexOnSlot(gp.ui.playerslotCol, gp.ui.playerslotRow);
     if(itemIndex < inventory.size()){
       Entity selectedItem = inventory.get(itemIndex);
-      if(selectedItem.type == type_sword || selectedItem.type == type_axe){
+      if(selectedItem.type == type_sword || selectedItem.type == type_axe || selectedItem.type == type_pickaxe){
         currenWeapon = selectedItem;
         attack = getAttack();
         getAttckImage();
