@@ -44,21 +44,23 @@ public class Player extends Entity {
     solidAreaDefaultY = solidArea.y;
     solidArea.width = 32;
     solidArea.height = 32;
-    //ATTACK AREA
-    //attackArea.width = 36;
-    //attackArea.height = 36;
 
     setDefaultValues();
   }
 
   public void setDefaultValues(){
-  
-    //worldX = gp.tileSize * 23;
-    //worldY = gp.tileSize * 21;
+    
+    //outside
+    gp.currentMap = 0;
     worldX = gp.tileSize * 23;
     worldY = gp.tileSize * 21;
 
-    //gp.currentMap = 0;
+
+    // Dungeon B2
+    //gp.currentMap = 3;
+    //worldX = gp.tileSize*25;
+    //worldY = gp.tileSize*29;
+
     defualtSpeed = 4;
     speed = defualtSpeed;
     direction = "down";
@@ -89,8 +91,9 @@ public class Player extends Entity {
     setDialogue();
   }
   public void setDefaultPositions(){
-    worldX = gp.tileSize * 24;
-    worldY = gp.tileSize * 33;
+    gp.currentArea = 0;
+    worldX = gp.tileSize * 23;
+    worldY = gp.tileSize * 21;
     direction = "down";
   }
   public void setDialogue(){
@@ -341,14 +344,15 @@ public class Player extends Entity {
     }
         if(mana > maxMana){
           mana = maxMana ;
-    }
-        if(life <= 0){
+        }
+        if(keyH.godModeOn == false){
+           if(life <= 0){
           gp.gameState = gp.gameOverState;
           gp.ui.commandNum = 0;
-          //gp.stopMusic();
+          gp.stopMusic();
           gp.playeSE(12);
-        }
-
+          }
+      } 
   }
 
             

@@ -126,13 +126,22 @@ public class SaveLoad {
         gp.player.getAttckImage(); // (se o nome correto for getAttackImage, ajuste aqui)
 
         // Objetos do mapa
-     
+        // Objetos do mapa — usar o TAMANHO DO SAVE e aplicar estado corretamente
 for (int mapNum = 0; mapNum < gp.maxMap; mapNum++) {
-    int len = gp.obj[mapNum].length;
+
+    String[] names = (ds.mapObjectNames != null) ? ds.mapObjectNames[mapNum] : null;
+    if (names == null) continue;
+
+    int len = names.length;
+
+    // Garante que o array do mapa tem o MESMO tamanho do save
+    if (gp.obj[mapNum] == null || gp.obj[mapNum].length != len) {
+        gp.obj[mapNum] = new Entity[len];
+    }
+
     for (int i = 0; i < len; i++) {
 
-        String name = (ds.mapObjectNames != null && ds.mapObjectNames[mapNum] != null)
-                      ? ds.mapObjectNames[mapNum][i] : null;
+        String name = names[i];
 
         // slot vazio no save → não recria
         if (name == null || "NA".equals(name)) {
@@ -140,7 +149,7 @@ for (int mapNum = 0; mapNum < gp.maxMap; mapNum++) {
             continue;
         }
 
-        // recria o objeto do mundo
+        // recria o objeto
         Entity obj = gp.eGenerator.getObject(name);
         if (obj == null) {
             gp.obj[mapNum][i] = null;
@@ -149,21 +158,32 @@ for (int mapNum = 0; mapNum < gp.maxMap; mapNum++) {
 
         obj.worldX = ds.mapObjectWorldX[mapNum][i];
         obj.worldY = ds.mapObjectWorldY[mapNum][i];
-        obj.opened = ds.mapObjectOpened[mapNum][i];
-        if (obj.opened) {
-            obj.down1 = obj.image2; // ex.: baú aberto
+
+        // aplica estado aberto/fechado (IMPORTANTE: colisão/sprite)
+        boolean opened =
+            (ds.mapObjectOpened != null && ds.mapObjectOpened[mapNum] != null)
+                ? ds.mapObjectOpened[mapNum][i]
+                : false;
+
+        obj.opened = opened;
+        if (opened) {
+            // sprite alternativa (ex.: baú aberto / porta aberta)
+            obj.down1 = obj.image2;
+            // libera passagem quando aberto (evita “reset visual” com bloqueio)
+            obj.collision = false;
         }
 
-        // 1) Primeiro coloca o objeto no array do mapa
+        // 1) coloca o objeto no array
         gp.obj[mapNum][i] = obj;
 
-        // 2) Depois seta o loot via setter (é AQUI que entra a sua linha!)
-        String lootName = (ds.mapObjectLootNames != null && ds.mapObjectLootNames[mapNum] != null)
-                          ? ds.mapObjectLootNames[mapNum][i] : null;
+        // 2) depois seta o loot, se houver
+        String lootName =
+            (ds.mapObjectLootNames != null && ds.mapObjectLootNames[mapNum] != null)
+                ? ds.mapObjectLootNames[mapNum][i]
+                : null;
+
         if (lootName != null && !"NA".equalsIgnoreCase(lootName)) {
             gp.obj[mapNum][i].setLoot(gp.eGenerator.getObject(lootName));
-            //            ^^^^^^^^^^^^^              ^^^^^^^^^^^
-            //            usa o setter               usa eGenerator (com "er")
         }
     }
 }
