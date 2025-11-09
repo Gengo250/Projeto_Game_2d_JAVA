@@ -72,7 +72,7 @@ public class Player extends Entity {
     maxMana = 4;
     mana = maxMana;
     //ammo = 10;
-    strength = 1; // the more strenght he has, the more damage he gives
+    strength = 20; // the more strenght he has, the more damage he gives ---> para testes colocar: 20
     dexterity = 1; // the more dexterity he has, the less damage he receives
     exp = 0;
     nextLevelExp = 5;
@@ -147,7 +147,6 @@ public class Player extends Entity {
     return currentShieldSlot;
   }
   public void getImage(){
-
     up1 = setup("/res/player/indio_up_1", gp.tileSize, gp.tileSize);
     up2 = setup("/res/player/indio_up_2", gp.tileSize, gp.tileSize);
     down1 = setup("/res/player/indio_down_1", gp.tileSize, gp.tileSize);
@@ -156,7 +155,6 @@ public class Player extends Entity {
     left2 = setup("/res/player/indio_left_2", gp.tileSize, gp.tileSize);
     right1 = setup("/res/player/indio_right_1", gp.tileSize, gp.tileSize);
     right2 = setup("/res/player/indio_right_2", gp.tileSize, gp.tileSize);
-
   }
   public void getSleepImage(BufferedImage image){
     up1 = image;
@@ -622,8 +620,10 @@ public class Player extends Entity {
     if(transparent == true){
       g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.3f));
     }
-    g2.drawImage(image, tempScreenX, tempScreenY, null);
-
+    if(drawing == true){
+      g2.drawImage(image, tempScreenX, tempScreenY, null);
+    }
+    
     //Reset alpha
     g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
 
