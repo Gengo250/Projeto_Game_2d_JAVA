@@ -18,7 +18,7 @@ GamePanel gp;
     speed = 5;
     maxLife = 80;
     life = maxLife;
-    attack = 2;
+    attack = 1;
     useCost = 1;
     alive = false;
     knokBackPower = 2;
