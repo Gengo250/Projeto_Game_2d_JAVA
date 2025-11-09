@@ -294,8 +294,7 @@ public class KeyHandler implements KeyListener {
       }
       else if(gp.ui.commandNum == 1){
          gp.gameState = gp.titleState;
-         gp.ui.titleScreenState = 0;
-         gp.stopMusic();  
+         gp.ui.titleScreenState = 0; 
          gp.resetGame(true);
       }
     }

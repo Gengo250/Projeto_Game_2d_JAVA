@@ -135,6 +135,7 @@ public class GamePanel  extends JPanel implements Runnable{
   }
   public void resetGame(boolean restart){
     
+    stopMusic();
     currentArea = outside;
     removeTempEntity();
     bossBattleON = false;
@@ -143,6 +144,7 @@ public class GamePanel  extends JPanel implements Runnable{
     player.resetCounter();
     aSetter.setNPC();
     aSetter.setMonster();
+
     if(restart == true){
       player.setDefaultValues();
       aSetter.setObject();
