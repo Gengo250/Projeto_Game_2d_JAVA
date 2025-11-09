@@ -8,8 +8,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
-import javax.imageio.ImageIO;
-
 import main.GamePanel;
 import main.UtilityTool;
 
@@ -46,7 +44,7 @@ public class TileManager {
     getTileImage();
 
     //Get the maxWorldCol & Row
-    is = getClass().getResourceAsStream("/res/maps/worldmap.txt");
+    is = getClass().getResourceAsStream("/res/maps/worldmapV2.txt");
     br = new BufferedReader(new InputStreamReader(is));
 
     try {
@@ -62,7 +60,7 @@ public class TileManager {
       System.out.println("Exception!");
     }
    
-    loadMap("/res/maps/worldmap.txt", 0);
+    loadMap("/res/maps/worldmapV2.txt", 0);
     loadMap("/res/maps/indoor01.txt", 1);
     loadMap("/res/maps/dungeon01.txt", 2);
     loadMap("/res/maps/dungeon02.txt", 3);
@@ -88,15 +86,27 @@ public class TileManager {
   public void setup(int index, String imageName, boolean collision){
     UtilityTool uTool = new UtilityTool();
     try{
-      tile[index] = new Tile();
-      tile[index].image = ImageIO.read(getClass().getResourceAsStream("/res/tiles/" + imageName));
-      tile[index].image = uTool.scaleImage(tile[index].image, gp.tileSize, gp.tileSize);
-      tile[index].collision = collision;
+        tile[index] = new Tile();
 
-    } catch(IOException e){
-      e.printStackTrace();
+        String path = "/res/tiles/" + imageName.trim();
+        InputStream in = TileManager.class.getResourceAsStream(path);
+        if (in == null) {
+            System.err.println("Tile faltando: " + path + " (verifique tiledata.txt e a pasta /res/tiles)");
+            // placeholder transparente (ou reaproveite 000.png, se quiser)
+            tile[index].image = new java.awt.image.BufferedImage(gp.tileSize, gp.tileSize, java.awt.image.BufferedImage.TYPE_INT_ARGB);
+            tile[index].collision = collision;
+            return;
+        }
+
+        tile[index].image = javax.imageio.ImageIO.read(in);
+        tile[index].image = uTool.scaleImage(tile[index].image, gp.tileSize, gp.tileSize);
+        tile[index].collision = collision;
+
+    } catch(Exception e){
+        throw new RuntimeException("Falha ao carregar tile["+index+"]: " + imageName, e);
     }
-  }
+}
+
   public void loadMap(String filePath, int map){
     try{
       InputStream is = getClass() .getResourceAsStream(filePath);
