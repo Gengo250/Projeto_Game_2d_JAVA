@@ -168,24 +168,24 @@ public class Player extends Entity {
   }
   public void getAttckImage(){
     if(currenWeapon.type == type_sword){
-      attackUp1 = setup("/res/player/boy_attack_up_1", gp.tileSize, gp.tileSize*2);
-      attackUp2 = setup("/res/player/boy_attack_up_2", gp.tileSize, gp.tileSize*2);
-      attackDown1 = setup("/res/player/boy_attack_down_1", gp.tileSize, gp.tileSize*2);
-      attackDown2 = setup("/res/player/boy_attack_down_2", gp.tileSize, gp.tileSize*2);
-      attackLeft1 = setup("/res/player/boy_attack_left_1", gp.tileSize*2, gp.tileSize);
-      attackLeft2 = setup("/res/player/boy_attack_left_2", gp.tileSize*2, gp.tileSize);
-      attackRight1 = setup("/res/player/boy_attack_right_1", gp.tileSize*2, gp.tileSize);  
-      attackRight2 = setup("/res/player/boy_attack_right_2", gp.tileSize*2, gp.tileSize);
+      attackUp1 = setup("/res/player/indio_lanca_up", gp.tileSize, gp.tileSize*2);
+      attackUp2 = setup("/res/player/indio_lanca_up", gp.tileSize, gp.tileSize*2);
+      attackDown1 = setup("/res/player/indio_lanca_down", gp.tileSize, gp.tileSize*2);
+      attackDown2 = setup("/res/player/indio_lanca_down", gp.tileSize, gp.tileSize*2);
+      attackLeft1 = setup("/res/player/indio_lanca_left", gp.tileSize*2, gp.tileSize);
+      attackLeft2 = setup("/res/player/indio_lanca_left", gp.tileSize*2, gp.tileSize);
+      attackRight1 = setup("/res/player/indio_lanca_right", gp.tileSize*2, gp.tileSize);  
+      attackRight2 = setup("/res/player/indio_lanca_right", gp.tileSize*2, gp.tileSize);
     }
     if(currenWeapon.type == type_axe){
-      attackUp1 = setup("/res/player/boy_axe_up_1", gp.tileSize, gp.tileSize*2);
-      attackUp2 = setup("/res/player/boy_axe_up_2", gp.tileSize, gp.tileSize*2);
-      attackDown1 = setup("/res/player/boy_axe_down_1", gp.tileSize, gp.tileSize*2);
-      attackDown2 = setup("/res/player/boy_axe_down_2", gp.tileSize, gp.tileSize*2);
-      attackLeft1 = setup("/res/player/boy_axe_left_1", gp.tileSize*2, gp.tileSize);
-      attackLeft2 = setup("/res/player/boy_axe_left_2", gp.tileSize*2, gp.tileSize);
-      attackRight1 = setup("/res/player/boy_axe_right_1", gp.tileSize*2, gp.tileSize);  
-      attackRight2 = setup("/res/player/boy_axe_right_2", gp.tileSize*2, gp.tileSize);
+      attackUp1 = setup("/res/player/indio_faca_up", gp.tileSize, gp.tileSize*2);
+      attackUp2 = setup("/res/player/indio_faca_up", gp.tileSize, gp.tileSize*2);
+      attackDown1 = setup("/res/player/indio_faca_down", gp.tileSize, gp.tileSize*2);
+      attackDown2 = setup("/res/player/indio_faca_down", gp.tileSize, gp.tileSize*2);
+      attackLeft1 = setup("/res/player/indio_faca_left", gp.tileSize*2, gp.tileSize);
+      attackLeft2 = setup("/res/player/indio_faca_left", gp.tileSize*2, gp.tileSize);
+      attackRight1 = setup("/res/player/indio_faca_right", gp.tileSize*2, gp.tileSize);  
+      attackRight2 = setup("/res/player/indio_faca_right", gp.tileSize*2, gp.tileSize);
     }
         if(currenWeapon.type == type_pickaxe){
       attackUp1 = setup("/res/player/boy_pick_up_1", gp.tileSize, gp.tileSize*2);
