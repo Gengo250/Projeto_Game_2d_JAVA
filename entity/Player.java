@@ -466,22 +466,39 @@ public class Player extends Entity {
       
     }
   }
-  public void checkLevelUp(){
-    if(exp >= nextLevelExp){
-      level++;
-      nextLevelExp = nextLevelExp*2;
-      maxLife += 6;
-      strength ++;
-      dexterity ++;
-      attack = getAttack();
-      defense = getDefense();
+  public void checkLevelUp() {
+    boolean leveled = false;
 
-      gp.playeSE(8);
-      gp.gameState = gp.dialogueState;
-      setDialogue();
-      startDialogue(this, 0);
+    while (exp >= nextLevelExp) {
+        // consome o XP do nível atual
+        exp -= nextLevelExp;
+
+        // sobe de nível
+        level++;
+
+        // escala o requisito (mantive sua lógica de dobrar)
+        nextLevelExp = nextLevelExp * 2;
+
+        // bônus de atributos
+        maxLife += 6;
+        strength++;
+        dexterity++;
+
+        leveled = true;
     }
-  }
+
+    if (leveled) {
+        // recalcula status só uma vez ao final
+        attack = getAttack();
+        defense = getDefense();
+
+        gp.playeSE(8);
+        gp.gameState = gp.dialogueState;
+        setDialogue();
+        startDialogue(this, 0);
+    }
+}
+
   public void selectItem(){
     int itemIndex = gp.ui.getItemIndexOnSlot(gp.ui.playerslotCol, gp.ui.playerslotRow);
     if(itemIndex < inventory.size()){
