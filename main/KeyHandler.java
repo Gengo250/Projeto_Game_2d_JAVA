@@ -422,4 +422,11 @@ public class KeyHandler implements KeyListener {
       spacePressed = false;
     }
   }
+public void clearAllPressed() {
+  upPressed = downPressed = leftPressed = rightPressed = false;
+  enterPressed = false;
+  shotKeyPressed = false;
+  spacePressed = false;
+}
+
 }

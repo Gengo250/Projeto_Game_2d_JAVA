@@ -12,7 +12,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 
 import entity.Entity;
-import object.OBJ_Heart;
+
 import object.OBJ_ManaCrystal;
 
 public class UI {
@@ -21,6 +21,8 @@ public class UI {
   Graphics2D g2;
   public Font minecraft, vRCOSD;
   BufferedImage heart_full, heart_half, heart_blank, crystal_full, crystal_blanck, coin;
+  BufferedImage[] heartStage; 
+static final int HEART_STEPS = 6;
   public boolean messageOn = false;
   ArrayList<String> message = new ArrayList<>();
   ArrayList<Integer> messageCounter = new ArrayList<>();
@@ -51,14 +53,27 @@ public class UI {
     } catch (IOException e) {
       e.printStackTrace();
     }
-    // CREATE HUD OBJECT
-    Entity heart = new OBJ_Heart(gp);
-    heart_full = heart.image;
-    heart_half = heart.image2;
-    heart_blank = heart.image3;
+
+    // CREATE HEART
+      Entity loader = new Entity(gp);
+
+      heartStage = new BufferedImage[7];
+      // Índices: 6=cheia ... 1=quase vazia, 0=vazia
+      heartStage[6] = loader.setup("/res/objects/Vida-cheia", gp.tileSize, gp.tileSize);
+      heartStage[5] = loader.setup("/res/objects/Vida-2",     gp.tileSize, gp.tileSize);
+      heartStage[4] = loader.setup("/res/objects/Vida-3",     gp.tileSize, gp.tileSize);
+      heartStage[3] = loader.setup("/res/objects/Vida-4",     gp.tileSize, gp.tileSize);
+      heartStage[2] = loader.setup("/res/objects/Vida-5",     gp.tileSize, gp.tileSize);
+      heartStage[1] = loader.setup("/res/objects/Vida-6",     gp.tileSize, gp.tileSize);
+      heartStage[0] = loader.setup("/res/objects/Vida-vazia", gp.tileSize, gp.tileSize);
+
+
+    // CREATE MANA
     Entity crystal = new OBJ_ManaCrystal(gp);
     crystal_full = crystal.image;
     crystal_blanck = crystal.image2;
+
+    //// CREATE COIN
     Entity bronzeCoin = new object.OBJ_Coin_Bronze(gp);
     coin = bronzeCoin.down1;
   }
@@ -127,49 +142,36 @@ public class UI {
 
   public void drawPlayLife() {
 
-    int x = gp.tileSize / 2;
-    int y = gp.tileSize / 2;
-    int i = 0;
-    int iconSize = 32;
-    int manaStartX = (gp.tileSize / 2) - 5;
-    int manaStartY = 0;
     
+  int x = gp.tileSize / 2;
+  int y = gp.tileSize / 2;
+  int iconSize = 32;
 
-    // DRAW MAX LIFE
-    while (i < gp.player.maxLife / 2) {
-      g2.drawImage(heart_blank, x, y, iconSize, iconSize, null);
-      i++;
-      x += iconSize;
-      manaStartY = y + 32;
-      if (i % 8 == 0) {
-        x = gp.tileSize / 2;
-        y += iconSize;
-      }
+  int manaStartX = (gp.tileSize / 2) - 5;
+  int manaStartY = 0;
+
+  // Quantos corações (arredonda pra cima se não dividir exato)
+  int hearts = (int) Math.ceil(gp.player.maxLife / (double) HEART_STEPS);
+
+  // Desenha cada coração já no estágio correto (0..6)
+  for (int h = 0; h < hearts; h++) {
+    int stepsInThisHeart = gp.player.life - (h * HEART_STEPS);
+    if (stepsInThisHeart < 0) stepsInThisHeart = 0;
+    if (stepsInThisHeart > HEART_STEPS) stepsInThisHeart = HEART_STEPS;
+
+    g2.drawImage(heartStage[stepsInThisHeart], x, y, iconSize, iconSize, null);
+
+    x += iconSize;
+    manaStartY = y + 32;
+    if ((h + 1) % 8 == 0) { // quebra linha a cada 8 corações
+      x = gp.tileSize / 2;
+      y += iconSize;
     }
-
-    // RESET
-    x = gp.tileSize / 2;
-    y = gp.tileSize / 2;
-    i = 0;
-
-    // DRAW CURRENT LIFE
-    while (i < gp.player.life) {
-      g2.drawImage(heart_half, x, y, iconSize, iconSize, null);
-      i++;
-      if (i < gp.player.life) {
-        g2.drawImage(heart_full, x, y, iconSize, iconSize, null);
-      }
-      i++;
-      x += iconSize;
-      if(i % 16 == 0){
-        x = gp.tileSize;
-        y += iconSize;
-      }
-    }
+  }
     // DRAW MAX MANA
     x = manaStartX;
     y = manaStartY;
-    i = 0;
+    int i = 0;
     while (i < gp.player.maxMana) {
       g2.drawImage(crystal_blanck, x, y,iconSize, iconSize, null);
       i++;

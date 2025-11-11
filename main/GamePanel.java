@@ -133,9 +133,15 @@ public class GamePanel  extends JPanel implements Runnable{
       setFullScreen();
     }
   }
+  public void prepareRespawn() {
+  keyH.clearAllPressed();     // limpa teclas “grudadas”
+  player.startRespawnIFrames(); // dá i-frames de respawn (~60 frames)
+}
+
   public void resetGame(boolean restart){
     
     stopMusic();
+    playMusic(23);
     if (currentMap == 1) {
     currentArea = indoor;
     } else if (currentMap == 2 || currentMap == 3) {
@@ -148,6 +154,7 @@ public class GamePanel  extends JPanel implements Runnable{
     player.setDefaultPositions();
     player.lightUpdated = true;
     player.restoreStatus();
+    prepareRespawn(); 
     player.resetCounter();
     aSetter.setNPC();
     aSetter.setMonster();

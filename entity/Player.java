@@ -67,7 +67,7 @@ public class Player extends Entity {
 
     // PLAYER STATUS
     level = 1;
-    maxLife = 6;
+    maxLife = 18;
     life = maxLife;
     maxMana = 4;
     mana = maxMana;
@@ -271,7 +271,7 @@ public class Player extends Entity {
             
 
              //CHECK EVENT 
-             gp.eHandler.checkEvent();
+             if (!invencible) gp.eHandler.checkEvent();
 
               //IF COLLISION IS FALSE, PLAYER CAN MOVE
               if(collisionOn == false && gp.keyH.enterPressed == false){
@@ -347,13 +347,11 @@ public class Player extends Entity {
         if(mana > maxMana){
           mana = maxMana ;
         }
-        if(keyH.godModeOn == false){
-           if(life <= 0){
-          gp.gameState = gp.gameOverState;
-          gp.ui.commandNum = 0;
-          gp.playeSE(12);
-          }
-      } 
+      if (!keyH.godModeOn && !invencible && life <= 0) {
+            gp.gameState = gp.gameOverState;
+            gp.ui.commandNum = 0;
+            gp.playeSE(12);
+        } 
   }
 
             
@@ -472,7 +470,7 @@ public class Player extends Entity {
     if(exp >= nextLevelExp){
       level++;
       nextLevelExp = nextLevelExp*2;
-      maxLife += 2;
+      maxLife += 6;
       strength ++;
       dexterity ++;
       attack = getAttack();
@@ -635,5 +633,11 @@ public class Player extends Entity {
     //g2.setColor(Color.white);
     //g2.drawString("Invencible: "+invencibleCounter, 10, 400);
   }
+  public void startRespawnIFrames() {
+  invencible = true;
+  transparent = true;     // Efeito visual opcional que você já usa
+  invencibleCounter = 0;  // O update() faz o countdown e desliga sozinho
+}
+
 
 }

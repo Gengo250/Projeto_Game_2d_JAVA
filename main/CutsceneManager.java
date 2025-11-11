@@ -48,7 +48,7 @@ public class CutsceneManager {
     if(scenePhase == 0){
       gp.bossBattleON = true;
 
-      //shut the irn door
+      //shut the iron door
       for(int i = 0; i < gp.obj[1].length; i++){
         if(gp.obj[gp.currentMap][i] == null){
           gp.obj[gp.currentMap][i] = new OBJ_Door_Iron(gp);
@@ -177,7 +177,7 @@ public class CutsceneManager {
     if(scenePhase == 6){
       drawBlackground(1f);
 
-      drawString(1f, 90f, gp.screenHeight/2, "TOCANTIN'S LEGENDY'S", 40);
+      drawString(1f, 80f, gp.screenHeight/2, "TOCANTIN'S LEGENDY'S", 40);
 
       if(counterReached(480) == true){
         scenePhase++;

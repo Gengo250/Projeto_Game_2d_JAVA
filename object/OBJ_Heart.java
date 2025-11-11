@@ -13,12 +13,18 @@ public class OBJ_Heart extends Entity{
     this.gp = gp;
     type = type_pickupOnly;
     name = "Heart";
-    value = 2;
+    value = 6;
     
-    down1  = setup("/res/objects/heart_full", gp.tileSize, gp.tileSize);
-    image  = setup("/res/objects/heart_full", gp.tileSize, gp.tileSize);
-    image2 = setup("/res/objects/heart_half", gp.tileSize, gp.tileSize);
-    image3 = setup("/res/objects/heart_blank", gp.tileSize, gp.tileSize);
+   // opcional: sprite do item no chão (usa sua arte "cheia")
+    down1  = setup("/res/objects/Vida-cheia", gp.tileSize, gp.tileSize);
+
+    // estes campos podem continuar, mas não são mais usados pela UI:
+    image  = setup("/res/objects/Vida-cheia", gp.tileSize, gp.tileSize);
+    image2 = setup("/res/objects/Vida-2",     gp.tileSize, gp.tileSize);
+    image3 = setup("/res/objects/Vida-3",     gp.tileSize, gp.tileSize);
+    image4 = setup("/res/objects/Vida-4",     gp.tileSize, gp.tileSize);
+    image5 = setup("/res/objects/Vida-5",     gp.tileSize, gp.tileSize);
+    image6 = setup("/res/objects/Vida-6",     gp.tileSize, gp.tileSize);
   }
   public boolean use(Entity entity){
     gp.playeSE(2);
