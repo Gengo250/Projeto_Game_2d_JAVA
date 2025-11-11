@@ -91,9 +91,13 @@ public class Player extends Entity {
     setDialogue();
   }
   public void setDefaultPositions(){
-    gp.currentArea = 0;
-    worldX = gp.tileSize * 23;
-    worldY = gp.tileSize * 21;
+   switch (gp.currentMap) {
+      case 0: worldX = gp.tileSize * 23; worldY = gp.tileSize * 21; break; // Outside
+      case 1: worldX = gp.tileSize * 12; worldY = gp.tileSize * 13; break; // Indoor (exemplo)
+      case 2: worldX = gp.tileSize * 23; worldY = gp.tileSize * 21; break; // Dungeons B1
+      case 3: worldX = gp.tileSize * 25; worldY = gp.tileSize * 29; break; // Dungeon/Boss
+      // adicione outros mapas se precisar
+    }
     direction = "down";
   }
   public void setDialogue(){

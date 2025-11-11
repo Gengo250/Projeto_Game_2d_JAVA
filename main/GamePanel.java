@@ -136,10 +136,17 @@ public class GamePanel  extends JPanel implements Runnable{
   public void resetGame(boolean restart){
     
     stopMusic();
-    currentArea = outside;
+    if (currentMap == 1) {
+    currentArea = indoor;
+    } else if (currentMap == 2 || currentMap == 3) {
+        currentArea = dungeon;
+    } else {
+        currentArea = outside;
+    }
     removeTempEntity();
     bossBattleON = false;
     player.setDefaultPositions();
+    player.lightUpdated = true;
     player.restoreStatus();
     player.resetCounter();
     aSetter.setNPC();
