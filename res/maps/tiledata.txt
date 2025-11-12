@@ -1,9 +1,9 @@
 000.png
 false
 001.png
-false
+true
 002.png
-false
+true
 003.png
 false
 004.png
@@ -13,7 +13,7 @@ false
 006.png
 false
 007.png
-false
+true
 008.png
 false
 009.png
@@ -23,7 +23,7 @@ false
 011.png
 false
 012.png
-false
+true
 013.png
 false
 014.png
@@ -31,7 +31,7 @@ false
 015.png
 false
 016.png
-true
+false
 017.png
 false
 018.png
@@ -39,7 +39,7 @@ true
 019.png
 true
 020.png
-true
+false
 021.png
 true
 022.png
@@ -51,7 +51,7 @@ true
 025.png
 true
 026.png
-true
+false
 027.png
 true
 028.png
@@ -75,4 +75,4 @@ false
 037.png
 false
 038.png
-false
+true

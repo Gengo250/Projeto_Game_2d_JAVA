@@ -31,7 +31,7 @@ public class Main {
     gamePanel.startGameThread();
   }
   public void setIcon(){
-    ImageIcon icon = new ImageIcon(getClass().getClassLoader().getResource("res/player/indio_down_1.png"));
+    ImageIcon icon = new ImageIcon(getClass().getClassLoader().getResource("res/player/player_indio/indio_down_1.png"));
     window.setIconImage(icon.getImage());
   }
   

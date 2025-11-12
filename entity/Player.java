@@ -53,7 +53,7 @@ public class Player extends Entity {
     //outside
     gp.currentMap = 0;
     worldX = gp.tileSize * 23;
-    worldY = gp.tileSize * 21;
+    worldY = gp.tileSize * 58;
 
 
     // Dungeon B2
@@ -151,14 +151,14 @@ public class Player extends Entity {
     return currentShieldSlot;
   }
   public void getImage(){
-    up1 = setup("/res/player/indio_up_1", gp.tileSize, gp.tileSize);
-    up2 = setup("/res/player/indio_up_2", gp.tileSize, gp.tileSize);
-    down1 = setup("/res/player/indio_down_1", gp.tileSize, gp.tileSize);
-    down2 = setup("/res/player/indio_down_2", gp.tileSize, gp.tileSize);
-    left1 = setup("/res/player/indio_left_1", gp.tileSize, gp.tileSize);
-    left2 = setup("/res/player/indio_left_2", gp.tileSize, gp.tileSize);
-    right1 = setup("/res/player/indio_right_1", gp.tileSize, gp.tileSize);
-    right2 = setup("/res/player/indio_right_2", gp.tileSize, gp.tileSize);
+    up1 = setup("/res/player/player_indio/indio_up_1", gp.tileSize, gp.tileSize);
+    up2 = setup("/res/player/player_indio/indio_up_2", gp.tileSize, gp.tileSize);
+    down1 = setup("/res/player/player_indio/indio_down_1", gp.tileSize, gp.tileSize);
+    down2 = setup("/res/player/player_indio/indio_down_2", gp.tileSize, gp.tileSize);
+    left1 = setup("/res/player/player_indio/indio_left_1", gp.tileSize, gp.tileSize);
+    left2 = setup("/res/player/player_indio/indio_left_2", gp.tileSize, gp.tileSize);
+    right1 = setup("/res/player/player_indio/indio_right_1", gp.tileSize, gp.tileSize);
+    right2 = setup("/res/player/player_indio/indio_right_2", gp.tileSize, gp.tileSize);
   }
   public void getSleepImage(BufferedImage image){
     up1 = image;
@@ -172,24 +172,24 @@ public class Player extends Entity {
   }
   public void getAttckImage(){
     if(currenWeapon.type == type_sword){
-      attackUp1 = setup("/res/player/indio_lanca_up", gp.tileSize, gp.tileSize*2);
-      attackUp2 = setup("/res/player/indio_lanca_up", gp.tileSize, gp.tileSize*2);
-      attackDown1 = setup("/res/player/indio_lanca_down", gp.tileSize, gp.tileSize*2);
-      attackDown2 = setup("/res/player/indio_lanca_down", gp.tileSize, gp.tileSize*2);
-      attackLeft1 = setup("/res/player/indio_lanca_left", gp.tileSize*2, gp.tileSize);
-      attackLeft2 = setup("/res/player/indio_lanca_left", gp.tileSize*2, gp.tileSize);
-      attackRight1 = setup("/res/player/indio_lanca_right", gp.tileSize*2, gp.tileSize);  
-      attackRight2 = setup("/res/player/indio_lanca_right", gp.tileSize*2, gp.tileSize);
+      attackUp1 = setup("/res/player/player_indio/indio_lanca_up", gp.tileSize, gp.tileSize*2);
+      attackUp2 = setup("/res/player/player_indio/indio_lanca_up", gp.tileSize, gp.tileSize*2);
+      attackDown1 = setup("/res/player/player_indio/indio_lanca_down", gp.tileSize, gp.tileSize*2);
+      attackDown2 = setup("/res/player/player_indio/indio_lanca_down", gp.tileSize, gp.tileSize*2);
+      attackLeft1 = setup("/res/player/player_indio/indio_lanca_left", gp.tileSize*2, gp.tileSize);
+      attackLeft2 = setup("/res/player/player_indio/indio_lanca_left", gp.tileSize*2, gp.tileSize);
+      attackRight1 = setup("/res/player/player_indio/indio_lanca_right", gp.tileSize*2, gp.tileSize);  
+      attackRight2 = setup("/res/player/player_indio/indio_lanca_right", gp.tileSize*2, gp.tileSize);
     }
     if(currenWeapon.type == type_axe){
-      attackUp1 = setup("/res/player/indio_faca_up", gp.tileSize, gp.tileSize*2);
-      attackUp2 = setup("/res/player/indio_faca_up", gp.tileSize, gp.tileSize*2);
-      attackDown1 = setup("/res/player/indio_faca_down", gp.tileSize, gp.tileSize*2);
-      attackDown2 = setup("/res/player/indio_faca_down", gp.tileSize, gp.tileSize*2);
-      attackLeft1 = setup("/res/player/indio_faca_left", gp.tileSize*2, gp.tileSize);
-      attackLeft2 = setup("/res/player/indio_faca_left", gp.tileSize*2, gp.tileSize);
-      attackRight1 = setup("/res/player/indio_faca_right", gp.tileSize*2, gp.tileSize);  
-      attackRight2 = setup("/res/player/indio_faca_right", gp.tileSize*2, gp.tileSize);
+      attackUp1 = setup("/res/player/player_indio/indio_faca_up", gp.tileSize, gp.tileSize*2);
+      attackUp2 = setup("/res/player/player_indio/indio_faca_up", gp.tileSize, gp.tileSize*2);
+      attackDown1 = setup("/res/player/player_indio/indio_faca_down", gp.tileSize, gp.tileSize*2);
+      attackDown2 = setup("/res/player/player_indio/indio_faca_down", gp.tileSize, gp.tileSize*2);
+      attackLeft1 = setup("/res/player/player_indio/indio_faca_left", gp.tileSize*2, gp.tileSize);
+      attackLeft2 = setup("/res/player/player_indio/indio_faca_left", gp.tileSize*2, gp.tileSize);
+      attackRight1 = setup("/res/player/player_indio/indio_faca_right", gp.tileSize*2, gp.tileSize);  
+      attackRight2 = setup("/res/player/player_indio/indio_faca_right", gp.tileSize*2, gp.tileSize);
     }
         if(currenWeapon.type == type_pickaxe){
       attackUp1 = setup("/res/player/boy_pick_up_1", gp.tileSize, gp.tileSize*2);
@@ -204,10 +204,10 @@ public class Player extends Entity {
   }
   public void getGuardImage(){
 
-    guardUp = setup("/res/player/boy_guard_up", gp.tileSize, gp.tileSize);
-    guardDown = setup("/res/player/boy_guard_down", gp.tileSize, gp.tileSize);
-    guardLeft = setup("/res/player/boy_guard_left", gp.tileSize, gp.tileSize);
-    guardRight = setup("/res/player/boy_guard_right", gp.tileSize, gp.tileSize);
+    guardUp = setup("/res/player/player_antigo/boy_guard_up", gp.tileSize, gp.tileSize);
+    guardDown = setup("/res/player/player_antigo/boy_guard_down", gp.tileSize, gp.tileSize);
+    guardLeft = setup("/res/player/player_antigo/boy_guard_left", gp.tileSize, gp.tileSize);
+    guardRight = setup("/res/player/player_antigo/boy_guard_right", gp.tileSize, gp.tileSize);
    
   }
   

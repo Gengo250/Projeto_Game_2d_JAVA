@@ -43,24 +43,24 @@ public class MON_Orc extends Entity {
   }
 
   public void getImage() {
-    up1 = setup("/res/monster/orc_up_1", gp.tileSize, gp.tileSize);
-    up2 = setup("/res/monster/orc_up_2", gp.tileSize, gp.tileSize);
-    down1 = setup("/res/monster/orc_down_1", gp.tileSize, gp.tileSize);
-    down2 = setup("/res/monster/orc_down_2", gp.tileSize, gp.tileSize);
-    left1 = setup("/res/monster/orc_left_1", gp.tileSize, gp.tileSize);
-    left2 = setup("/res/monster/orc_left_2", gp.tileSize, gp.tileSize);
-    right1 = setup("/res/monster/orc_right_1", gp.tileSize, gp.tileSize);
-    right2 = setup("/res/monster/orc_right_2", gp.tileSize, gp.tileSize);
+    up1 = setup("/res/monster/orc/orc_up_1", gp.tileSize, gp.tileSize);
+    up2 = setup("/res/monster/orc/orc_up_2", gp.tileSize, gp.tileSize);
+    down1 = setup("/res/monster/orc/orc_down_1", gp.tileSize, gp.tileSize);
+    down2 = setup("/res/monster/orc/orc_down_2", gp.tileSize, gp.tileSize);
+    left1 = setup("/res/monster/orc/orc_left_1", gp.tileSize, gp.tileSize);
+    left2 = setup("/res/monster/orc/orc_left_2", gp.tileSize, gp.tileSize);
+    right1 = setup("/res/monster/orc/orc_right_1", gp.tileSize, gp.tileSize);
+    right2 = setup("/res/monster/orc/orc_right_2", gp.tileSize, gp.tileSize);
   }
   public void getAttack(){
-      attackUp1 = setup("/res/monster/orc_attack_up_1", gp.tileSize, gp.tileSize*2);
-      attackUp2 = setup("/res/monster/orc_attack_up_2", gp.tileSize, gp.tileSize*2);
-      attackDown1 = setup("/res/monster/orc_attack_down_1", gp.tileSize, gp.tileSize*2);
-      attackDown2 = setup("/res/monster/orc_attack_down_2", gp.tileSize, gp.tileSize*2);
-      attackLeft1 = setup("/res/monster/orc_attack_left_1", gp.tileSize*2, gp.tileSize);
-      attackLeft2 = setup("/res/monster/orc_attack_left_2", gp.tileSize*2, gp.tileSize);
-      attackRight1 = setup("/res/monster/orc_attack_right_1", gp.tileSize*2, gp.tileSize);  
-      attackRight2 = setup("/res/monster/orc_attack_right_2", gp.tileSize*2, gp.tileSize);
+      attackUp1 = setup("/res/monster/orc/orc_attack_up_1", gp.tileSize, gp.tileSize*2);
+      attackUp2 = setup("/res/monster/orc/orc_attack_up_2", gp.tileSize, gp.tileSize*2);
+      attackDown1 = setup("/res/monster/orc/orc_attack_down_1", gp.tileSize, gp.tileSize*2);
+      attackDown2 = setup("/res/monster/orc/orc_attack_down_2", gp.tileSize, gp.tileSize*2);
+      attackLeft1 = setup("/res/monster/orc/orc_attack_left_1", gp.tileSize*2, gp.tileSize);
+      attackLeft2 = setup("/res/monster/orc/orc_attack_left_2", gp.tileSize*2, gp.tileSize);
+      attackRight1 = setup("/res/monster/orc/orc_attack_right_1", gp.tileSize*2, gp.tileSize);  
+      attackRight2 = setup("/res/monster/orc/orc_attack_right_2", gp.tileSize*2, gp.tileSize);
   }
 
   public void setAction() {
