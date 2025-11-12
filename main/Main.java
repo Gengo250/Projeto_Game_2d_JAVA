@@ -11,6 +11,7 @@ public class Main {
     window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     window.setResizable(false);
     window.setTitle("2D Tocantins");
+    
     new Main().setIcon();
     
 

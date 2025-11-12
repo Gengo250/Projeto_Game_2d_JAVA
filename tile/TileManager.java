@@ -44,7 +44,7 @@ public class TileManager {
     getTileImage();
 
     //Get the maxWorldCol & Row
-    is = getClass().getResourceAsStream("/res/maps/tocantins2.txt");
+    is = getClass().getResourceAsStream("/res/maps/tocantins.txt");
     br = new BufferedReader(new InputStreamReader(is));
 
     try {
@@ -60,7 +60,7 @@ public class TileManager {
       System.out.println("Exception!");
     }
    
-    loadMap("/res/maps/tocantins2.txt", 0);
+    loadMap("/res/maps/tocantins.txt", 0);
     loadMap("/res/maps/indoor01.txt", 1);
     loadMap("/res/maps/dungeon01.txt", 2);
     loadMap("/res/maps/dungeon02.txt", 3);
