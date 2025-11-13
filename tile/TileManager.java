@@ -61,8 +61,8 @@ public class TileManager {
     }
    
     loadMap("/res/maps/tocantins.txt", 0);
-    loadMap("/res/maps/indoor01.txt", 1);
-    loadMap("/res/maps/dungeon01.txt", 2);
+    loadMap("/res/maps/mercador.txt", 1);
+    loadMap("/res/maps/labirinto.txt", 2);
     loadMap("/res/maps/dungeon02.txt", 3);
 
   }
@@ -107,37 +107,35 @@ public class TileManager {
     }
 }
 
-  public void loadMap(String filePath, int map){
-    try{
-      InputStream is = getClass() .getResourceAsStream(filePath);
-      BufferedReader br = new BufferedReader(new InputStreamReader(is));
+ public void loadMap(String filePath, int map) {
+  try {
+    InputStream is = getClass().getResourceAsStream(filePath);
+    BufferedReader br = new BufferedReader(new InputStreamReader(is));
 
-      int col = 0;
-      int row = 0;
+    int row = 0;
+    String line;
 
-      while (col < gp.maxWorldCol && row < gp.maxWorldRow) {
-        String line = br.readLine();
+    while (row < gp.maxWorldRow && (line = br.readLine()) != null) {
+      String[] numbers = line.split(" ");
 
-        while(col < gp.maxWorldCol){
-          String numbers[] = line.split(" ");
+      int colLimit = Math.min(numbers.length, gp.maxWorldCol);
 
-          int num = Integer.parseInt(numbers[col]);
-
-          mapTileNum[map][col][row] = num;
-          col++;
-        }
-        if(col == gp.maxWorldCol){
-          col = 0;
-          row++;
-        }
+      for (int col = 0; col < colLimit; col++) {
+        int num = Integer.parseInt(numbers[col]);
+        mapTileNum[map][col][row] = num;
       }
 
-      br.close();
-
-    } catch(Exception e){
-
+      // o resto da linha (col >= colLimit) fica com 0 (padrão), se existir
+      row++;
     }
+
+    br.close();
+
+  } catch (Exception e) {
+    e.printStackTrace(); // pelo menos mostra se der erro
   }
+}
+
   public void draw(Graphics2D g2){
 
     int worldCol = 0;
