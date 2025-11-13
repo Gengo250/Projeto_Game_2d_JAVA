@@ -17,7 +17,7 @@ import main.GamePanel;
 public class Entity {
 
   GamePanel gp;
-  public BufferedImage up1, up2, down1, down2, left1, left2, right1, right2;
+  public BufferedImage up1, up2, down1, down2, left1, left2, left3, right1, right2, right3;
   public BufferedImage attackUp1, attackUp2, attackDown1, attackDown2, attackLeft1, attackLeft2, attackRight1,
       attackRight2,
       guardUp, guardDown, guardLeft, guardRight;
@@ -368,15 +368,26 @@ public class Entity {
               break;
           }
         }
-        spriteCounter++;
+            spriteCounter++;
         if (spriteCounter > 24) {
-          if (spriteNum == 1) {
-            spriteNum = 2;
-          } else if (spriteNum == 2) {
+
+          int maxFrame = 2;
+
+          // Se a entidade tiver 3 frames de walk pra esquerda/direita,
+          // usamos 1 → 2 → 3 → 1
+          if ((direction.equals("left") && left3 != null) ||
+              (direction.equals("right") && right3 != null)) {
+            maxFrame = 3;
+          }
+
+          spriteNum++;
+          if (spriteNum > maxFrame) {
             spriteNum = 1;
           }
+
           spriteCounter = 0;
         }
+
       }
 
       if (invencible == true) {
@@ -706,9 +717,10 @@ public class Entity {
           if (attacking == false) {
             if (spriteNum == 1) {
               image = left1;
-            }
-            if (spriteNum == 2) {
+            } else if (spriteNum == 2) {
               image = left2;
+            } else if (spriteNum == 3 && left3 != null) {
+              image = left3;
             }
           }
           if (attacking == true) {
@@ -722,13 +734,15 @@ public class Entity {
           }
           break;
 
+
         case "right":
           if (attacking == false) {
             if (spriteNum == 1) {
               image = right1;
-            }
-            if (spriteNum == 2) {
+            } else if (spriteNum == 2) {
               image = right2;
+            } else if (spriteNum == 3 && right3 != null) {
+              image = right3;
             }
           }
           if (attacking == true) {
@@ -740,6 +754,7 @@ public class Entity {
             }
           }
           break;
+
       }
       if (invencible == true) {
         g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.3f));
