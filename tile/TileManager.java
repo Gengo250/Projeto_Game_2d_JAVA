@@ -63,7 +63,7 @@ public class TileManager {
     loadMap("/res/maps/tocantins.txt", 0);
     loadMap("/res/maps/mercador.txt", 1);
     loadMap("/res/maps/labirinto.txt", 2);
-    loadMap("/res/maps/dungeon02.txt", 3);
+    loadMap("/res/maps/dungeonfinal.txt", 3);
 
   }
   public void getTileImage(){

@@ -58,14 +58,21 @@ public class EventHandler {
     if (distance > gp.tileSize) {
       canTouchEvent = true;
     }
+    // 23,66 -> escada labirinto 
     if (canTouchEvent == true) {
       // if(hit(27, 16, "right") == true){damagePit(gp.dialogueState);}
       if (hit(0, 23, 12, "up") == true) {healingPool(gp.dialogueState);} 
         else if (hit(0, 24, 44, "any") == true) {teleport(1, 21, 27,gp.indoor);} // to the merchant's house
         else if (hit(1, 21, 27, "any") == true) {teleport(0, 24, 44,gp.outside);} //to outside
-        else if (hit(1, 21, 23, "up") == true) {speak(gp.npc[1][0]);}
-        else if (hit(0, 19, 26, "any") == true){teleport(2, 68, 74, gp.dungeon);} //dangeon 
+
+        else if (hit(1, 21, 23, "up") == true) {speak(gp.npc[1][0]);} //mercador falando na mesa 
+
+        else if (hit(0, 19, 26, "any") == true){teleport(2, 68, 74, gp.dungeon);} //labirinto 
         else if (hit(2, 68, 74, "any") == true){teleport(0, 19, 26, gp.outside);} //outside
+
+        else if (hit(2, 23, 66, "any") == true){teleport(0, 86, 18, gp.outside);} //Área secreta
+        else if (hit(0, 86, 19, "any") == true){teleport(2, 23, 66, gp.outside);} //volta para o labirinto
+
         else if (hit(2, 8, 7, "any") == true){teleport(3, 26, 41, gp.dungeon);}//B2
         else if (hit(3, 26, 41, "any") == true){teleport(2, 8, 7, gp.dungeon);}//B1
         else if (hit(3, 25, 27, "any") == true){skeletonLord();}//BOSS
