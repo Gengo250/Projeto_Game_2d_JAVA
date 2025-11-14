@@ -275,6 +275,9 @@ public class GamePanel  extends JPanel implements Runnable{
     if(keyH.showDebugText == true){
       drawStart = System.nanoTime();
     }
+   
+    g2.setColor(Color.BLACK); // ou outra cor de fundo que você quiser
+    g2.fillRect(0, 0, screenWidth, screenHeight);
     
     //TITLE SCREEN 
     if(gameState == titleState){

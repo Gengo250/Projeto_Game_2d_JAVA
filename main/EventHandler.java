@@ -71,7 +71,8 @@ public class EventHandler {
         else if (hit(2, 68, 74, "any") == true){teleport(0, 19, 26, gp.outside);} //outside
 
         else if (hit(2, 23, 66, "any") == true){teleport(0, 86, 18, gp.outside);} //Área secreta
-        else if (hit(0, 86, 19, "any") == true){teleport(2, 23, 66, gp.outside);} //volta para o labirinto
+        else if (hit(0, 86, 19, "any") == true){teleport(2, 23, 66, gp.dungeon);} // Area secreta -> labirinto (volta para área escura)
+
 
         else if (hit(2, 8, 7, "any") == true){teleport(3, 26, 41, gp.dungeon);}//B2
         else if (hit(3, 26, 41, "any") == true){teleport(2, 8, 7, gp.dungeon);}//B1
