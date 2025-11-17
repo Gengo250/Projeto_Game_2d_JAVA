@@ -39,6 +39,11 @@ public class AssetSetter {
     
     int mapNum = 0;
     int i = 0;
+
+    gp.obj[mapNum][i] = new OBJ_Axe(gp);
+    gp.obj[mapNum][i].worldX = gp.tileSize*28;
+    gp.obj[mapNum][i].worldY = gp.tileSize*58;
+    i++;
     
     /* gp.obj[mapNum][i] = new OBJ_Door_Iron(gp);
     gp.obj[mapNum][i].worldX = gp.tileSize*18;

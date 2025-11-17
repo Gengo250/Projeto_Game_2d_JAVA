@@ -17,10 +17,12 @@ import main.GamePanel;
 public class Entity {
 
   GamePanel gp;
-  public BufferedImage up1, up2, down1, down2, left1, left2, left3, right1, right2, right3;
-  public BufferedImage attackUp1, attackUp2, attackDown1, attackDown2, attackLeft1, attackLeft2, attackRight1,
-      attackRight2,
-      guardUp, guardDown, guardLeft, guardRight;
+  public BufferedImage up1, up2, up3, down1, down2, down3, left1, left2, left3, right1, right2, right3;
+  public BufferedImage attackUp1, attackUp2, attackUp3,
+    attackDown1, attackDown2, attackDown3,
+    attackLeft1, attackLeft2, attackLeft3,
+    attackRight1, attackRight2, attackRight3,
+    guardUp, guardDown, guardLeft, guardRight;
   public BufferedImage image, image2, image3, image4, image5, image6;
   public Rectangle solidArea = new Rectangle(0, 0, 48, 48);
   public Rectangle attackArea = new Rectangle(0, 0, 0, 0);
@@ -368,15 +370,17 @@ public class Entity {
               break;
           }
         }
-            spriteCounter++;
+        spriteCounter++;
         if (spriteCounter > 24) {
 
           int maxFrame = 2;
 
-          // Se a entidade tiver 3 frames de walk pra esquerda/direita,
+          // Se a entidade tiver 3 frames de walk em alguma direção,
           // usamos 1 → 2 → 3 → 1
           if ((direction.equals("left") && left3 != null) ||
-              (direction.equals("right") && right3 != null)) {
+              (direction.equals("right") && right3 != null) ||
+              (direction.equals("up") && up3 != null) ||
+              (direction.equals("down") && down3 != null)) {
             maxFrame = 3;
           }
 
@@ -548,19 +552,38 @@ public class Entity {
   public void attacking() {
     spriteCounter++;
 
+    // 1) Wind-up
     if (spriteCounter <= motion1_duration) {
       spriteNum = 1;
     }
-    if (spriteCounter > motion1_duration && spriteCounter <= motion2_duration) {
-      spriteNum = 2;
 
-      // Save the current worldX, worldY, solidArea
+    // 2) Fase ativa do golpe (onde sai o dano)
+    if (spriteCounter > motion1_duration && spriteCounter <= motion2_duration) {
+
+      // Se a entidade tiver 3 sprites de ataque, dividimos essa fase em 2 metades:
+      // primeira metade = frame 2, segunda metade = frame 3.
+      boolean has3AttackFrames =
+          attackUp3 != null || attackDown3 != null ||
+          attackLeft3 != null || attackRight3 != null;
+
+      if (has3AttackFrames) {
+        int mid = motion1_duration + (motion2_duration - motion1_duration) / 2;
+        if (spriteCounter <= mid) {
+          spriteNum = 2;
+        } else {
+          spriteNum = 3;
+        }
+      } else {
+        // Comportamento antigo (Skeleton Lord, player, etc.)
+        spriteNum = 2;
+      }
+
+      // ======= CÓDIGO ORIGINAL DE HITBOX / DANO =======
       int currentWordX = worldX;
       int currentWordY = worldY;
       int solidAreaWidth = solidArea.width;
       int solidAreaHeight = solidArea.height;
 
-      // Adjust player's wordX/Y for the attackArea
       switch (direction) {
         case "up":
           worldY -= attackArea.height;
@@ -575,16 +598,15 @@ public class Entity {
           worldX += attackArea.width;
           break;
       }
-      // attackArea becomes solidArea
+
       solidArea.width = attackArea.width;
       solidArea.height = attackArea.height;
 
       if (type == type_monster) {
-        if (gp.cChecker.checkPlayer(this) == true) {
+        if (gp.cChecker.checkPlayer(this)) {
           damagePlayer(attack);
         }
-      } else { // Player
-        // Check monster collision with the updated worldX, worldY and solidArea
+      } else {
         int monsterIndex = gp.cChecker.checkEntity(this, gp.monster);
         gp.player.damageMonter(monsterIndex, this, attack, currenWeapon.knokBackPower);
 
@@ -595,18 +617,20 @@ public class Entity {
         gp.player.damageProjectile(projectileIndex);
       }
 
-      // After cheking collision, restore the original data
       worldX = currentWordX;
       worldY = currentWordY;
       solidArea.width = solidAreaWidth;
       solidArea.height = solidAreaHeight;
     }
+
+    // 3) Fim do ataque
     if (spriteCounter > motion2_duration) {
       spriteNum = 1;
       spriteCounter = 0;
       attacking = false;
     }
-  }
+}
+
 
   public void damagePlayer(int attack) {
     if (gp.player.invencible == false) {
@@ -678,38 +702,34 @@ public class Entity {
           if (attacking == false) {
             if (spriteNum == 1) {
               image = up1;
-            }
-            if (spriteNum == 2) {
+            } else if (spriteNum == 2) {
               image = up2;
+            } else if (spriteNum == 3 && up3 != null) {
+              image = up3;
             }
           }
           if (attacking == true) {
-            tempScreenY = getScreenY() - up1.getHeight();
-            if (spriteNum == 1) {
-              image = attackUp1;
+          tempScreenY = getScreenY() - up1.getHeight();
+          if (spriteNum == 1) { image = attackUp1; }
+          else if (spriteNum == 2) { image = attackUp2; }
+          else if (spriteNum == 3 && attackUp3 != null) { image = attackUp3; }
             }
-            if (spriteNum == 2) {
-              image = attackUp2;
-            }
-          }
           break;
 
         case "down":
           if (attacking == false) {
             if (spriteNum == 1) {
               image = down1;
-            }
-            if (spriteNum == 2) {
+            } else if (spriteNum == 2) {
               image = down2;
+            } else if (spriteNum == 3 && down3 != null) {
+              image = down3;
             }
           }
-          if (attacking == true) {
-            if (spriteNum == 1) {
-              image = attackDown1;
-            }
-            if (spriteNum == 2) {
-              image = attackDown2;
-            }
+           if (attacking == true) {
+            if (spriteNum == 1) { image = attackDown1; }
+            else if (spriteNum == 2) { image = attackDown2; }
+            else if (spriteNum == 3 && attackDown3 != null) { image = attackDown3; }
           }
           break;
 
@@ -723,17 +743,13 @@ public class Entity {
               image = left3;
             }
           }
-          if (attacking == true) {
+           if (attacking == true) {
             tempScreenX = getScreenX() - left1.getHeight();
-            if (spriteNum == 1) {
-              image = attackLeft1;
-            }
-            if (spriteNum == 2) {
-              image = attackLeft2;
-            }
+            if (spriteNum == 1) { image = attackLeft1; }
+            else if (spriteNum == 2) { image = attackLeft2; }
+            else if (spriteNum == 3 && attackLeft3 != null) { image = attackLeft3; }
           }
           break;
-
 
         case "right":
           if (attacking == false) {
@@ -745,13 +761,10 @@ public class Entity {
               image = right3;
             }
           }
-          if (attacking == true) {
-            if (spriteNum == 1) {
-              image = attackRight1;
-            }
-            if (spriteNum == 2) {
-              image = attackRight2;
-            }
+           if (attacking == true) {
+            if (spriteNum == 1) { image = attackRight1; }
+            else if (spriteNum == 2) { image = attackRight2; }
+            else if (spriteNum == 3 && attackRight3 != null) { image = attackRight3; }
           }
           break;
 
