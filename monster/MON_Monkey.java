@@ -41,12 +41,12 @@ public class MON_Monkey extends Entity {
 
     // Hitbox do soco (dano em área)
     // Mesmo tamanho base do Skeleton Lord
-    attackArea.width  = 170;
-    attackArea.height = 170;
+    attackArea.width  = 200;
+    attackArea.height = 200;
 
     // Duração do ataque (frames) – IGUAL Skeleton Lord
-    motion1_duration = 25;  // wind-up (levantando o braço)
-    motion2_duration = 50;  // impacto (soco, aplica dano)
+    motion1_duration = 40;  // wind-up (levantando o braço)
+    motion2_duration = 70;  // impacto (soco, aplica dano)
 
     getImage();
     getAttack();
@@ -115,9 +115,13 @@ public void getAttack() {
     attackUp2   = attackLeft2;
     attackUp3   = attackLeft3;
 
-    attackDown1 = attackRight1;
-    attackDown2 = attackRight2;
-    attackDown3 = attackRight3;
+      // Ataque pra baixo – ataque vertical (mais alto, mesma largura)
+    attackDown1 = setup("/res/monster/monkey/monkey_attack_down_1",
+                        gp.tileSize * i, gp.tileSize * 2 * i);
+    attackDown2 = setup("/res/monster/monkey/monkey_attack_down_2",
+                        gp.tileSize *  i, gp.tileSize * 2 * i);
+
+   
 }
 
   @Override
