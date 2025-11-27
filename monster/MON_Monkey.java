@@ -16,11 +16,11 @@ public class MON_Monkey extends Entity {
     boss = true;
     name = monName;
 
-    defualtSpeed = 2;
+    defualtSpeed = 3;
     speed = defualtSpeed;
-    maxLife = 80;
+    maxLife = 200;
     life = maxLife;
-    attack = 12;
+    attack = 15;
     defense = 3;
     exp = 400;
     knokBackPower = 4;
@@ -95,19 +95,19 @@ public void getAttack() {
 
     // Esquerda – 3 frames de ataque
     attackLeft1 = setup("/res/monster/monkey/monkey_attack_left_1",
-                        gp.tileSize * 2 * i, gp.tileSize * i);
+                        gp.tileSize  * i, gp.tileSize * i);
     attackLeft2 = setup("/res/monster/monkey/monkey_attack_left_2",
-                        gp.tileSize * 2 * i, gp.tileSize * i);
+                        gp.tileSize * i, gp.tileSize * i);
     attackLeft3 = setup("/res/monster/monkey/monkey_attack_left_3",
-                        gp.tileSize * 2 * i, gp.tileSize * i);
+                        gp.tileSize * i, gp.tileSize * i);
 
     // Direita – 3 frames de ataque
     attackRight1 = setup("/res/monster/monkey/monkey_attack_right_1",
-                         gp.tileSize * 2 * i, gp.tileSize * i);
+                         gp.tileSize * i, gp.tileSize * i);
     attackRight2 = setup("/res/monster/monkey/monkey_attack_right_2",
-                         gp.tileSize * 2 * i, gp.tileSize * i);
+                         gp.tileSize  * i, gp.tileSize * i);
     attackRight3 = setup("/res/monster/monkey/monkey_attack_right_3",
-                         gp.tileSize * 2 * i, gp.tileSize * i);
+                         gp.tileSize  * i, gp.tileSize * i);
 
     // Não temos sprites separados para cima/baixo,
     // então reaproveitamos os laterais (só visualmente).
@@ -117,9 +117,9 @@ public void getAttack() {
 
       // Ataque pra baixo – ataque vertical (mais alto, mesma largura)
     attackDown1 = setup("/res/monster/monkey/monkey_attack_down_1",
-                        gp.tileSize * i, gp.tileSize * 2 * i);
+                        gp.tileSize * i, gp.tileSize  * i);
     attackDown2 = setup("/res/monster/monkey/monkey_attack_down_2",
-                        gp.tileSize *  i, gp.tileSize * 2 * i);
+                        gp.tileSize *  i, gp.tileSize * i);
 
    
 }
