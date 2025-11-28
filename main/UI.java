@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import entity.Entity;
 
 import object.OBJ_ManaCrystal;
+import object.OBJ_Zarabatana;
 
 public class UI {
 
@@ -669,10 +670,18 @@ static final int HEART_STEPS = 6;
       if (itemIndex < entity.inventory.size()) {
         drawSubWindow(dFrameX, dFrameY, dFrameWidth, dFrameHeight);
 
+        Entity selected = entity.inventory.get(itemIndex);
+
         for (String line : entity.inventory.get(itemIndex).description.split("\n")) {
           g2.drawString(line, textX, textY);
           textY += 32;
         }
+      if (selected instanceof OBJ_Zarabatana) {
+        int maxDardos = 20; // mesmo número que você decidiu lá na OBJ_Zarabatana
+        String ammoText = "Dardos: " + gp.player.ammo + "/" + maxDardos;
+        g2.drawString(ammoText, textX, textY);
+        textY += 32;
+    }
       }
     }
   }
