@@ -72,7 +72,7 @@ public class Player extends Entity {
     life = maxLife;
     maxMana = 4;
     mana = maxMana;
-    //ammo = 10;
+    ammo = 20;
     strength = 20; // the more strenght he has, the more damage he gives ---> para testes colocar: 20
     dexterity = 1; // the more dexterity he has, the less damage he receives
     exp = 0;
@@ -204,10 +204,10 @@ public class Player extends Entity {
       attackRight2 = setup("/res/player/boy_pick_right_2", gp.tileSize*2, gp.tileSize);
     }
         if (currenWeapon.type == type_zarabatana) {
-        attackUp1    = setup("/res/player/player_indio/indio_zarabatana_up",    gp.tileSize,   gp.tileSize * 2);
-        attackUp2    = setup("/res/player/player_indio/indio_zarabatana_up",    gp.tileSize,   gp.tileSize * 2);
-        attackDown1  = setup("/res/player/player_indio/indio_zarabatana_down",  gp.tileSize,   gp.tileSize * 2);
-        attackDown2  = setup("/res/player/player_indio/indio_zarabatana_down",  gp.tileSize,   gp.tileSize * 2);
+        attackUp1    = setup("/res/player/player_indio/indio_zarabatana_up",    gp.tileSize,   gp.tileSize);
+        attackUp2    = setup("/res/player/player_indio/indio_zarabatana_up",    gp.tileSize,   gp.tileSize);
+        attackDown1  = setup("/res/player/player_indio/indio_zarabatana_down",  gp.tileSize,   gp.tileSize);
+        attackDown2  = setup("/res/player/player_indio/indio_zarabatana_down",  gp.tileSize,   gp.tileSize);
         attackLeft1  = setup("/res/player/player_indio/indio_zarabatana_left",  gp.tileSize*2, gp.tileSize);
         attackLeft2  = setup("/res/player/player_indio/indio_zarabatana_left",  gp.tileSize*2, gp.tileSize);
         attackRight1 = setup("/res/player/player_indio/indio_zarabatana_right", gp.tileSize*2, gp.tileSize);
@@ -294,45 +294,64 @@ public class Player extends Entity {
                   case "right": worldX += speed; break;
                 }
               }
-            if (keyH.enterPressed == true && attackCanceled == false) {
+              if (keyH.enterPressed == true && attackCanceled == false) {
 
-          // Se a arma equipada for a zarabatana, ATIRA o dardo
-          if (currenWeapon != null && currenWeapon.type == type_zarabatana) {
+    // Som de ataque (vale pra qualquer arma)
+    gp.playeSE(7);
 
-            if (projectile.alive == false && shotAvailableCounter == 30) {
+    // Começa animação de ataque (para TODAS as armas, inclusive zarabatana)
+    attacking = true;
+    spriteCounter = 0;
 
-              int projX = worldX;
-              int projY = worldY;
+    // Se a arma equipada for a zarabatana, ATIRA o dardo
+   if (keyH.enterPressed == true && attackCanceled == false) {
 
-              // Opcional: jogar o projétil um pouquinho pra frente do índio
-              switch (direction) {
+    // Som de ataque (vale pra qualquer arma)
+    gp.playeSE(7);
+
+    // Começa animação de ataque (para TODAS as armas, inclusive zarabatana)
+    attacking = true;
+    spriteCounter = 0;
+
+    // Se a arma equipada for a zarabatana, ATIRA o dardo SEM DELAY
+    if (currenWeapon != null && currenWeapon.type == type_zarabatana) {
+
+        // cria um NOVO dardo a cada ENTER
+        OBJ_Dardo dardo = new OBJ_Dardo(gp);
+
+        if (dardo.haveResource(this) == true) {
+
+            int projX = worldX;
+            int projY = worldY;
+
+            // joga o projétil um pouco pra frente do índio
+            switch (direction) {
                 case "up":    projY -= gp.tileSize / 2; break;
                 case "down":  projY += gp.tileSize / 2; break;
                 case "left":  projX -= gp.tileSize / 2; break;
                 case "right": projX += gp.tileSize / 2; break;
-              }
-
-              projectile.set(projX, projY, direction, true, this);
-
-              for (int i = 0; i < gp.projectile[1].length; i++) {
-                if (gp.projectile[gp.currentMap][i] == null) {
-                  gp.projectile[gp.currentMap][i] = projectile;
-                  break;
-                }
-              }
-
-              gp.playeSE(7);          // som da zarabatana
-              shotAvailableCounter = 0;
             }
 
-          } else {
-            // Qualquer outra arma = ataque corpo a corpo normal
-            gp.playeSE(7);
-            attacking = true;
-            spriteCounter = 0;
-            shotAvailableCounter = 0;
-          }
+            dardo.set(projX, projY, direction, true, this);
+            dardo.subtractResouce(this); // aqui ele gasta mana ou ammo, do jeito que você configurou no OBJ_Dardo
+
+            // coloca o dardo em um slot livre do array de projéteis
+            for (int i = 0; i < gp.projectile[1].length; i++) {
+                if (gp.projectile[gp.currentMap][i] == null) {
+                    gp.projectile[gp.currentMap][i] = dardo;
+                    break;
+                }
+            }
         }
+
+    } else {
+        // Outras armas = só ataque corpo a corpo normal
+        shotAvailableCounter = 0;
+    }
+}
+
+}
+
 
               attackCanceled = false;
               gp.keyH.enterPressed = false;
@@ -633,20 +652,32 @@ public class Player extends Entity {
     int tempScreenY = screenY;
 
     switch(direction){
-      case "up":
-      if(attacking == false){
-         if(spriteNum == 1){image = up1;} 
-         if(spriteNum == 2 ){image = up2;}
-      }
-      if(attacking == true){
-        tempScreenY = screenY - gp.tileSize;
-         if(spriteNum == 1){image = attackUp1;} 
-         if(spriteNum == 2 ){image = attackUp2;}
-      }
-      if(guarding == true){
+  case "up":
+    if (attacking == false) {
+        if (spriteNum == 1) { image = up1; }
+        if (spriteNum == 2) { image = up2; }
+    }
+
+    if (attacking == true) {
+
+        int offsetY = 0;
+
+        // Para espada, machado, etc. (sprites 2 tiles de altura) mantém o deslocamento
+        if (currenWeapon == null || currenWeapon.type != type_zarabatana) {
+            offsetY = gp.tileSize;
+        }
+
+        tempScreenY = screenY - offsetY;
+
+        if (spriteNum == 1) { image = attackUp1; }
+        if (spriteNum == 2) { image = attackUp2; }
+    }
+
+    if (guarding == true) {
         image = guardUp;
-      }
-      break;
+    }
+    break;
+
 
       case "down":
       if(attacking == false){

@@ -39,13 +39,13 @@ GamePanel gp;
 
   public boolean haveResource(Entity user){
     boolean haveResource = false;
-    if(user.mana >= useCost){
+    if(user.ammo >= useCost){
       haveResource = true;
     }
     return haveResource;
   }
   public void subtractResouce(Entity user){
-    user.mana -= useCost;
+    user.ammo -= useCost;
   }
     public Color getParticleColor(){
     Color color = new Color(240,50,0);

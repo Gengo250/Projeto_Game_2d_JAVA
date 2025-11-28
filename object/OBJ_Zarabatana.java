@@ -24,7 +24,7 @@ public class OBJ_Zarabatana extends Entity {
         attackArea.width = gp.tileSize;
         attackArea.height = gp.tileSize;
 
-        description = "[" + name + "]\nArma leve usada para lançar dardos.";
+        description = "[" + name + "]\nArma leve usada \npara lançar dardos.";
         price = 200;
 
         knokBackPower = 1;            // empurrãozinho básico
