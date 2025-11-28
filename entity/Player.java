@@ -8,11 +8,12 @@ import java.awt.image.BufferedImage;
 
 import main.GamePanel;
 import main.KeyHandler;
-import object.OBJ_Fireball;
+import object.OBJ_Dardo;
 import object.OBJ_Key;
 import object.OBJ_Lantern;
 import object.OBJ_Shield_Wood;
 import object.OBJ_Sword_Normal;
+import object.OBJ_Zarabatana;
 
 
 public class Player extends Entity {
@@ -80,7 +81,7 @@ public class Player extends Entity {
     currenWeapon = new OBJ_Sword_Normal(gp);
     currentyShield = new OBJ_Shield_Wood(gp);
     currentyLight = null;
-    projectile = new OBJ_Fireball(gp);
+    projectile = new OBJ_Dardo(gp);
     attack = getAttack(); // the total attack value is decided by strength and weapon
     defense = getDefense(); // the total defense value is decided by dexterity and shield
 
@@ -122,6 +123,7 @@ public class Player extends Entity {
     inventory.add(currentyShield);
     inventory.add(new OBJ_Key(gp));
     inventory.add(new OBJ_Lantern(gp));
+    inventory.add(new OBJ_Zarabatana(gp));
   }
   public int getAttack(){
     attackArea = currenWeapon.attackArea;
@@ -200,6 +202,16 @@ public class Player extends Entity {
       attackLeft2 = setup("/res/player/boy_pick_left_2", gp.tileSize*2, gp.tileSize);
       attackRight1 = setup("/res/player/boy_pick_right_1", gp.tileSize*2, gp.tileSize);  
       attackRight2 = setup("/res/player/boy_pick_right_2", gp.tileSize*2, gp.tileSize);
+    }
+        if (currenWeapon.type == type_zarabatana) {
+        attackUp1    = setup("/res/player/player_indio/indio_zarabatana_up",    gp.tileSize,   gp.tileSize * 2);
+        attackUp2    = setup("/res/player/player_indio/indio_zarabatana_up",    gp.tileSize,   gp.tileSize * 2);
+        attackDown1  = setup("/res/player/player_indio/indio_zarabatana_down",  gp.tileSize,   gp.tileSize * 2);
+        attackDown2  = setup("/res/player/player_indio/indio_zarabatana_down",  gp.tileSize,   gp.tileSize * 2);
+        attackLeft1  = setup("/res/player/player_indio/indio_zarabatana_left",  gp.tileSize*2, gp.tileSize);
+        attackLeft2  = setup("/res/player/player_indio/indio_zarabatana_left",  gp.tileSize*2, gp.tileSize);
+        attackRight1 = setup("/res/player/player_indio/indio_zarabatana_right", gp.tileSize*2, gp.tileSize);
+        attackRight2 = setup("/res/player/player_indio/indio_zarabatana_right", gp.tileSize*2, gp.tileSize);
     }
   }
   public void getGuardImage(){
@@ -282,11 +294,46 @@ public class Player extends Entity {
                   case "right": worldX += speed; break;
                 }
               }
-              if(keyH.enterPressed == true && attackCanceled == false){
-                gp.playeSE(7);
-                attacking = true;
-                spriteCounter = 0;
+            if (keyH.enterPressed == true && attackCanceled == false) {
+
+          // Se a arma equipada for a zarabatana, ATIRA o dardo
+          if (currenWeapon != null && currenWeapon.type == type_zarabatana) {
+
+            if (projectile.alive == false && shotAvailableCounter == 30) {
+
+              int projX = worldX;
+              int projY = worldY;
+
+              // Opcional: jogar o projétil um pouquinho pra frente do índio
+              switch (direction) {
+                case "up":    projY -= gp.tileSize / 2; break;
+                case "down":  projY += gp.tileSize / 2; break;
+                case "left":  projX -= gp.tileSize / 2; break;
+                case "right": projX += gp.tileSize / 2; break;
               }
+
+              projectile.set(projX, projY, direction, true, this);
+
+              for (int i = 0; i < gp.projectile[1].length; i++) {
+                if (gp.projectile[gp.currentMap][i] == null) {
+                  gp.projectile[gp.currentMap][i] = projectile;
+                  break;
+                }
+              }
+
+              gp.playeSE(7);          // som da zarabatana
+              shotAvailableCounter = 0;
+            }
+
+          } else {
+            // Qualquer outra arma = ataque corpo a corpo normal
+            gp.playeSE(7);
+            attacking = true;
+            spriteCounter = 0;
+            shotAvailableCounter = 0;
+          }
+        }
+
               attackCanceled = false;
               gp.keyH.enterPressed = false;
               guarding = false;
@@ -460,12 +507,21 @@ public class Player extends Entity {
   }
   public void damageProjectile(int i){
     if(i != 999){
-      Entity projectile = gp.projectile[gp.currentMap][i];
-      projectile.alive =  false;
-      generatorParticule(projectile, projectile);
-      
+
+        Entity entity = gp.projectile[gp.currentMap][i];
+
+        // Garante que é um projétil
+        if (entity instanceof Projectile) {
+            Projectile projectile = (Projectile) entity;
+
+            // Só destrói se NÃO for um projétil disparado pelo próprio player
+            if (projectile.user != this) {
+                projectile.alive = false;
+                generatorParticule(projectile, projectile);
+            }
+        }
     }
-  }
+}
   public void checkLevelUp() {
     boolean leveled = false;
 
@@ -503,7 +559,7 @@ public class Player extends Entity {
     int itemIndex = gp.ui.getItemIndexOnSlot(gp.ui.playerslotCol, gp.ui.playerslotRow);
     if(itemIndex < inventory.size()){
       Entity selectedItem = inventory.get(itemIndex);
-      if(selectedItem.type == type_sword || selectedItem.type == type_axe || selectedItem.type == type_pickaxe){
+      if(selectedItem.type == type_sword || selectedItem.type == type_axe || selectedItem.type == type_pickaxe ||  selectedItem.type == type_zarabatana){
         currenWeapon = selectedItem;
         attack = getAttack();
         getAttckImage();
