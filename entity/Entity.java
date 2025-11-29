@@ -687,115 +687,96 @@ public class Entity {
     return inCamera;
 
   }
+    public void draw(Graphics2D g2) {
+        BufferedImage image = null;
+        int screenX = getScreenX();
+        int screenY = getScreenY();
 
-  public void draw(Graphics2D g2) {
+        // Offsets manuais para corrigir sprites de ataque 300x300
+        int offsetX = 0;
+        int offsetY = 0;
 
-    BufferedImage image = null;
+        switch (direction) {
+            case "up":
+                if (attacking) {
+                    offsetY = -80;  // puxa pra cima (ajuste se precisar)
+                    if (spriteNum == 1) image = attackUp1;
+                    else if (spriteNum == 2) image = attackUp2;
+                } else {
+                    if (spriteNum == 1) image = up1;
+                    else if (spriteNum == 2) image = up2;
+                    else if (spriteNum == 3 && up3 != null) image = up3;
+                }
+                break;
 
-    if (inCamera() == true) {
+            case "down":
+                if (attacking) {
+                    offsetY = -60;  // ESSENCIAL: evita descer no ataque down
+                    offsetX = -50;  // centraliza horizontalmente
+                    if (spriteNum == 1) image = attackDown1;
+                    else if (spriteNum == 2) image = attackDown2;
+                } else {
+                    if (spriteNum == 1) image = down1;
+                    else if (spriteNum == 2) image = down2;
+                    else if (spriteNum == 3 && down3 != null) image = down3;
+                }
+                break;
 
-      int tempScreenX = getScreenX();
-      int tempScreenY = getScreenY();
+            case "left":
+                if (attacking) {
+                    offsetX = -100; // compensa o braço esticado pra esquerda
+                    offsetY = -60;
+                    if (spriteNum == 1) image = attackLeft1;
+                    else if (spriteNum == 2) image = attackLeft2;
+                    else if (spriteNum == 3 && attackLeft3 != null) image = attackLeft3;
+                } else {
+                    if (spriteNum == 1) image = left1;
+                    else if (spriteNum == 2) image = left2;
+                    else if (spriteNum == 3 && left3 != null) image = left3;
+                }
+                break;
 
-      switch (direction) {
-        case "up":
-          if (attacking == false) {
-            if (spriteNum == 1) {
-              image = up1;
-            } else if (spriteNum == 2) {
-              image = up2;
-            } else if (spriteNum == 3 && up3 != null) {
-              image = up3;
-            }
-          }
-          if (attacking == true) {
-          tempScreenY = getScreenY() - up1.getHeight();
-          if (spriteNum == 1) { image = attackUp1; }
-          else if (spriteNum == 2) { image = attackUp2; }
-          else if (spriteNum == 3 && attackUp3 != null) { image = attackUp3; }
-            }
-          break;
+            case "right":
+                if (attacking) {
+                    offsetX = -20; // compensa o braço esticado pra esquerda
+                    offsetY = -60;
+                    if (spriteNum == 1) image = attackRight1;
+                    else if (spriteNum == 2) image = attackRight2;
+                    else if (spriteNum == 3 && attackRight3 != null) image = attackRight3;
+                } else {
+                    if (spriteNum == 1) image = right1;
+                    else if (spriteNum == 2) image = right2;
+                    else if (spriteNum == 3 && right3 != null) image = right3;
+                }
+                break;
+        }
 
-        case "down":
-          if (attacking == false) {
-            if (spriteNum == 1) {
-              image = down1;
-            } else if (spriteNum == 2) {
-              image = down2;
-            } else if (spriteNum == 3 && down3 != null) {
-              image = down3;
-            }
-          }
-           if (attacking == true) {
-            if (spriteNum == 1) { image = attackDown1; }
-            else if (spriteNum == 2) { image = attackDown2; }
-            else if (spriteNum == 3 && attackDown3 != null) { image = attackDown3; }
-          }
-          break;
+        // Aplicar offsets apenas no ataque
+        if (attacking) {
+            screenX += offsetX;
+            screenY += offsetY;
+        }
 
-        case "left":
-          if (attacking == false) {
-            if (spriteNum == 1) {
-              image = left1;
-            } else if (spriteNum == 2) {
-              image = left2;
-            } else if (spriteNum == 3 && left3 != null) {
-              image = left3;
-            }
-          }
-           if (attacking == true) {
-            tempScreenX = getScreenX() - left1.getHeight();
-            if (spriteNum == 1) { image = attackLeft1; }
-            else if (spriteNum == 2) { image = attackLeft2; }
-            else if (spriteNum == 3 && attackLeft3 != null) { image = attackLeft3; }
-          }
-          break;
+        // Efeito de invencibilidade
+        if (invencible) {
+            g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.4f));
+        }
 
-        case "right":
-          if (attacking == false) {
-            if (spriteNum == 1) {
-              image = right1;
-            } else if (spriteNum == 2) {
-              image = right2;
-            } else if (spriteNum == 3 && right3 != null) {
-              image = right3;
-            }
-          }
-           if (attacking == true) {
-            if (spriteNum == 1) { image = attackRight1; }
-            else if (spriteNum == 2) { image = attackRight2; }
-            else if (spriteNum == 3 && attackRight3 != null) { image = attackRight3; }
-          }
-          break;
+        // DESENHA UMA ÚNICA VEZ (corrige bug de duplicação)
+        g2.drawImage(image, screenX, screenY, null);
 
-      }
-      if (invencible == true) {
-        g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.3f));
-      }
-      g2.drawImage(image, tempScreenX, tempScreenY, null);
+        // Reset alpha
+        g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
 
-      // Reset alpha
-      g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
-
-      // DEBUG
-      // g2.setFont(new Font("Arial", Font.PLAIN, 26));
-      // g2.setColor(Color.white);
-      // g2.drawString("Invencible: "+invencibleCounter, 10, 400);
-
-      if (invencible == true) {
-        hpBarOn = true;
-        hpBarCounter = 0;
-        changeAlpha(g2, 0.4F);
-      }
-      if (dying == true) {
-        dyingAnimation(g2);
-      }
-
-      g2.drawImage(image, tempScreenX, tempScreenY, null);
-
-      changeAlpha(g2, 1F);
+        // HP Bar e dying (se necessário)
+        if (invencible) {
+            hpBarOn = true;
+            hpBarCounter = 0;
+        }
+        if (dying) {
+            dyingAnimation(g2);
+        }
     }
-  }
 
   public void dyingAnimation(Graphics2D g2) {
     dyingCounter++;
@@ -829,22 +810,47 @@ public class Entity {
     }
   }
 
+
   public void changeAlpha(Graphics2D g2, float alphaValue) {
     g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alphaValue));
   }
 
-  public BufferedImage setup(String imagePath, int width, int height) {
-    UtilityTool uTool = new UtilityTool();
-    BufferedImage image = null;
-    try {
-      image = ImageIO.read(getClass().getResourceAsStream(imagePath + ".png" ));
-      image = uTool.scaleImage(image, width, height);
+    public BufferedImage setup(String imagePath, int width, int height) {
+        try {
+            // Garante "/" no início
+            if (!imagePath.startsWith("/")) {
+                imagePath = "/" + imagePath;
+            }
 
-    } catch (IOException e) {
-      e.printStackTrace();
+            // Garante extensão .png
+            String finalPath = imagePath + ".png";
+
+            // Carrega a imagem do resource
+            java.net.URL url = getClass().getResource(finalPath);
+
+            if (url == null) {
+                System.out.println("❌ ERRO: imagem não encontrada em: " + finalPath);
+                return null;
+            }
+
+            BufferedImage original = javax.imageio.ImageIO.read(url);
+
+            // Cria nova imagem redimensionada
+            BufferedImage scaledImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+            Graphics2D g2 = scaledImage.createGraphics();
+
+            g2.drawImage(original, 0, 0, width, height, null);
+            g2.dispose();
+
+            return scaledImage;
+
+        } catch (Exception e) {
+            System.out.println("❌ Falha ao carregar imagem: " + imagePath);
+            e.printStackTrace();
+            return null;
+        }
     }
-    return image;
-  }
+
 
   public void searchPath(int goalCol, int goalRow) {
     int startCol = (worldX + solidArea.x) / gp.tileSize;

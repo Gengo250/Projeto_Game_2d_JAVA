@@ -9,7 +9,7 @@ import object.OBJ_Heart;
 
 public class MON_Monkey extends Entity {
     GamePanel gp;
-    public static final String monName = "Macaco Rei";
+    public static final String monName = "Macaco";
 
     public MON_Monkey(GamePanel gp) {
         super(gp);
@@ -28,16 +28,18 @@ public class MON_Monkey extends Entity {
         knokBackPower = 10;
 
         // Tamanho grande (3x3 tiles)
-        int size = gp.tileSize * 3;
-        solidArea.x = 24;
-        solidArea.y = 48;
-        solidArea.width = size - 48;
-        solidArea.height = size - 96;
+        // Hitbox PROPORCIONAL ao sprite 200x200 (3x3 tiles)
+        solidArea.x = 55;       // centraliza o corpo
+        solidArea.y = 105;      // hitbox inicia mais perto dos pés
+        solidArea.width = 90;   // largura justa do tronco
+        solidArea.height = 85;  // altura proporcional do tronco
         solidAreaDefaultX = solidArea.x;
         solidAreaDefaultY = solidArea.y;
 
-        attackArea.width = 120;
-        attackArea.height = 120;
+// Área de ataque mais ampla (boss grande)
+        attackArea.width = 160;
+        attackArea.height = 160;
+
 
         motion1_duration = 20;  // wind-up
         motion2_duration = 45;  // ataque ativo
@@ -51,56 +53,54 @@ public class MON_Monkey extends Entity {
         int i = 3; // 3x scale
 
         if (!inRage) {
-            up1 = setup("/res/monster/Monkey/Mku01", gp.tileSize * i, gp.tileSize * i);
-            up2 = setup("/res/monster/Monkey/Mku02", gp.tileSize * i, gp.tileSize * i);
-            up3 = setup("/res/monster/Monkey/Mku03", gp.tileSize * i, gp.tileSize * i);
-            down1 = setup("/res/monster/Monkey/Mkd01", gp.tileSize * i, gp.tileSize * i);
-            down2 = setup("/res/monster/Monkey/Mkd02", gp.tileSize * i, gp.tileSize * i);
-            down3 = setup("/res/monster/Monkey/Mkd03", gp.tileSize * i, gp.tileSize * i);
-            left1 = setup("/res/monster/Monkey/Mkl01", gp.tileSize * i, gp.tileSize * i);
-            left2 = setup("/res/monster/Monkey/Mkl02", gp.tileSize * i, gp.tileSize * i);
-            left3 = setup("/res/monster/Monkey/Mkl03", gp.tileSize * i, gp.tileSize * i);
-            right1 = setup("/res/monster/Monkey/Mkr01", gp.tileSize * i, gp.tileSize * i);
-            right2 = setup("/res/monster/Monkey/Mkr02", gp.tileSize * i, gp.tileSize * i);
-            right3 = setup("/res/monster/Monkey/Mkr03", gp.tileSize * i, gp.tileSize * i);
+            up1 = setup("/monster/monkey/mku01", 200, 200);
+            up2 = setup("/monster/monkey/mku02", 200, 200);
+            up3 = setup("/monster/monkey/mku03", 200, 200);
+            down1 = setup("/monster/monkey/mkd01", 200, 200);
+            down2 = setup("/monster/monkey/mkd02", 200, 200);
+            down3 = setup("/monster/monkey/mkd03", 200, 200);
+            left1 = setup("/monster/monkey/mkl01", 200, 200);
+            left2 = setup("/monster/monkey/mkl02", 200, 200);
+            left3 = setup("/monster/monkey/mkl03", 200, 200);
+            right1 = setup("/monster/monkey/mkr01", 200, 200);
+            right2 = setup("/monster/monkey/mkr02", 200, 200);
+            right3 = setup("/monster/monkey/mkr03", 200, 200);
         } else {
             // Fase rage: sprites mais agressivos (opcional)
-            up1 = setup("/res/monster/Monkey/Mkrageu01", gp.tileSize * i, gp.tileSize * i);
-            up2 = setup("/res/monster/Monkey/Mkrageu02", gp.tileSize * i, gp.tileSize * i);
-            up3 = setup("/res/monster/Monkey/Mkrageu03", gp.tileSize * i, gp.tileSize * i);
-            down1 = setup("/res/monster/Monkey/Mkraged01", gp.tileSize * i, gp.tileSize * i);
-            down2 = setup("/res/monster/Monkey/Mkraged02", gp.tileSize * i, gp.tileSize * i);
-            down3 = setup("/res/monster/Monkey/Mkraged03", gp.tileSize * i, gp.tileSize * i);
-            left1 = setup("/res/monster/Monkey/Mkragel01", gp.tileSize * i, gp.tileSize * i);
-            left2 = setup("/res/monster/Monkey/Mkragel02", gp.tileSize * i, gp.tileSize * i);
-            left3 = setup("/res/monster/Monkey/Mkragel03", gp.tileSize * i, gp.tileSize * i);
-            right1 = setup("/res/monster/Monkey/MKrager01", gp.tileSize * i, gp.tileSize * i);
-            right2 = setup("/res/monster/Monkey/Mkrager02", gp.tileSize * i, gp.tileSize * i);
-            right3 = setup("/res/monster/Monkey/Mkrager03", gp.tileSize * i, gp.tileSize * i);
+            up1 = setup("/monster/monkey/mkrageu01", 200, 200);
+            up2 = setup("/monster/monkey/mkrageu02", 200, 200);
+            up3 = setup("/monster/monkey/mkrageu03", 200, 200);
+            down1 = setup("/monster/monkey/mkraged01", 200, 200);
+            down2 = setup("/monster/monkey/mkraged02", 200, 200);
+            down3 = setup("/monster/monkey/mkraged03", 200, 200);
+            left1 = setup("/monster/monkey/mkragel01", 200, 200);
+            left2 = setup("/monster/monkey/mkragel02", 200, 200);
+            left3 = setup("/monster/monkey/mkragel03", 200, 200);
+            right1 = setup("/monster/monkey/mkrager01", 200, 200);
+            right2 = setup("/monster/monkey/mkrager02", 200, 200);
+            right3 = setup("/monster/monkey/mkrager03", 200, 200);
         }
     }
 
     public void getAttackImage() {
         int i = 3;
-        int attackWidth = gp.tileSize * 4;
-        int attackHeight = gp.tileSize * 4;
 
         if (!inRage) {
-            attackDown1 = setup("/res/monster/Monkey/Mksu01", gp.tileSize * i, attackHeight);
-            attackDown2 = setup("/res/monster/Monkey/Mksu02", gp.tileSize * i, attackHeight);
-            attackLeft1 = setup("/res/monster/Monkey/Mksl01", attackWidth, gp.tileSize * i);
-            attackLeft2 = setup("/res/monster/Monkey/Mksl02", attackWidth, gp.tileSize * i);
-            attackLeft3 = setup("/res/monster/Monkey/Mksl03", attackWidth, gp.tileSize * i);
-            attackRight1 = setup("/res/monster/Monkey/Mksr01", attackWidth, gp.tileSize * i);
-            attackRight2 = setup("/res/monster/Monkey/Mksr02", attackWidth, gp.tileSize * i);
-            attackRight3 = setup("/res/monster/Monkey/Mksr04", attackWidth, gp.tileSize * i);
+            attackDown1 = setup("/monster/monkey/mksu01", 300, 300);
+            attackDown2 = setup("/monster/monkey/mksu02", 300, 300);
+            attackLeft1 = setup("/monster/monkey/mksl01", 300, 300);
+            attackLeft2 = setup("/monster/monkey/mksl02", 300, 300);
+            attackLeft3 = setup("/monster/monkey/mksl03", 300, 300);
+            attackRight1 = setup("/monster/monkey/mksr01", 300, 300);
+            attackRight2 = setup("/monster/monkey/mksr02", 300, 300);
+            attackRight3 = setup("/monster/monkey/mksr03", 300, 300);
         } //else {
-           // attackDown1 = setup("/res/monster/Monkey/rage_attack_down_1", gp.tileSize * i, attackHeight);
-            //attackDown2 = setup("/res/monster/Monkey/rage_attack_down_2", gp.tileSize * i, attackHeight);
-           // attackLeft1 = setup("/res/monster/Monkey/rage_attack_left_1", attackWidth, gp.tileSize * i);
-            //attackLeft2 = setup("/res/monster/Monkey/rage_attack_left_2", attackWidth, gp.tileSize * i);
-           // attackRight1 = setup("/res/monster/Monkey/rage_attack_right_1", attackWidth, gp.tileSize * i);
-            //attackRight2 = setup("/res/monster/Monkey/rage_attack_right_2", attackWidth, gp.tileSize * i);
+           // attackDown1 = setup("/monster/monkey/rage_attack_down_1", 200, 200);
+            //attackDown2 = setup("/monster/monkey/rage_attack_down_2", 200, 200);
+           // attackLeft1 = setup("/monster/monkey/rage_attack_left_1", 200, 200);
+            //attackLeft2 = setup("/monster/monkey/rage_attack_left_2", 200, 200);
+           // attackRight1 = setup("/monster/monkey/rage_attack_right_1", 200, 200);
+            //attackRight2 = setup("/monster/monkey/rage_attack_right_2", 200, 200);
         //}
     }
 
@@ -151,6 +151,8 @@ public class MON_Monkey extends Entity {
             }
         }
     }
+
+
 
     public void damageReaction() {
         actionLockCounter = 0;
