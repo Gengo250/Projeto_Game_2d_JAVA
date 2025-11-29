@@ -1,19 +1,7 @@
 package main;
 
 import entity.Entity;
-import object.OBJ_Axe;
-import object.OBJ_Boots;
-import object.OBJ_Chest;
-import object.OBJ_Door;
-import object.OBJ_Door_Iron;
-import object.OBJ_Key;
-import object.OBJ_Lantern;
-import object.OBJ_Pickaxe;
-import object.OBJ_Potion_Red;
-import object.OBJ_Shield_Blue;
-import object.OBJ_Shield_Wood;
-import object.OBJ_Sword_Normal;
-import object.OBJ_Tent;
+import object.*;
 
 public class EntityGenerator {
   GamePanel gp;
@@ -24,6 +12,7 @@ public class EntityGenerator {
     Entity obj = null;
 
     switch(itemName){
+        case OBJ_Bananao.objName: obj = new OBJ_Bananao(gp); break;
       case OBJ_Axe.objName: obj = new OBJ_Axe(gp); break;
       case OBJ_Key.objName: obj = new OBJ_Key(gp); break;
       case OBJ_Boots.objName: obj = new OBJ_Boots(gp); break;

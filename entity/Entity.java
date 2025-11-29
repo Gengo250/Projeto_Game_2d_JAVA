@@ -837,7 +837,7 @@ public class Entity {
     UtilityTool uTool = new UtilityTool();
     BufferedImage image = null;
     try {
-      image = ImageIO.read(getClass().getResourceAsStream(imagePath + ".png"));
+      image = ImageIO.read(getClass().getResourceAsStream(imagePath + ".png" ));
       image = uTool.scaleImage(image, width, height);
 
     } catch (IOException e) {

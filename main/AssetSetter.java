@@ -3,6 +3,7 @@ package main;
 import data.Progress;
 import entity.NPC_BigRock;
 import entity.NPC_Merchant;
+import monster.MON_Monkey;
 import monster.MON_SkeletonLord;
 import object.OBJ_Axe;
 import object.OBJ_BlueHeart;
