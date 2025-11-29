@@ -175,7 +175,7 @@ public class Entity {
   }
 
   public int getScreenX() {
-    int screenX = worldX - gp.player.worldX + gp.player.sreenX;
+    int screenX = worldX - gp.player.worldX + gp.player.screenX;
     return screenX;
   }
 
@@ -678,8 +678,8 @@ public class Entity {
   public boolean inCamera() {
     boolean inCamera = false;
 
-    if (worldX + gp.tileSize * 5 > gp.player.worldX - gp.player.sreenX &&
-        worldX - gp.tileSize < gp.player.worldX + gp.player.sreenX &&
+    if (worldX + gp.tileSize * 5 > gp.player.worldX - gp.player.screenX &&
+        worldX - gp.tileSize < gp.player.worldX + gp.player.screenX &&
         worldY + gp.tileSize * 5 > gp.player.worldY - gp.player.screenY &&
         worldY - gp.tileSize < gp.player.worldY + gp.player.screenY) {
       inCamera = true;
