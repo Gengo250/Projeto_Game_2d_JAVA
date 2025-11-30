@@ -209,15 +209,17 @@ public class Entity {
     return (worldY + solidArea.y) / gp.tileSize;
   }
 
-  public int getCenterX() {
-    int centerX = worldX + left1.getHeight() / 2;
-    return centerX;
-  }
+ 
+public int getCenterX() {
+    // centro da hitbox
+    return worldX + solidArea.x + solidArea.width / 2;
+}
 
-  public int getCenterY() {
-    int centerY = worldY + up1.getHeight() / 2;
-    return centerY;
-  }
+public int getCenterY() {
+    // centro da hitbox
+    return worldY + solidArea.y + solidArea.height / 2;
+}
+
 
   public void speak() {
   }
