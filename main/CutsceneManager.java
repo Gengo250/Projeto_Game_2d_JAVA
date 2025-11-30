@@ -5,7 +5,7 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 
 import entity.PlayerDummy;
-import monster.MON_SkeletonLord;
+import monster.MON_Monkey;
 import object.OBJ_BlueHeart;
 import object.OBJ_Door_Iron;
 
@@ -21,7 +21,7 @@ public class CutsceneManager {
 
   //Scene Number
   public final int NA = 0;
-  public final int skeletonLord = 1;
+  public final int macaco = 1;
   public final int ending = 2;
 
   public CutsceneManager(GamePanel gp){
@@ -40,11 +40,11 @@ public class CutsceneManager {
     this.g2 = g2;
 
     switch(sceneNum){
-      case skeletonLord: scene_skeletonLord(); break;
+      case macaco: scene_macaco(); break;
       case ending: scene_ending(); break;
     }
   }
-  public void scene_skeletonLord(){
+  public void scene_macaco(){
     if(scenePhase == 0){
       gp.bossBattleON = true;
 
@@ -83,7 +83,7 @@ public class CutsceneManager {
       //search the boss
       for(int i = 0; i < gp.monster[1].length; i++){
         if(gp.monster[gp.currentMap][i] != null && 
-            gp.monster[gp.currentMap][i].name == MON_SkeletonLord.monName){
+            gp.monster[gp.currentMap][i].name == MON_Monkey.monName){
               gp.monster[gp.currentMap][i].sleep = false;
               gp.ui.npc = gp.monster[gp.currentMap][i];
               scenePhase++;
