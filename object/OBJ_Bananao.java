@@ -10,7 +10,7 @@ public class OBJ_Bananao extends Entity {
 
         type = type_axe;
         name = objName;
-        down1 = setup("/res/monster/Monkey/Banana.png", gp.tileSize, gp.tileSize);
+        down1 = setup("/monster/monkey/banana", gp.tileSize, gp.tileSize);
         attackValue = 2;
         attackArea.width = 30;
         attackArea.height = 30;
