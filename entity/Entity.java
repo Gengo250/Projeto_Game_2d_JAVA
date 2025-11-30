@@ -177,7 +177,7 @@ public class Entity {
   }
 
   public int getScreenX() {
-    int screenX = worldX - gp.player.worldX + gp.player.sreenX;
+    int screenX = worldX - gp.player.worldX + gp.player.screenX;
     return screenX;
   }
 
@@ -685,8 +685,8 @@ public class Entity {
   public boolean inCamera() {
     boolean inCamera = false;
 
-    if (worldX + gp.tileSize * 5 > gp.player.worldX - gp.player.sreenX &&
-        worldX - gp.tileSize < gp.player.worldX + gp.player.sreenX &&
+    if (worldX + gp.tileSize * 5 > gp.player.worldX - gp.player.screenX &&
+        worldX - gp.tileSize < gp.player.worldX + gp.player.screenX &&
         worldY + gp.tileSize * 5 > gp.player.worldY - gp.player.screenY &&
         worldY - gp.tileSize < gp.player.worldY + gp.player.screenY) {
       inCamera = true;
@@ -860,7 +860,7 @@ public class Entity {
     UtilityTool uTool = new UtilityTool();
     BufferedImage image = null;
     try {
-      image = ImageIO.read(getClass().getResourceAsStream(imagePath + ".png"));
+      image = ImageIO.read(getClass().getResourceAsStream(imagePath + ".png" ));
       image = uTool.scaleImage(image, width, height);
 
     } catch (IOException e) {

@@ -35,7 +35,7 @@ public class Lighting {
     } 
       else {
           //Get the center x and y of the light circle
-      int centerX = gp.player.sreenX + (gp.tileSize)/2;
+      int centerX = gp.player.screenX + (gp.tileSize)/2;
       int centerY = gp.player.screenY + (gp.tileSize)/2;
 
       //Create a gradation effect within the leght circle

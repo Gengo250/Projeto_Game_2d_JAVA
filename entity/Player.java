@@ -22,7 +22,7 @@ public class Player extends Entity {
   GamePanel gp;
   KeyHandler keyH;
 
-  public final int sreenX;
+  public final int screenX;
   public final int screenY;
   int standCounter = 0;
   public boolean attackCanceled = false;
@@ -34,7 +34,7 @@ public class Player extends Entity {
     this.gp = gp;
     this.keyH = keyH;
 
-    sreenX = gp.screenWidth/2 - (gp.tileSize/2);
+    screenX = gp.screenWidth/2 - (gp.tileSize/2);
     screenY = gp.screenHeight/2 - (gp.tileSize/2);
 
     //SOLID AREA
@@ -648,7 +648,7 @@ public class Player extends Entity {
   public void draw(Graphics2D g2){
 
     BufferedImage image = null;
-    int tempScreenX = sreenX;
+    int tempScreenX = screenX;
     int tempScreenY = screenY;
 
     switch(direction){
@@ -699,7 +699,7 @@ public class Player extends Entity {
          if(spriteNum == 2 ){image = left2;}
       }
       if(attacking == true){
-        tempScreenX = sreenX - gp.tileSize;
+        tempScreenX = screenX - gp.tileSize;
          if(spriteNum == 1){image = attackLeft1;} 
          if(spriteNum == 2 ){image = attackLeft2;}
       }
