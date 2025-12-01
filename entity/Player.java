@@ -27,6 +27,8 @@ public class Player extends Entity {
   int standCounter = 0;
   public boolean attackCanceled = false;
   public boolean lightUpdated = false;
+  public boolean parryActive = false;
+  public int parryCounter = 0;
 
   public Player(GamePanel gp, KeyHandler keyH){
     super(gp);
@@ -216,12 +218,22 @@ public class Player extends Entity {
   }
   public void getGuardImage(){
 
-    guardUp = setup("/res/player/player_antigo/boy_guard_up", gp.tileSize, gp.tileSize);
-    guardDown = setup("/res/player/player_antigo/boy_guard_down", gp.tileSize, gp.tileSize);
-    guardLeft = setup("/res/player/player_antigo/boy_guard_left", gp.tileSize, gp.tileSize);
-    guardRight = setup("/res/player/player_antigo/boy_guard_right", gp.tileSize, gp.tileSize);
+    guardUp = setup("/res/player/player_indio/indio_block_up", gp.tileSize, gp.tileSize);
+    guardDown = setup("/res/player/player_indio/indio_block_down", gp.tileSize, gp.tileSize);
+    guardLeft = setup("/res/player/player_indio/indio_block_left", gp.tileSize, gp.tileSize);
+    guardRight = setup("/res/player/player_indio/indio_block_right", gp.tileSize, gp.tileSize);
    
   }
+
+  public void getParryImage(){
+
+    parryUp    = setup("/res/player/player_indio/indio_parry_up",    gp.tileSize, gp.tileSize);
+    parryDown  = setup("/res/player/player_indio/indio_parry_down",  gp.tileSize, gp.tileSize);
+    parryLeft  = setup("/res/player/player_indio/indio_parry_left",  gp.tileSize, gp.tileSize);
+    parryRight = setup("/res/player/player_indio/indio_parry_right", gp.tileSize, gp.tileSize);
+
+  }
+
   
   public void update(){
     if(knokBack == true){
@@ -406,6 +418,13 @@ public class Player extends Entity {
         } 
         if(shotAvailableCounter < 30){
           shotAvailableCounter++;
+        }
+         if (parryActive) {
+            parryCounter++;
+            if (parryCounter > 15) {
+                parryActive = false;
+                parryCounter = 0;
+            }
         }
         if(life > maxLife){
           life = maxLife;
@@ -674,7 +693,11 @@ public class Player extends Entity {
     }
 
     if (guarding == true) {
-        image = guardUp;
+        if (parryActive && parryUp != null) {
+            image = parryUp;
+        } else {
+            image = guardUp;
+        }
     }
     break;
 
@@ -689,7 +712,11 @@ public class Player extends Entity {
          if(spriteNum == 2 ){image = attackDown2;}
       }
        if(guarding == true){
-        image = guardDown;
+        if (parryActive && parryDown != null) {
+            image = parryDown;
+        } else {
+            image = guardDown;
+        }
       }
       break;
 
@@ -704,7 +731,11 @@ public class Player extends Entity {
          if(spriteNum == 2 ){image = attackLeft2;}
       }
        if(guarding == true){
-        image = guardLeft;
+        if (parryActive && parryLeft != null) {
+            image = parryLeft;
+        } else {
+            image = guardLeft;
+        }
       }
       break;
 
@@ -718,7 +749,11 @@ public class Player extends Entity {
          if(spriteNum == 2 ){image = attackRight2;}
       }
        if(guarding == true){
-        image = guardRight;
+        if (parryActive && parryRight != null) {
+            image = parryRight;
+        } else {
+            image = guardRight;
+        }
       }
       break;
     }

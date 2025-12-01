@@ -3,7 +3,9 @@ package main;
 import data.Progress;
 import entity.NPC_BigRock;
 import entity.NPC_Merchant;
+import monster.MON_GreenSlime;
 import monster.MON_Monkey;
+import monster.MON_Orc;
 import monster.MON_SkeletonLord;
 import object.OBJ_Axe;
 import object.OBJ_BlueHeart;
@@ -87,6 +89,11 @@ public class AssetSetter {
     gp.monster[mapNum][i] = new MON_Monkey(gp);
     gp.monster[mapNum][i].worldX = gp.tileSize*81;
     gp.monster[mapNum][i].worldY = gp.tileSize*11;
+    i++;
+
+    gp.monster[mapNum][i] = new MON_Orc(gp);
+    gp.monster[mapNum][i].worldX = gp.tileSize*37;
+    gp.monster[mapNum][i].worldY = gp.tileSize*55;
     i++;
 
     mapNum = 2;

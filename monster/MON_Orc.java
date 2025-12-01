@@ -15,6 +15,8 @@ public class MON_Orc extends Entity {
     super(gp);
     this.gp = gp;
 
+     useAttackOffsets = false;
+
     type = type_monster;
     name = "Orc";
     defualtSpeed = 1;

@@ -16,6 +16,8 @@ public class MON_GreenSlime extends Entity {
 
     this.gp = gp;
 
+     useAttackOffsets = false;
+
     type = type_monster;
     name = "Green  Slime";
     defualtSpeed = 1;

@@ -16,6 +16,8 @@ public class MON_Bat extends Entity{
 
     this.gp = gp;
 
+     useAttackOffsets = false;
+
     type = type_monster;
     name = "Bat";
     defualtSpeed = 4;

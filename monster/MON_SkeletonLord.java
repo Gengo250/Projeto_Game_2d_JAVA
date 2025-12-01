@@ -18,6 +18,8 @@ public class MON_SkeletonLord extends Entity{
     super(gp);
     this.gp = gp;
 
+     useAttackOffsets = false;
+
     type = type_monster;
     boss = true;
     name = monName;

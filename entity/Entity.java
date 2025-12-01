@@ -4,6 +4,9 @@ import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Random;
 import java.awt.AlphaComposite;
@@ -21,7 +24,7 @@ public class Entity {
       attackDown1, attackDown2, attackDown3,
       attackLeft1, attackLeft2, attackLeft3,
       attackRight1, attackRight2, attackRight3,
-      guardUp, guardDown, guardLeft, guardRight;
+      guardUp, guardDown, guardLeft, guardRight, parryUp, parryDown, parryLeft, parryRight;
   public BufferedImage image, image2, image3, image4, image5, image6;
   public Rectangle solidArea = new Rectangle(0, 0, 48, 48);
   public Rectangle attackArea = new Rectangle(0, 0, 0, 0);
@@ -56,6 +59,8 @@ public class Entity {
   public boolean sleep = false;
   public boolean drawing = true;
   public boolean shotThisAttack = false;
+  public boolean useAttackOffsets = false; 
+
 
   // COUNTER
   public int spriteCounter = 0;
@@ -141,15 +146,18 @@ public class Entity {
     return tileDistance;
   }
 
-  public int getGoalCol(Entity target) {
-    int goalCol = (target.worldX + target.solidArea.x) / gp.tileSize;
+public int getGoalCol(Entity target) {
+    // centro da hitbox na horizontal
+    int goalCol = (target.worldX + target.solidArea.x + target.solidArea.width / 2) / gp.tileSize;
     return goalCol;
-  }
+}
 
-  public int getGoalRow(Entity target) {
-    int goalRow = (gp.player.worldY + gp.player.solidArea.y) / gp.tileSize;
+public int getGoalRow(Entity target) {
+    // centro da hitbox na vertical
+    int goalRow = (target.worldY + target.solidArea.y + target.solidArea.height / 2) / gp.tileSize;
     return goalRow;
-  }
+}
+
 
   public void resetCounter() {
     spriteCounter = 0;
@@ -646,13 +654,20 @@ public int getCenterY() {
       // Get an opposite direction of this attacker
       String canGuardDirection = getOppositeDirection(direction);
       if (gp.player.guarding == true && gp.player.direction.equals(canGuardDirection)) {
-        // Prarry
+        // Parry
         if (gp.player.guardCounter < 10) {
           damage = 0;
           gp.playeSE(16);
           setknokBack(this, gp.player, knokBackPower);
           offBalance = true;
           spriteCounter = -60;
+
+          if (gp.player.parryUp == null) {
+              gp.player.getParryImage();
+          }
+          gp.player.parryActive = true;
+          gp.player.parryCounter = 0;
+
         } else {
           // normal guard
           damage /= 3;
@@ -760,7 +775,7 @@ public int getCenterY() {
         }
 
         // Aplicar offsets apenas no ataque
-        if (attacking) {
+        if (attacking && useAttackOffsets) {
             screenX += offsetX;
             screenY += offsetY;
         }
@@ -823,41 +838,47 @@ public int getCenterY() {
     g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alphaValue));
   }
 
-    public BufferedImage setup(String imagePath, int width, int height) {
-        try {
-            // Garante "/" no início
-            if (!imagePath.startsWith("/")) {
-                imagePath = "/" + imagePath;
-            }
+   public BufferedImage setup(String imagePath, int width, int height) {
+    try {
+        // tira "/" do começo, se tiver
+        if (imagePath.startsWith("/")) {
+            imagePath = imagePath.substring(1);
+        }
 
-            // Garante extensão .png
-            String finalPath = imagePath + ".png";
+        String relPath = imagePath + ".png";
 
-            // Carrega a imagem do resource
-            java.net.URL url = getClass().getResource(finalPath);
+        BufferedImage original = null;
 
-            if (url == null) {
-                System.out.println("❌ ERRO: imagem não encontrada em: " + finalPath);
+        // 1) tenta pelo CLASSPATH (IntelliJ já resolve aqui)
+        java.net.URL url = getClass().getClassLoader().getResource(relPath);
+        if (url != null) {
+            original = ImageIO.read(url);
+        } else {
+            // 2) fallback: tenta direto na pasta "res" do projeto (VSCode)
+            Path path = Paths.get("res", relPath);
+            if (Files.exists(path)) {
+                original = ImageIO.read(path.toFile());
+                System.out.println("⚠ carreguei imagem pelo disco: " + path.toAbsolutePath());
+            } else {
+                System.out.println("❌ ERRO: imagem não encontrada em classpath ou em res/" + relPath);
                 return null;
             }
-
-            BufferedImage original = javax.imageio.ImageIO.read(url);
-
-            // Cria nova imagem redimensionada
-            BufferedImage scaledImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-            Graphics2D g2 = scaledImage.createGraphics();
-
-            g2.drawImage(original, 0, 0, width, height, null);
-            g2.dispose();
-
-            return scaledImage;
-
-        } catch (Exception e) {
-            System.out.println("❌ Falha ao carregar imagem: " + imagePath);
-            e.printStackTrace();
-            return null;
         }
+
+        // redimensiona
+        BufferedImage scaledImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2 = scaledImage.createGraphics();
+        g2.drawImage(original, 0, 0, width, height, null);
+        g2.dispose();
+
+        return scaledImage;
+
+    } catch (Exception e) {
+        System.out.println("❌ Falha ao carregar imagem: " + imagePath);
+        e.printStackTrace();
+        return null;
     }
+}
 
 
   public void searchPath(int goalCol, int goalRow) {
