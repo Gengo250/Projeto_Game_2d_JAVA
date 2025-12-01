@@ -16,32 +16,42 @@ public class Map extends TileManager {
     this.gp = gp;
     createWorldMap();
   }
-  public void createWorldMap(){
+public void createWorldMap() {
     wordMap = new BufferedImage[gp.maxMap];
-    int worldMapWidth = gp.tileSize * gp.maxWorldCol;
-    int worldMapHeight = gp.tileSize * gp.maxWorldRow;
 
-    for(int i = 0; i < gp.maxMap; i++){
-      wordMap[i] = new BufferedImage(worldMapWidth, worldMapHeight, BufferedImage.TYPE_INT_ARGB);
-      Graphics2D g2 = (Graphics2D)wordMap[i].createGraphics();
-      int col = 0;
-      int row = 0;
+    // Tamanho do tile SÓ para o mapa/minimapa
+    int mapTileSize = 4; // pode testar 3, 4, 6... 4 costuma ficar bom
 
-      while(col < gp.maxWorldCol && row < gp.maxWorldRow){
-        int tileNum = mapTileNum[i][col][row];
-        int x = gp.tileSize * col;
-        int y = gp.tileSize * row;
-        g2.drawImage(tile[tileNum].image, x, y, null);
+    int worldMapWidth = mapTileSize * gp.maxWorldCol;
+    int worldMapHeight = mapTileSize * gp.maxWorldRow;
 
-        col++;
-        if(col == gp.maxWorldCol){
-          col = 0;
-          row++;
+    for (int i = 0; i < gp.maxMap; i++) {
+        wordMap[i] = new BufferedImage(worldMapWidth, worldMapHeight, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2 = (Graphics2D) wordMap[i].createGraphics();
+
+        int col = 0;
+        int row = 0;
+
+        while (col < gp.maxWorldCol && row < gp.maxWorldRow) {
+            int tileNum = mapTileNum[i][col][row];
+            
+            int x = mapTileSize * col;
+            int y = mapTileSize * row;
+
+            // Desenha o tile já reduzido
+            g2.drawImage(tile[tileNum].image, x, y, mapTileSize, mapTileSize, null);
+
+            col++;
+            if (col == gp.maxWorldCol) {
+                col = 0;
+                row++;
+            }
         }
-      }
-      g2.dispose();
+
+        g2.dispose();
     }
-  }
+}
+
   public void drawFullMapScreen(Graphics2D g2){
     g2.setColor(Color.black);
     g2.fillRect(0, 0, gp.screenWidth,gp.screenHeight);

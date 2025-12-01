@@ -38,7 +38,7 @@ public class MON_Monkey extends Entity {
         solidAreaDefaultX = solidArea.x;
         solidAreaDefaultY = solidArea.y;
 
-// Área de ataque mais ampla (boss grande)
+        // Área de ataque mais ampla (boss grande)
         attackArea.width = 160;
         attackArea.height = 160;
 
@@ -50,7 +50,9 @@ public class MON_Monkey extends Entity {
         getAttackImage();
         setDialogue();
     }
+    public void getMonkeyParado(){
 
+    }
     public void getImage() {
 
 

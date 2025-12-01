@@ -61,8 +61,8 @@ public class Player extends Entity {
 
     // outside
     gp.currentMap = 0;
-    worldX = gp.tileSize * 23;
-    worldY = gp.tileSize * 58;
+    worldX = gp.tileSize * 179;
+    worldY = gp.tileSize * 119;
 
     // Dungeon B2
     // gp.currentMap = 3;
@@ -105,8 +105,8 @@ public class Player extends Entity {
   public void setDefaultPositions() {
     switch (gp.currentMap) {
       case 0:
-        worldX = gp.tileSize * 23;
-        worldY = gp.tileSize * 58;
+        worldX = gp.tileSize * 179;
+        worldY = gp.tileSize * 119;
         break; // Outside
       case 1:
         worldX = gp.tileSize * 12;
