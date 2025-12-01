@@ -52,7 +52,7 @@ public class MON_Monkey extends Entity {
     }
 
     public void getImage() {
-        int i = 3; // 3x scale
+
 
         if (!inRage) {
             up1 = setup("/monster/monkey/mku01", 200, 200);
@@ -85,7 +85,7 @@ public class MON_Monkey extends Entity {
     }
 
     public void getAttackImage() {
-        int i = 3;
+        
 
         if (!inRage) {
             attackDown1 = setup("/monster/monkey/mksu01", 300, 300);
