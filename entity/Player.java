@@ -4,6 +4,7 @@ import java.awt.AlphaComposite;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
+import java.awt.Color;
 
 import main.GamePanel;
 import main.KeyHandler;
@@ -30,6 +31,10 @@ public class Player extends Entity {
   public boolean ugabugaActive = false;
   public int ugabugaCounter = 0;
   public int ugabugaDuration = 60 * 15; // 15 segundos a 60 FPS
+  // Buffer reutilizável para a aura Ugabuga
+  private BufferedImage ugabugaAuraBuf;
+  private int ugabugaAuraW = -1, ugabugaAuraH = -1;
+
 
   public Player(GamePanel gp, KeyHandler keyH) {
     super(gp);
@@ -807,6 +812,40 @@ public class Player extends Entity {
     return canObtain;
   }
 
+  private void drawUgabugaAura(Graphics2D g2, BufferedImage img, int x, int y) {
+    if (img == null) return;
+
+    int w = img.getWidth();
+    int h = img.getHeight();
+
+    // (re)cria o buffer se tamanho mudou
+    if (ugabugaAuraBuf == null || w != ugabugaAuraW || h != ugabugaAuraH) {
+        ugabugaAuraW = w; ugabugaAuraH = h;
+        ugabugaAuraBuf = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
+    }
+
+    // cores arco-íris animadas (gira 1x por segundo)
+    float phase = (ugabugaCounter % 60) / 60.0f;
+    Color rainbow = Color.getHSBColor(phase, 1.0f, 1.0f);
+
+    // pinta o buffer com a cor (com alpha) e usa a alpha do sprite como máscara
+    Graphics2D gg = ugabugaAuraBuf.createGraphics();
+    gg.setComposite(AlphaComposite.Src);
+    gg.setColor(new Color(rainbow.getRed(), rainbow.getGreen(), rainbow.getBlue(),
+                          (int)(0.35f * 255))); // intensidade da aura
+    gg.fillRect(0, 0, w, h);
+
+    // mantém só onde o sprite tem pixels (usa a alpha do sprite)
+    gg.setComposite(AlphaComposite.DstIn);
+    gg.drawImage(img, 0, 0, null);
+    gg.dispose();
+
+    // ligeiro “inchaço” pra parecer glow
+    int pad = 2;
+    g2.drawImage(ugabugaAuraBuf, x - pad, y - pad, w + 2*pad, h + 2*pad, null);
+}
+
+
   public void draw(Graphics2D g2) {
 
     BufferedImage image = null;
@@ -936,6 +975,12 @@ public class Player extends Entity {
     }
     if (drawing == true) {
       g2.drawImage(image, tempScreenX, tempScreenY, null);
+          // 2) aura no formato do sprite (apenas quando ugabugaActive)
+    if (ugabugaActive) {
+        // aura por cima do sprite; se preferir por baixo, mova esta chamada
+        // para ANTES do drawImage do sprite
+        drawUgabugaAura(g2, image, tempScreenX, tempScreenY);
+      }
     }
 
     // Reset alpha
