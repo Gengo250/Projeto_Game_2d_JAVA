@@ -76,7 +76,8 @@ public class EventHandler {
 
         else if (hit(2, 8, 7, "any") == true){teleport(3, 26, 41, gp.dungeon);}//B2
         else if (hit(3, 26, 41, "any") == true){teleport(2, 8, 7, gp.dungeon);}//B1
-       //else if (hit(3, 25, 27, "any") == true){skeletonLord();}//BOSS
+        else if (hit(0, 61, 86, "any") == true){monkeyBoss();} // BOSS MACACO
+
        
     }
 
@@ -148,11 +149,32 @@ public class EventHandler {
       entity.speak();
     }
   }
-  //public void skeletonLord(){
-    //if(gp.bossBattleON == false && Progress.skeletonLordDefeated == false){
-   //   gp.gameState = gp.cutsceneState;
-   //   gp.csManager.sceneNum = gp.csManager.skeletonLord;
+public void monkeyBoss() {
 
-   // }
-  //}
+    // 1) Verifica se ainda existe um Macaco vivo no mapa atual
+    boolean bossAlive = false;
+    for (int i = 0; i < gp.monster[1].length; i++) {
+        if (gp.monster[gp.currentMap][i] != null &&
+            gp.monster[gp.currentMap][i].name.equals("Macaco") && // mesmo name do MON_Monkey
+            gp.monster[gp.currentMap][i].alive) {
+
+            bossAlive = true;
+            break;
+        }
+    }
+
+    // 2) Se NÃO existir mais boss, marca o evento como concluído pra nunca mais disparar
+    if (!bossAlive) {
+        eventRect[0][61][86].eventDone = true;
+        return;
+    }
+
+    // 3) Se o boss ainda existe e não estamos em batalha, inicia a cutscene
+    if (!gp.bossBattleON) {
+        gp.gameState = gp.cutsceneState;
+        gp.csManager.sceneNum = gp.csManager.macaco;
+        // NÃO marca eventDone aqui, assim a cutscene pode repetir se você morrer
+    }
+}
+
 }

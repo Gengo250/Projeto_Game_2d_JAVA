@@ -15,7 +15,8 @@ public class MON_Monkey extends Entity {
         super(gp);
         this.gp = gp;
 
-         useAttackOffsets = true;
+        useAttackOffsets = true;
+        sleep = true;
 
         type = type_monster;
         boss = true;
@@ -50,9 +51,20 @@ public class MON_Monkey extends Entity {
         getAttackImage();
         setDialogue();
     }
-    public void getMonkeyParado(){
+    public void getMonkeyParado() {
 
+        // Sprites especiais só pra CUTSCENE:
+        //  - down1 / down2: macaco comendo banana (loop parado)
+        //  - down3: macaco gritando (mk_beam)
+
+        // >>> TROCA os nomes abaixo pros nomes reais dos seus arquivos (sem .png) <<<
+        down1 = setup("/monster/monkey/mkb01", 200, 200);
+        down2 = setup("/monster/monkey/mkb02", 200, 200);
+
+        // sprite do grito (essa imagem aí do mk_beam.png)
+        down3 = setup("/monster/monkey/mkgrito", 200, 200); // consertar mais tarde //
     }
+
     public void getImage() {
 
 

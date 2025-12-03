@@ -87,8 +87,8 @@ public class AssetSetter {
     int i = 0;
 
     gp.monster[mapNum][i] = new MON_Monkey(gp);
-    gp.monster[mapNum][i].worldX = gp.tileSize*81;
-    gp.monster[mapNum][i].worldY = gp.tileSize*11;
+    gp.monster[mapNum][i].worldX = gp.tileSize*30;
+    gp.monster[mapNum][i].worldY = gp.tileSize*82;
     i++;
 
     gp.monster[mapNum][i] = new MON_Orc(gp);
