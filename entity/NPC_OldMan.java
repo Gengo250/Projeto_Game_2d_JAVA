@@ -28,14 +28,16 @@ public class NPC_OldMan extends Entity{
   }
    public void getImage(){
 
-    up1 = setup("/res/npc/oldman_up_1", gp.tileSize, gp.tileSize);
-    up2 = setup("/res/npc/oldman_up_2", gp.tileSize, gp.tileSize);
-    down1 = setup("/res/npc/oldman_down_1", gp.tileSize, gp.tileSize);
-    down2 = setup("/res/npc/oldman_down_2", gp.tileSize, gp.tileSize);
-    left1 = setup("/res/npc/oldman_left_1", gp.tileSize, gp.tileSize);
-    left2 = setup("/res/npc/oldman_left_2", gp.tileSize, gp.tileSize);
-    right1 = setup("/res/npc/oldman_right_1", gp.tileSize, gp.tileSize);
-    right2 = setup("/res/npc/oldman_right_2", gp.tileSize, gp.tileSize);
+    up1 = setup("/res/npc/pajeu01", gp.tileSize, gp.tileSize);
+    up2 = setup("/res/npc/pajeu02", gp.tileSize, gp.tileSize);
+    up3 = setup("/res/npc/pajeu03", gp.tileSize, gp.tileSize);
+    down1 = setup("/res/npc/pajed01", gp.tileSize, gp.tileSize);
+    down2 = setup("/res/npc/pajed02", gp.tileSize, gp.tileSize);
+    down3 =  setup("/res/npc/pajed03", gp.tileSize, gp.tileSize);
+    left1 = setup("/res/npc/pajel01", gp.tileSize, gp.tileSize);
+    left2 = setup("/res/npc/pajel02", gp.tileSize, gp.tileSize);
+    right1 = setup("/res/npc/pajer01", gp.tileSize, gp.tileSize);
+    right2 = setup("/res/npc/pajer02", gp.tileSize, gp.tileSize);
 
   }
   public void setDialogue(){
