@@ -208,7 +208,7 @@ if (scenePhase == 5) {
         if (monkeyCounter == -1) {
             monkeyCounter = 0;
             // gp.playeSE(4); // som do grito, se tiver
-            gp.startScreenShake(60, 6);
+            gp.startScreenShake(120, 6);
         }
 
         monkeyCounter++;
