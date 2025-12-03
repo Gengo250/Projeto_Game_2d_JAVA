@@ -203,23 +203,25 @@ public void scene_macaco(){
     }
 
     // FASE 5: GRITO (mk_beam) DEPOIS do diálogo
-    if (scenePhase == 5) {
-        if (monkeyBoss != null) {
-            if (monkeyCounter == -1) {
-                monkeyCounter = 0;
-                // gp.playeSE(4); // som do grito, se tiver
-            }
+if (scenePhase == 5) {
+    if (monkeyBoss != null) {
+        if (monkeyCounter == -1) {
+            monkeyCounter = 0;
+            // gp.playeSE(4); // som do grito, se tiver
+            gp.startScreenShake(60, 6);
+        }
 
-            monkeyCounter++;
-            monkeyBoss.spriteNum = 3; // frame do grito (mk_beam)
+        monkeyCounter++;
+        monkeyBoss.spriteNum = 3; // frame do grito (mk_beam)
 
-            if (monkeyCounter > 60) { // ~1 segundo
-                scenePhase++;
-            }
-        } else {
+        if (monkeyCounter > 60) { // ~1 segundo
             scenePhase++;
         }
+    } else {
+        scenePhase++;
     }
+}
+
 
     // FASE 6: volta pro jogador e começa a batalha
     if (scenePhase == 6) {

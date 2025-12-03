@@ -14,6 +14,9 @@ import java.util.Comparator;
 
 import javax.swing.JPanel;
 
+import java.util.Random;
+
+
 import ai.PathFind;
 import data.SaveLoad;
 import entity.Entity;
@@ -96,6 +99,16 @@ public class GamePanel  extends JPanel implements Runnable{
 
   //OTHERS
   public boolean bossBattleON = false;
+
+
+  // SCREEN SHAKE
+  private int screenShakeTimer = 0;
+  private int screenShakeIntensity = 0;
+  private int screenShakeOffsetX = 0;
+  private int screenShakeOffsetY = 0;
+  private Random screenShakeRandom = new Random();
+
+
 
 
   // AREA
@@ -290,6 +303,11 @@ public class GamePanel  extends JPanel implements Runnable{
 
     //OTHERS
     else {
+       // Atualiza o tremor (se estiver ativo)
+    updateScreenShake();
+
+    // Aplica o tremor em TODO o mundo (mapa, entidades, cutscene)
+    g2.translate(screenShakeOffsetX, screenShakeOffsetY);
     //TILE 
     tileM.draw(g2);
 
@@ -352,6 +370,9 @@ public class GamePanel  extends JPanel implements Runnable{
     //CUTSCENE
     csManager.draw(g2);
 
+    // remove o offset ANTES de desenhar HUD/UI
+    g2.translate(-screenShakeOffsetX, -screenShakeOffsetY);
+
     //UI
     ui.draw(g2);
 
@@ -394,6 +415,23 @@ public class GamePanel  extends JPanel implements Runnable{
     se.setFile(i);
     se.play();
   }
+  public void startScreenShake(int durationFrames, int intensityPixels) {
+    screenShakeTimer = durationFrames;
+    screenShakeIntensity = intensityPixels;
+}
+private void updateScreenShake() {
+    if (screenShakeTimer > 0 && screenShakeIntensity > 0) {
+        screenShakeTimer--;
+
+        // valor aleatório entre -intensity e +intensity
+        screenShakeOffsetX = screenShakeRandom.nextInt(screenShakeIntensity * 2 + 1) - screenShakeIntensity;
+        screenShakeOffsetY = screenShakeRandom.nextInt(screenShakeIntensity * 2 + 1) - screenShakeIntensity;
+    } else {
+        screenShakeOffsetX = 0;
+        screenShakeOffsetY = 0;
+    }
+}
+
   public void changeArea(){
     if(nextArea != currentArea){
       stopMusic();
