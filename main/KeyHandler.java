@@ -22,6 +22,39 @@ public class KeyHandler implements KeyListener {
   @Override
   public void keyPressed(KeyEvent e) {
     int code = e.getKeyCode();
+      // ===== MODO DE DIGITAÇÃO DO PAPEL =====
+  if (gp.gameState == gp.dialogueState && gp.ui.paperMode) {
+
+    // ENTER: enviar
+    if (code == KeyEvent.VK_ENTER) {
+      gp.ui.confirmPaperInput();
+      return; // não deixa o resto do código processar
+    }
+
+    // ESC: fechar sem enviar
+    if (code == KeyEvent.VK_ESCAPE) {
+      gp.ui.closePaperWindow();
+      return;
+    }
+
+    // BACKSPACE: apagar último caractere
+    if (code == KeyEvent.VK_BACK_SPACE) {
+      int len = gp.ui.paperInputText.length();
+      if (len > 0) {
+        gp.ui.paperInputText = gp.ui.paperInputText.substring(0, len - 1);
+      }
+      return;
+    }
+
+    // Letras, números, espaços, etc.
+    char c = e.getKeyChar();
+    if (!Character.isISOControl(c) && gp.ui.paperInputText.length() < 40) {
+      gp.ui.paperInputText += c;
+    }
+
+    // Enquanto estiver digitando no papel, não processa W/A/S/D nem nada
+    return;
+  }
 
     // TITLE STATE
     if (gp.gameState == gp.titleState) {

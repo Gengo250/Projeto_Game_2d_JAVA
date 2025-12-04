@@ -12,7 +12,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 
 import entity.Entity;
-
+import object.OBJ_Door_Iron;
 import object.OBJ_ManaCrystal;
 import object.OBJ_Zarabatana;
 
@@ -40,6 +40,14 @@ static final int HEART_STEPS = 6;
   public Entity npc;
   public int charIndex = 0;
   public String combinedText = "";
+  // === MODO PAPEL (janela com campo de texto) ===
+  public boolean paperMode = false;
+  public String paperInputText = "";
+  private int paperInputCounter = 0; // pra piscar o cursor
+  // Resposta correta do puzzle em complemento de dois (8 bits)
+  public String paperCorrectAnswer = "11111011";
+
+
 
   public UI(GamePanel gp) {
     this.gp = gp;
@@ -78,6 +86,83 @@ static final int HEART_STEPS = 6;
     Entity bronzeCoin = new object.OBJ_Coin_Bronze(gp);
     coin = bronzeCoin.down1;
   }
+    // Abre a janela especial do papel
+  public void openPaperWindow(Entity paperEntity) {
+    npc = paperEntity;          // usa os diálogos do próprio item (se quiser)
+    paperMode = true;
+    paperInputText = "";
+    paperInputCounter = 0;
+    charIndex = 0;
+    combinedText = "";
+    currentDialogue = "";
+
+    gp.gameState = gp.dialogueState;
+  }
+
+  // Fecha a janela do papel e volta pro jogo
+  public void closePaperWindow() {
+    paperMode = false;
+    npc = null;
+    gp.gameState = gp.playState;
+  }
+
+// Quando o jogador aperta ENTER no papel
+public void confirmPaperInput() {
+
+    if (paperInputText == null) {
+        paperInputText = "";
+    }
+
+    // Normaliza: tira espaços da resposta digitada
+    String raw = paperInputText.trim();
+    String normalized = raw.replaceAll("\\s+", "");
+
+    // Nada digitado
+    if (normalized.isEmpty()) {
+        addMessage("Digite uma resposta antes de enviar.");
+        gp.keyH.enterPressed = false;
+        return;
+    }
+
+    // Comparar com a resposta certa (complemento de dois)
+    if (normalized.equals(paperCorrectAnswer)) {
+
+        addMessage("Resposta correta! \nVocê ouviu uma porta de ferro se abrindo.");
+        unlockIronDoorFromPaperPuzzle();  // abre a porta
+
+        gp.keyH.enterPressed = false;
+        closePaperWindow();               // fecha a janela do papel
+
+    } else {
+
+        addMessage("Resposta incorreta. Tente novamente.");
+        paperInputText = "";              // limpa o campo pra tentar de novo
+        gp.keyH.enterPressed = false;
+        closePaperWindow(); 
+    }
+}
+
+
+  // Abre a porta de ferro (remove um OBJ_Door_Iron do mapa atual)
+private void unlockIronDoorFromPaperPuzzle() {
+
+    int mapNum = gp.currentMap; // abre a porta no mapa onde o player está // mudar quando ficar tudo pronto
+
+    for (int i = 0; i < gp.obj[mapNum].length; i++) {
+        Entity obj = gp.obj[mapNum][i];
+        if (obj != null && obj instanceof OBJ_Door_Iron) {
+
+            // Remove a porta (passagem fica livre)
+            gp.obj[mapNum][i] = null;
+
+            // Se quiser, aqui dá pra tocar um som:
+            // gp.playSE(3);
+
+            break; // abre só a primeira porta encontrada
+        }
+    }
+}
+
 
   public void addMessage(String text) {
     message.add(text);
@@ -404,9 +489,17 @@ static final int HEART_STEPS = 6;
     g2.drawString(text, x, y);
   }
 
-  public void drawDialogueScreen() {
+   void drawDialogueScreen() {
 
-    // WINDOW
+    // Se for o modo do papel, desenha outra tela e sai
+    if (paperMode) {
+      drawPaperDialogueScreen();
+      return;
+    }
+
+    // ===== DIÁLOGO NORMAL (NPCs, itens, cutscenes, etc.) =====
+
+    // WINDOW padrão
     int x = gp.tileSize * 3;
     int y = gp.tileSize / 2;
     int width = gp.screenWidth - (gp.tileSize * 6);
@@ -417,45 +510,123 @@ static final int HEART_STEPS = 6;
     x += gp.tileSize;
     y += gp.tileSize;
 
-    if (npc.dialogues[npc.dialogueSet][npc.dialogueIndex] != null) {
+    if (npc != null && npc.dialogues[npc.dialogueSet][npc.dialogueIndex] != null) {
 
-      currentDialogue = npc.dialogues[npc.dialogueSet][npc.dialogueIndex];
+      String targetText = npc.dialogues[npc.dialogueSet][npc.dialogueIndex];
+      currentDialogue = targetText;
 
-      // char characters[] =
-      // npc.dialogues[npc.dialogueSet][npc.dialogueIndex].toCharArray();
+      // efeito “máquina de escrever”
+      char characters[] = targetText.toCharArray();
 
-      // if(charIndex < characters.length){
-      // gp.playeSE(17);
-      // String s = String.valueOf(characters[charIndex]);
-      // combinedText = combinedText + s;
-      // currentDialogue = combinedText;
-      // charIndex++;
-      // }
+      if (charIndex < characters.length) {
+        String s = String.valueOf(characters[charIndex]);
+        combinedText += s;
+        charIndex++;
+        currentDialogue = combinedText;
+      }
+
       if (gp.keyH.enterPressed == true) {
         charIndex = 0;
         combinedText = "";
         if (gp.gameState == gp.dialogueState || gp.gameState == gp.cutsceneState) {
           npc.dialogueIndex++;
-          gp.keyH.enterPressed = false;
         }
+        gp.keyH.enterPressed = false;
       }
     } else {
       npc.dialogueIndex = 0;
       if (gp.gameState == gp.dialogueState) {
         gp.gameState = gp.playState;
       }
-      if(gp.gameState == gp.cutsceneState){
+      if (gp.gameState == gp.cutsceneState) {
         gp.csManager.scenePhase++;
       }
     }
 
-    // BREAK LINE DIALOGUE
+    // Quebra de linha (\n)
     for (String line : currentDialogue.split("\n")) {
       g2.drawString(line, x, y);
       y += 40;
     }
-
   }
+
+    // Tela especial do Papel: janela maior + campo de texto na última linha
+  void drawPaperDialogueScreen() {
+
+    // Janela maior que o diálogo normal
+    final int frameX = gp.tileSize * 2;
+    final int frameY = gp.tileSize / 2;
+    final int frameWidth = gp.screenWidth - gp.tileSize * 4;
+    final int frameHeight = gp.screenHeight - gp.tileSize * 3;
+
+    drawSubWindow(frameX, frameY, frameWidth, frameHeight);
+
+    // Texto principal
+    g2.setFont(g2.getFont().deriveFont(Font.PLAIN, 24F));
+    int textX = frameX + gp.tileSize;
+    int textY = frameY + gp.tileSize;
+    final int lineHeight = 32;
+
+    String text = "";
+
+    // Se quiser usar o diálogo do próprio item como texto base
+    if (npc != null  && npc.dialogues != null) {
+      String d = npc.dialogues[npc.dialogueSet][npc.dialogueIndex];
+      if (d != null) {
+        text = d;
+      }
+    }
+
+    // Desenha o texto do papel (ex: "(este item não é estocavel)")
+    for (String line : text.split("\n")) {
+      g2.drawString(line, textX, textY);
+      textY += lineHeight;
+    }
+
+    // Uma mini instrução acima do campo
+    textY += lineHeight;
+    g2.setFont(g2.getFont().deriveFont(Font.PLAIN, 20F));
+    g2.drawString("Digite a resposta e aperte ENTER para enviar.", textX, textY);
+
+
+    // Caixa de input na “última linha”
+    int inputBoxX = frameX + gp.tileSize;
+    int inputBoxY = frameY + frameHeight - gp.tileSize * 2;
+    int inputBoxWidth = frameWidth - gp.tileSize * 2;
+    int inputBoxHeight = gp.tileSize;
+
+    Color boxColor = new Color(0, 0, 0, 180);
+    g2.setColor(boxColor);
+    g2.fillRoundRect(inputBoxX, inputBoxY, inputBoxWidth, inputBoxHeight, 20, 20);
+
+    g2.setColor(Color.white);
+    g2.setStroke(new BasicStroke(3));
+    g2.drawRoundRect(inputBoxX, inputBoxY, inputBoxWidth, inputBoxHeight, 20, 20);
+
+    // Texto digitado + cursor
+    int textInputX = inputBoxX + 10;
+    int textInputY = inputBoxY + (inputBoxHeight / 2) + 8;
+
+    paperInputCounter++;
+    if (paperInputCounter > 60) {
+      paperInputCounter = 0;
+    }
+    boolean caretOn = paperInputCounter < 30;
+
+    String drawText = paperInputText;
+    if (caretOn) {
+      drawText += "_";
+    }
+
+    g2.setFont(g2.getFont().deriveFont(Font.PLAIN, 22F));
+    g2.drawString(drawText, textInputX, textInputY);
+
+    // Ajuda no rodapé do retângulo
+    g2.setFont(g2.getFont().deriveFont(Font.PLAIN, 18F));
+    g2.drawString("ENTER = enviar  |  ESC = fechar", textX, frameY + frameHeight - 10);
+  }
+
+
 
   public void drawCharacterScreen() {
     // CREATE A FRAME

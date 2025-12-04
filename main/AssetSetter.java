@@ -37,17 +37,12 @@ public class AssetSetter {
     gp.obj[mapNum][i].worldY = gp.tileSize*23;
     i++; */
 
-    mapNum = 3;
-    i = 0;
     gp.obj[mapNum][i] = new OBJ_Door_Iron(gp);
-    gp.obj[mapNum][i].worldX = gp.tileSize*25;
-    gp.obj[mapNum][i].worldY = gp.tileSize*15;
+    gp.obj[mapNum][i].worldX = gp.tileSize*169;
+    gp.obj[mapNum][i].worldY = gp.tileSize*119;
     i++;
 
-    gp.obj[mapNum][i] = new OBJ_BlueHeart(gp);
-    gp.obj[mapNum][i].worldX = gp.tileSize*25;
-    gp.obj[mapNum][i].worldY = gp.tileSize*8;
-    i++;
+
     
     
 

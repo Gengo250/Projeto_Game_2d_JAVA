@@ -11,6 +11,7 @@ import main.KeyHandler;
 import object.OBJ_Dardo;
 import object.OBJ_Key;
 import object.OBJ_Lantern;
+import object.OBJ_Paper;
 import object.OBJ_Shield_Wood;
 import object.OBJ_Sword_Normal;
 import object.OBJ_Ugabuga;
@@ -153,6 +154,7 @@ public class Player extends Entity {
     inventory.add(new OBJ_Lantern(gp));
     inventory.add(new OBJ_Zarabatana(gp));
     inventory.add(new OBJ_Ugabuga(gp));
+    inventory.add(new OBJ_Paper(gp));
   }
 
   public int getAttack() {
