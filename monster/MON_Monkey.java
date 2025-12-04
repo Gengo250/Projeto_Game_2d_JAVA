@@ -177,6 +177,8 @@ public class MON_Monkey extends Entity {
             defualtSpeed += 2;
             speed = defualtSpeed;
             attack += 10;
+            gp.stopMusic();
+            gp.playMusic(24);
         }
 
         if (getTileDistance(gp.player) < 12) {
@@ -228,8 +230,7 @@ public class MON_Monkey extends Entity {
         }
         dropItem(new OBJ_Heart(gp));
 
-        // Toca música de vitória
         gp.stopMusic();
-        gp.playMusic(20); // música pós-boss
+        gp.playMusic(23);
     }
 }
