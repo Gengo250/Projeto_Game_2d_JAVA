@@ -402,15 +402,25 @@ public class GamePanel  extends JPanel implements Runnable{
     g.drawImage(tempScreen, 0, 0, screenWidth2, screenHeight2, null);
     g.dispose();
   }
-  public void playMusic(int i){
+ public void playMusic(int i) {
+    // Garante que não vai ter música sobreposta
+    if (music.clip != null && music.clip.isRunning()) {
+        music.clip.stop();
+        music.clip.close();
+    }
+
     music.setFile(i);
     music.play();
     music.loop();
+}
 
-  }
-  public void stopMusic(){
-    music.stop();
-  }
+public void stopMusic() {
+    if (music.clip != null) {
+        music.clip.stop();
+        music.clip.close();
+    }
+}
+
   public void playeSE(int i){
     se.setFile(i);
     se.play();

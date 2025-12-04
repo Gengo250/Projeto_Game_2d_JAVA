@@ -11,6 +11,9 @@ public class MON_Monkey extends Entity {
     GamePanel gp;
     public static final String monName = "Macaco";
 
+    private boolean bananaIdleLoaded = false;
+
+
     public MON_Monkey(GamePanel gp) {
         super(gp);
         this.gp = gp;
@@ -126,6 +129,44 @@ public class MON_Monkey extends Entity {
         dialogues[0][2] = "VOCÊ VAI VIRAR COMIDA DE MACACO!";
     }
 
+        @Override
+    public void update() {
+
+        // MODO SLEEP = macaco comendo banana parado
+        if (sleep) {
+
+            // Garante que está usando os sprites de banana
+            if (!bananaIdleLoaded) {
+                getMonkeyParado();   // down1 = mkb01, down2 = mkb02, down3 = grito
+                direction = "down";  // fica olhando pra baixo (pra câmera)
+                spriteNum = 1;
+                spriteCounter = 0;
+                bananaIdleLoaded = true;
+            }
+
+            // Anima só mkb01 <-> mkb02 parado
+            spriteCounter++;
+            if (spriteCounter > 30) { // ~0.5s a 60 FPS, ajusta se quiser mais rápido
+                spriteNum = (spriteNum == 1) ? 2 : 1;
+                spriteCounter = 0;
+            }
+
+            // NÃO chama super.update() aqui, pra ele não andar, não atacar, nada.
+
+        } else {
+            // Acordou: volta pro sprite normal de combate se estava em modo banana
+            if (bananaIdleLoaded) {
+                bananaIdleLoaded = false;
+                getImage();        // recarrega sprites normais de movimento :contentReference[oaicite:1]{index=1}
+                getAttackImage();  // recarrega sprites de ataque normais
+            }
+
+            // Comportamento padrão de monstro (andar, seguir player, atacar, etc.)
+            super.update();
+        }
+    }
+
+
     public void setAction() {
 
         // Ativa rage com menos de 50% de vida
@@ -136,7 +177,6 @@ public class MON_Monkey extends Entity {
             defualtSpeed += 2;
             speed = defualtSpeed;
             attack += 10;
-            gp.playeSE(18); // som de rage
         }
 
         if (getTileDistance(gp.player) < 12) {
