@@ -10,6 +10,7 @@ public class NPC_OldMan extends Entity{
     super(gp);
 
     type = type_npc;
+    name = "Paje"; // ou "Velho", "Pajé", o que você quise
 
     direction = "down";
     speed = 1;

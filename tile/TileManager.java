@@ -16,6 +16,9 @@ public class TileManager {
   GamePanel gp;
   public Tile[] tile;
   public int mapTileNum[][][];
+  // NOVO: tamanho real de cada mapa
+  public int[] mapCols;
+  public int[] mapRows;
   boolean drawPath = true; //DEBUG AGRO = true -> ON || AGRO = false -> Off
   ArrayList<String> fileNames = new ArrayList<>();
   ArrayList<String> collsionsStatus = new ArrayList<>();
@@ -54,6 +57,10 @@ public class TileManager {
       gp.maxWorldRow = maxTile.length;
       mapTileNum = new int[gp.maxMap][gp.maxWorldCol][gp.maxWorldRow];
 
+      // NOVO:
+      mapCols = new int[gp.maxMap];
+      mapRows = new int[gp.maxMap];
+
       br.close();
 
     } catch (Exception e) {
@@ -61,9 +68,9 @@ public class TileManager {
     }
    
     loadMap("/res/maps/tocantins.txt", 0);
-    loadMap("/res/maps/mercador.txt", 1);
-    loadMap("/res/maps/labirinto.txt", 2);
-    loadMap("/res/maps/dungeonfinal.txt", 3);
+    //loadMap("/res/maps/mercador.txt", 1);
+    loadMap("/res/maps/caverna.txt", 2);
+    //loadMap("/res/maps/dungeonfinal.txt", 3);
 
   }
   public void getTileImage(){
@@ -107,33 +114,43 @@ public class TileManager {
     }
 }
 
- public void loadMap(String filePath, int map) {
-  try {
-    InputStream is = getClass().getResourceAsStream(filePath);
-    BufferedReader br = new BufferedReader(new InputStreamReader(is));
+public void loadMap(String filePath, int map) {
+    try {
+        InputStream is = getClass().getResourceAsStream(filePath);
+        BufferedReader br = new BufferedReader(new InputStreamReader(is));
 
-    int row = 0;
-    String line;
+        int row = 0;
+        String line;
 
-    while (row < gp.maxWorldRow && (line = br.readLine()) != null) {
-      String[] numbers = line.split(" ");
+        int maxColThisMap = 0;
 
-      int colLimit = Math.min(numbers.length, gp.maxWorldCol);
+        while (row < gp.maxWorldRow && (line = br.readLine()) != null) {
+            String[] numbers = line.split(" ");
 
-      for (int col = 0; col < colLimit; col++) {
-        int num = Integer.parseInt(numbers[col]);
-        mapTileNum[map][col][row] = num;
-      }
+            int colLimit = Math.min(numbers.length, gp.maxWorldCol);
 
-      // o resto da linha (col >= colLimit) fica com 0 (padrão), se existir
-      row++;
+            // guarda a maior quantidade de colunas dessa linha
+            if (colLimit > maxColThisMap) {
+                maxColThisMap = colLimit;
+            }
+
+            for (int col = 0; col < colLimit; col++) {
+                int num = Integer.parseInt(numbers[col]);
+                mapTileNum[map][col][row] = num;
+            }
+
+            row++;
+        }
+
+        // tamanho real desse mapa
+        mapCols[map] = maxColThisMap;
+        mapRows[map] = row;
+
+        br.close();
+
+    } catch (Exception e) {
+        e.printStackTrace();
     }
-
-    br.close();
-
-  } catch (Exception e) {
-    e.printStackTrace(); // pelo menos mostra se der erro
-  }
 }
 
   public void draw(Graphics2D g2){

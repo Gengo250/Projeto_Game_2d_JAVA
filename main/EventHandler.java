@@ -67,15 +67,18 @@ public class EventHandler {
 
         else if (hit(1, 21, 23, "up") == true) {speak(gp.npc[1][0]);} //mercador falando na mesa 
 
-        else if (hit(0, 19, 26, "any") == true){teleport(2, 68, 74, gp.dungeon);} //labirinto 
-        else if (hit(2, 68, 74, "any") == true){teleport(0, 19, 26, gp.outside);} //outside
+        else if (hit(0, 35, 73, "any") == true){teleport(2, 71, 97, gp.dungeon);} //caverna
+        else if (hit(0, 36, 73, "any") == true){teleport(2, 71, 97, gp.dungeon);} //caverna
+        else if (hit(0, 37, 73, "any") == true){teleport(2, 71, 97, gp.dungeon);} //caverna
+        else if (hit(0, 38, 73, "any") == true){teleport(2, 71, 97, gp.dungeon);} //caverna
+        else if (hit(0, 39, 73, "any") == true){teleport(2, 71, 97, gp.dungeon);} //caverna
+        else if (hit(0, 40, 73, "any") == true){teleport(2, 71, 97, gp.dungeon);} //caverna
+        else if (hit(0, 41, 73, "any") == true){teleport(2, 71, 97, gp.dungeon);} //caverna
+        
+        else if (hit(2, 71, 97, "any") == true){teleport(0, 39, 73, gp.outside);} //outside
 
-        else if (hit(2, 23, 66, "any") == true){teleport(0, 86, 18, gp.outside);} //Área secreta
-        else if (hit(0, 86, 19, "any") == true){teleport(2, 23, 66, gp.dungeon);} // Area secreta -> labirinto (volta para área escura)
 
 
-        else if (hit(2, 8, 7, "any") == true){teleport(3, 26, 41, gp.dungeon);}//B2
-        else if (hit(3, 26, 41, "any") == true){teleport(2, 8, 7, gp.dungeon);}//B1
         else if (hit(0, 61, 86, "any") == true){monkeyBoss();} // BOSS MACACO
 
        

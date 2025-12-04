@@ -3,7 +3,6 @@ package entity;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -13,7 +12,6 @@ import java.awt.AlphaComposite;
 import java.awt.Color;
 import javax.imageio.ImageIO;
 
-import main.UtilityTool;
 import main.GamePanel;
 
 public class Entity {
@@ -969,15 +967,18 @@ public int getCenterY() {
     int col = nextWordX / gp.tileSize;
     int row = nextWordY / gp.tileSize;
 
-    for (int i = 0; i < target[1].length; i++) {
-      if (target[gp.currentMap][i] != null) {
-        if (target[gp.currentMap][i].getCol() == col
-            && target[gp.currentMap][i].getRow() == row && target[gp.currentMap][i].name.equals(targetName)) {
-          index = i;
-          break;
-        }
-      }
+    for (int i = 0; i < target[gp.currentMap].length; i++) {
+    Entity e = target[gp.currentMap][i];
+
+    if (e != null
+        && e.getCol() == col
+        && e.getRow() == row
+        && targetName.equals(e.name)) { // evita NPE se e.name for null
+        index = i;
+        break;
     }
+}
+
     return index;
   }
 }
