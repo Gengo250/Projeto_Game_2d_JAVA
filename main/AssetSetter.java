@@ -64,14 +64,19 @@ public class AssetSetter {
     gp.npc[mapNum][i].worldY = gp.tileSize * 117; // ajusta o col/row que quiser
     i++;
       // exemplo: mapa 0, perto da vila
-    gp.npc[0][i] = new NPC_TamanduaStatueBlue(gp);
-    gp.npc[0][i].worldX = gp.tileSize * 172; // ajusta pos
-    gp.npc[0][i].worldY = gp.tileSize * 117;
+    gp.npc[mapNum][i] = new NPC_TamanduaStatueBlue(gp);
+    gp.npc[mapNum][i].worldX = gp.tileSize * 172; // ajusta pos
+    gp.npc[mapNum][i].worldY = gp.tileSize * 117;
     i++;
 
-    gp.npc[0][i] = new NPC_TamanduaStatueBlue(gp);
-    gp.npc[0][i].worldX = gp.tileSize * 184; // ajusta pos
-    gp.npc[0][i].worldY = gp.tileSize * 119;
+    gp.npc[mapNum][i] = new NPC_TamanduaStatueBlue(gp);
+    gp.npc[mapNum][i].worldX = gp.tileSize * 184; // ajusta pos
+    gp.npc[mapNum][i].worldY = gp.tileSize * 119;
+    i++;
+
+    gp.npc[mapNum][i] = new NPC_TamanduaStatueBlue(gp);
+    gp.npc[mapNum][i].worldX = gp.tileSize * 71; // ajusta pos
+    gp.npc[mapNum][i].worldY = gp.tileSize * 89;
     i++;
 
 

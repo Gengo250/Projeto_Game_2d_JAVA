@@ -207,7 +207,7 @@ if (scenePhase == 5) {
     if (monkeyBoss != null) {
         if (monkeyCounter == -1) {
             monkeyCounter = 0;
-            // gp.playeSE(4); // som do grito, se tiver
+            gp.playeSE(25); // som do grito, se tiver
             gp.startScreenShake(120, 6);
         }
 
