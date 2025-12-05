@@ -3,6 +3,13 @@ package monster;
 
 import entity.Entity;
 import main.GamePanel;
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
+import java.awt.AlphaComposite;
+
+
+
+
 import object.OBJ_Bananao;
 import object.OBJ_Coin_Bronze;
 import object.OBJ_Heart;
@@ -12,6 +19,31 @@ public class MON_Monkey extends Entity {
     public static final String monName = "Macaco";
 
     private boolean bananaIdleLoaded = false;
+
+        // === ATAQUE DE RAIO (só lado direito) ===
+    private boolean beamAttacking = false;
+    private int beamCounter = 0;
+
+    private BufferedImage beamHead;
+    private BufferedImage beamBody1;
+    private BufferedImage beamBody2;
+
+    // Padrão do ataque de raio
+    private static final int BEAM_WINDUP_NORMAL      = 35; // tempo "carregando" (frames)
+    private static final int BEAM_WINDUP_RAGE        = 25;
+    private static final int BEAM_DURATION_NORMAL    = 30; // tempo com o raio ativo
+    private static final int BEAM_DURATION_RAGE      = 45;
+    private static final int BEAM_RANGE_TILES_NORMAL = 9;  // alcance à frente (em tiles)
+    private static final int BEAM_RANGE_TILES_RAGE   = 10;
+    private static final int BEAM_HEIGHT_TILES       = 6;  // espessura vertical da área de dano
+    
+    // Posição da boca do macaco em relação à borda direita da hitbox
+    // (valores calibrados pelo sprite atual)
+    private static final int BEAM_MOUTH_OFFSET_X = 84;   // puxa um pouco à frente da hitbox
+    private static final int BEAM_MOUTH_OFFSET_Y = -16;  // ***sobe*** o feixe ~55px
+
+
+
 
 
     public MON_Monkey(GamePanel gp) {
@@ -52,6 +84,7 @@ public class MON_Monkey extends Entity {
 
         getImage();
         getAttackImage();
+        getBeamImages();   // carrega sprites do ataque de raio
         setDialogue();
     }
     public void getMonkeyParado() {
@@ -105,6 +138,9 @@ public class MON_Monkey extends Entity {
         
 
         if (!inRage) {
+            attackUp1 = setup("/monster/monkey/mksd02", 300, 300);
+            attackUp2 = setup("/monster/monkey/mksd03", 300, 300);
+            attackUp3 = setup("/monster/monkey/mksd01", 300, 300);
             attackDown1 = setup("/monster/monkey/mksu01", 300, 300);
             attackDown2 = setup("/monster/monkey/mksu02", 300, 300);
             attackLeft1 = setup("/monster/monkey/mksl01", 300, 300);
@@ -122,6 +158,20 @@ public class MON_Monkey extends Entity {
             //attackRight2 = setup("/monster/monkey/rage_attack_right_2", 200, 200);
         //}
     }
+
+        private void getBeamImages() {
+
+        // Boca aberta com início do raio (mesmo tamanho dos outros ataques do boss)
+        beamHead = setup("/monster/monkey/mk_beam", 300, 300);
+
+        // Segmentos do raio (vamos repetir para formar o feixe)
+        int beamWidth = gp.tileSize * 3;
+        int beamHeight = gp.tileSize;
+
+        beamBody1 = setup("/monster/monkey/mkbeam01", beamWidth, beamHeight);
+        beamBody2 = setup("/monster/monkey/mkbeam02", beamWidth, beamHeight);
+    }
+
 
     public void setDialogue() {
         dialogues[0][0] = "QUEM OUSA ENTRAR NO MEU REINO?!";
@@ -167,6 +217,7 @@ public class MON_Monkey extends Entity {
     }
 
 
+        @Override
     public void setAction() {
 
         // Ativa rage com menos de 50% de vida
@@ -174,6 +225,7 @@ public class MON_Monkey extends Entity {
             inRage = true;
             getImage();
             getAttackImage();
+            getBeamImages(); // se tiver variação de sprites na rage, recarrega aqui
             defualtSpeed += 2;
             speed = defualtSpeed;
             attack += 10;
@@ -181,32 +233,209 @@ public class MON_Monkey extends Entity {
             gp.playMusic(24);
         }
 
+        // Se já está no meio de um ataque (normal OU raio),
+        // deixa o método attacking() cuidar do resto.
+        if (attacking) {
+            return;
+        }
+
+        // Movimento básico: persegue o player se estiver relativamente perto
         if (getTileDistance(gp.player) < 12) {
             moveTowardPlayer(60);
         } else {
             getRandomDirection(120);
         }
 
-        // Define direção do ataque baseada na posição do player
-        if (!attacking) {
-            int px = gp.player.getCenterX();
-            int py = gp.player.getCenterY();
-            int mx = getCenterX();
-            int my = getCenterY();
+        // Define direção olhando pro player usando o eixo dominante
+        int px = gp.player.getCenterX();
+        int py = gp.player.getCenterY();
+        
+        int mx = getCenterX();
+        int my = getCenterY();
 
-            int xDiff = Math.abs(px - mx);
-            int yDiff = Math.abs(py - my);
+        int xDiff = Math.abs(px - mx);
+        int yDiff = Math.abs(py - my);
 
-            if (xDiff > yDiff) {
-                direction = (px < mx) ? "left" : "right";
+        if (xDiff > yDiff) {
+            direction = (px < mx) ? "left" : "right";
+        } else {
+            direction = (py < my) ? "up" : "down";
+        }
+
+        int tileDist = getTileDistance(gp.player);
+
+        // ----------------------------
+        // 1) Tentativa de ataque de RAIO (somente pra DIREITA)
+        // ----------------------------
+        boolean playerOnRight = px > mx && Math.abs(py - my) < gp.tileSize * 3;
+
+        if (direction.equals("right") && playerOnRight && tileDist >= 3) {
+
+            // Fora da rage o raio é mais raro, na rage é mais frequente
+            int beamRate = inRage ? 35 : 80; // quanto MENOR, mais chance de usar o raio
+
+            if (new java.util.Random().nextInt(beamRate) == 0) {
+                startBeamAttack();
+                return; // nesse frame não tenta o ataque corpo-a-corpo
+            }
+        }
+
+      // 2) Ataque corpo-a-corpo normal com alcance maior (boss grandão)
+// ----------------------------
+if (tileDist < 10) {
+    int meleeRate = inRage ? 30 : 45; // um pouco mais agressivo na rage
+
+    // Alcance "reto" (para frente) e tolerância lateral
+    int straightDist  = inRage ? gp.tileSize * 7 : gp.tileSize * 5; // 5~7 tiles pra frente
+    int sideTolerance = gp.tileSize * 4;                             // 4 tiles pros lados
+
+    checkAttackOrNot(meleeRate, straightDist, sideTolerance);
+}
+
+    }
+
+        private void startBeamAttack() {
+        attacking = true;
+        beamAttacking = true;
+        beamCounter = 0;
+        spriteCounter = 0;
+        spriteNum = 1;
+        direction = "right"; // garante que o raio SEMPRE sai pra direita
+    }
+
+@Override
+public void attacking() {
+
+    // 0) Ataque de RAIO usa lógica separada
+    if (beamAttacking) {
+        updateBeamAttack();
+        return;
+    }
+
+    spriteCounter++;
+
+    // 1) Wind-up (levantando o braço, ainda sem hitbox)
+    if (spriteCounter <= motion1_duration) {
+        spriteNum = 1;
+        return;
+    }
+
+    // 2) Fase ativa do soco (onde realmente sai o dano)
+    if (spriteCounter > motion1_duration && spriteCounter <= motion2_duration) {
+
+        // Animação: se tiver 3 frames de ataque, usa 2 depois 3
+        boolean has3AttackFrames =
+                attackUp3 != null || attackDown3 != null ||
+                attackLeft3 != null || attackRight3 != null;
+
+        if (has3AttackFrames) {
+            int mid = motion1_duration + (motion2_duration - motion1_duration) / 2;
+            if (spriteCounter <= mid) {
+                spriteNum = 2;
             } else {
-                direction = (py < my) ? "up" : "down";
+                spriteNum = 3;
             }
+        } else {
+            spriteNum = 2;
+        }
 
-            // Ataca se estiver perto
-            if (getTileDistance(gp.player) < 3) {
-                checkAttackOrNot(50, gp.tileSize * 3, gp.tileSize * 3);
-            }
+        // ---- HITBOX ESPECIAL DO MACACO (GRANDE) ----
+        int currentWorldX = worldX;
+        int currentWorldY = worldY;
+        int solidWidth    = solidArea.width;
+        int solidHeight   = solidArea.height;
+
+        // Em vez de usar attackArea.width/height como deslocamento,
+        // usamos o TAMANHO DA HITBOX do corpo.
+        // Assim o ataque começa encostado no corpo e se estende pra fora.
+        switch (direction) {
+            case "up":
+                worldY -= solidHeight;
+                break;
+            case "down":
+                worldY += solidHeight;
+                break;
+            case "left":
+                worldX -= solidWidth;
+                break;
+            case "right":
+                worldX += solidWidth;
+                break;
+        }
+
+        // A área de dano continua sendo 160x160 (ataque em área gigante)
+        solidArea.width  = attackArea.width;
+        solidArea.height = attackArea.height;
+
+        // Como é monstro, só precisamos checar o player
+        if (gp.cChecker.checkPlayer(this)) {
+            damagePlayer(attack);
+        }
+
+        // Restaura posição e hitbox originais
+        worldX = currentWorldX;
+        worldY = currentWorldY;
+        solidArea.width  = solidWidth;
+        solidArea.height = solidHeight;
+    }
+
+    // 3) Fim do ataque
+    if (spriteCounter > motion2_duration) {
+        spriteNum = 1;
+        spriteCounter = 0;
+        attacking = false;
+    }
+}
+
+
+    private void updateBeamAttack() {
+
+        beamCounter++;
+        spriteCounter++;
+
+        int windup = inRage ? BEAM_WINDUP_RAGE : BEAM_WINDUP_NORMAL;
+        int duration = inRage ? BEAM_DURATION_RAGE : BEAM_DURATION_NORMAL;
+
+        // 1) Carregando o raio (apenas animação, sem dano)
+        if (beamCounter <= windup) {
+            spriteNum = 1; // usa o primeiro frame de ataque para telegraph
+        }
+        // 2) Raio ativo
+        else if (beamCounter <= windup + duration) {
+            spriteNum = 2; // mantém pose de boca aberta
+            applyBeamDamage();
+        }
+        // 3) Fim do ataque
+        else {
+            beamAttacking = false;
+            attacking = false;
+            beamCounter = 0;
+            spriteCounter = 0;
+            spriteNum = 1;
+        }
+    }
+
+    private void applyBeamDamage() {
+
+      int rangeTiles = inRage ? BEAM_RANGE_TILES_RAGE : BEAM_RANGE_TILES_NORMAL;
+int beamWidthPixels = rangeTiles * gp.tileSize;
+int beamHeightPixels = BEAM_HEIGHT_TILES * gp.tileSize;
+
+// ORIGEM DO RAIO = BOCA
+int startX = getRightX() + BEAM_MOUTH_OFFSET_X;
+int centerY = getCenterY() + BEAM_MOUTH_OFFSET_Y;
+
+int topY = centerY - beamHeightPixels / 2;
+int bottomY = centerY + beamHeightPixels / 2;
+int endX = startX + beamWidthPixels;
+
+
+        int px = gp.player.getCenterX();
+        int py = gp.player.getCenterY();
+
+        if (px >= startX && px <= endX && py >= topY && py <= bottomY) {
+            int beamDamage = attack + (inRage ? 5 : 0); // raio bate um pouco mais forte na rage
+            damagePlayer(beamDamage);
         }
     }
 
@@ -216,6 +445,146 @@ public class MON_Monkey extends Entity {
         actionLockCounter = 0;
         // Pode adicionar animação de recuo aqui se quiser
     }
+
+@Override
+public void draw(Graphics2D g2) {
+
+    // Ataque corpo-a-corpo pra CIMA (não é o raio)
+    boolean customUpAttack = attacking && !beamAttacking && "up".equals(direction);
+
+    if (!customUpAttack) {
+        // Qualquer outra situação (andar, soco pros lados, raio, etc.)
+        super.draw(g2);
+
+        // Overlay do RAIO (grito + feixe) por cima de tudo
+        if (beamAttacking && "right".equals(direction)) {
+            drawBeamOverlay(g2);
+        }
+        return;
+    }
+
+    // Se chegou aqui, é o ataque pra CIMA com sprite especial
+    drawUpAttackOverlay(g2);
+
+    // (Na prática, beamAttacking nunca é true junto com esse ataque,
+    //  mas deixo aqui por segurança; se um dia misturar estados, funciona.)
+    if (beamAttacking && "right".equals(direction)) {
+        drawBeamOverlay(g2);
+    }
+}
+
+
+
+private void drawUpAttackOverlay(Graphics2D g2) {
+
+    BufferedImage image = null;
+    if (spriteNum == 1)      image = attackUp1;
+    else if (spriteNum == 2) image = attackUp2;
+    else if (spriteNum == 3 && attackUp3 != null) image = attackUp3;
+
+    if (image == null) {
+        // fallback de segurança
+        super.draw(g2);
+        return;
+    }
+
+    // Mesmo ponto de referência que o Entity.draw usa
+    int screenX = getScreenX();
+    int screenY = getScreenY();
+
+    // As sprites de movimento do macaco foram carregadas com 200x200
+    final int BODY_SIZE = 200;
+
+    // Queremos:
+    //  - MESMA "base" (pé) da sprite normal
+    //  - NENHUM "salto" pro lado ou pra frente
+    //
+    // Bottom da sprite normal = screenY + BODY_SIZE
+    // Bottom da sprite de ataque = drawY + image.getHeight()
+    // => drawY = screenY + BODY_SIZE - image.getHeight()
+    int drawX = screenX;                                // mantém a mesma coluna
+    int drawY = screenY + BODY_SIZE - image.getHeight();// mantém o pé no mesmo lugar
+
+    // Efeito de invencibilidade igual ao Entity.draw()
+    if (invencible) {
+        g2.setComposite(
+            AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.4f)
+        );
+    }
+
+    // Desenha SÓ o sprite de ataque pra cima
+    g2.drawImage(image, drawX, drawY, null);
+
+    // Reset alpha
+    g2.setComposite(
+        AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f)
+    );
+
+    // HP bar e animação de morte (copiado da lógica do Entity.draw)
+    if (invencible) {
+        hpBarOn = true;
+        hpBarCounter = 0;
+    }
+    if (dying) {
+        dyingAnimation(g2);
+    }
+}
+
+
+private void drawBeamOverlay(Graphics2D g2) {
+
+    // Boca aberta (beamHead) por cima do corpo
+    if (beamHead != null) {
+
+        int headX = getScreenX();
+        int headY = getScreenY();
+
+        // Mesmo offset do ataque para a direita em Entity.draw
+        if (attacking && useAttackOffsets) {
+            headX += -20;
+            headY += -60;
+        }
+
+        g2.drawImage(beamHead, headX, headY, null);
+    }
+
+    // Durante o windup só o grito aparece (sem feixe)
+    int windup = inRage ? BEAM_WINDUP_RAGE : BEAM_WINDUP_NORMAL;
+    if (beamCounter <= windup || beamBody1 == null) {
+        return;
+    }
+
+    int rangeTiles = inRage ? BEAM_RANGE_TILES_RAGE : BEAM_RANGE_TILES_NORMAL;
+    int beamWidthPixels = rangeTiles * gp.tileSize;
+
+    // Origem do feixe: boca (como já calibramos com BEAM_MOUTH_OFFSET_*)
+    int startWorldX = getRightX() + BEAM_MOUTH_OFFSET_X;
+    int centerWorldY = getCenterY() + BEAM_MOUTH_OFFSET_Y;
+
+    int startScreenX = startWorldX - gp.player.worldX + gp.player.screenX;
+    int centerScreenY = centerWorldY - gp.player.worldY + gp.player.screenY;
+
+    // Alterna entre mkbeam01 e mkbeam02 pra animar
+    BufferedImage slice = (beamBody2 != null && (beamCounter / 5) % 2 == 1)
+            ? beamBody2
+            : beamBody1;
+
+    int sliceW = slice.getWidth();
+    int sliceH = slice.getHeight();
+    int y = centerScreenY - sliceH / 2;
+
+    int drawn = 0;
+    int x = startScreenX;
+
+    while (drawn < beamWidthPixels) {
+        g2.drawImage(slice, x, y, null);
+        x += sliceW;
+        drawn += sliceW;
+    }
+}
+
+
+
 
     public void checkDrop() {
         // Desativa boss fight
