@@ -57,25 +57,23 @@ public class AssetSetter {
     gp.npc[mapNum][i].worldY = gp.tileSize * 119;
     i++;
 
-
-    // ESTÁTUA TAMANDUÁ-BANDEIRA (MAPA 0)
     gp.npc[mapNum][i] = new NPC_TamanduaStatue(gp);
-    gp.npc[mapNum][i].worldX = gp.tileSize * 173; // posição exemplo
-    gp.npc[mapNum][i].worldY = gp.tileSize * 117; // ajusta o col/row que quiser
+    gp.npc[mapNum][i].worldX = gp.tileSize * 173; 
+    gp.npc[mapNum][i].worldY = gp.tileSize * 117; 
     i++;
-      // exemplo: mapa 0, perto da vila
+    
     gp.npc[mapNum][i] = new NPC_TamanduaStatueBlue(gp);
-    gp.npc[mapNum][i].worldX = gp.tileSize * 172; // ajusta pos
+    gp.npc[mapNum][i].worldX = gp.tileSize * 172; 
     gp.npc[mapNum][i].worldY = gp.tileSize * 117;
     i++;
 
     gp.npc[mapNum][i] = new NPC_TamanduaStatueBlue(gp);
-    gp.npc[mapNum][i].worldX = gp.tileSize * 184; // ajusta pos
+    gp.npc[mapNum][i].worldX = gp.tileSize * 184; 
     gp.npc[mapNum][i].worldY = gp.tileSize * 119;
     i++;
 
     gp.npc[mapNum][i] = new NPC_TamanduaStatueBlue(gp);
-    gp.npc[mapNum][i].worldX = gp.tileSize * 71; // ajusta pos
+    gp.npc[mapNum][i].worldX = gp.tileSize * 71; 
     gp.npc[mapNum][i].worldY = gp.tileSize * 89;
     i++;
 
