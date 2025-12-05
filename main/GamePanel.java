@@ -66,7 +66,7 @@ public class GamePanel  extends JPanel implements Runnable{
   public PathFind pFinder = new PathFind(this);
   EnvironmentManager eManager = new EnvironmentManager(this);
   Map map = new Map(this);
-  SaveLoad saveLoad = new SaveLoad(this);
+  public SaveLoad saveLoad = new SaveLoad(this);
   public EntityGenerator eGenerator = new EntityGenerator(this);
   public CutsceneManager csManager = new CutsceneManager(this);
   Thread gameThread;
