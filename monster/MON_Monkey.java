@@ -10,6 +10,7 @@ import java.awt.AlphaComposite;
 
 
 
+
 import object.OBJ_Bananao;
 import object.OBJ_Coin_Bronze;
 import object.OBJ_Heart;
@@ -27,6 +28,9 @@ public class MON_Monkey extends Entity {
     private BufferedImage beamHead;
     private BufferedImage beamBody1;
     private BufferedImage beamBody2;
+
+    private BufferedImage cutsceneRoarFront;
+
 
     // Padrão do ataque de raio
     private static final int BEAM_WINDUP_NORMAL      = 35; // tempo "carregando" (frames)
@@ -87,19 +91,22 @@ public class MON_Monkey extends Entity {
         getBeamImages();   // carrega sprites do ataque de raio
         setDialogue();
     }
-    public void getMonkeyParado() {
+   public void getMonkeyParado() {
 
-        // Sprites especiais só pra CUTSCENE:
-        //  - down1 / down2: macaco comendo banana (loop parado)
-        //  - down3: macaco gritando (mk_beam)
+    // Sprites especiais só pra CUTSCENE:
+    //  - down1 / down2: macaco comendo banana (loop parado)
+    //  - cutsceneRoarFront: macaco gritando de frente (grandão)
 
-        // >>> TROCA os nomes abaixo pros nomes reais dos seus arquivos (sem .png) <<<
-        down1 = setup("/monster/monkey/mkb01", 200, 200);
-        down2 = setup("/monster/monkey/mkb02", 200, 200);
+    down1 = setup("/monster/monkey/mkb01", 200, 200);
+    down2 = setup("/monster/monkey/mkb02", 200, 200);
 
-        // sprite do grito (essa imagem aí do mk_beam.png)
-        down3 = setup("/monster/monkey/mkgrito", 200, 200); // consertar mais tarde //
-    }
+    // Versão "normal" se quiser usar em algum lugar
+    down3 = setup("/monster/monkey/mkgrito", 200, 200);
+
+    // Versão GRANDONA só pro grito da cutscene
+    cutsceneRoarFront = setup("/monster/monkey/mkgrito", 300, 300);
+}
+
 
     public void getImage() {
 
@@ -138,9 +145,9 @@ public class MON_Monkey extends Entity {
         
 
         if (!inRage) {
-            attackUp1 = setup("/monster/monkey/mksd02", 300, 300);
-            attackUp2 = setup("/monster/monkey/mksd03", 300, 300);
-            attackUp3 = setup("/monster/monkey/mksd01", 300, 300);
+            attackUp1 = setup("/monster/monkey/mksd01", 300, 300);
+            attackUp2 = setup("/monster/monkey/mksd02", 300, 300);
+            attackUp3 = setup("/monster/monkey/mksd03", 300, 300);
             attackDown1 = setup("/monster/monkey/mksu01", 300, 300);
             attackDown2 = setup("/monster/monkey/mksu02", 300, 300);
             attackLeft1 = setup("/monster/monkey/mksl01", 300, 300);
@@ -450,28 +457,92 @@ int endX = startX + beamWidthPixels;
 public void draw(Graphics2D g2) {
 
     // Ataque corpo-a-corpo pra CIMA (não é o raio)
-    boolean customUpAttack = attacking && !beamAttacking && "up".equals(direction);
+    boolean customUpAttack   = attacking && !beamAttacking && "up".equals(direction);
 
-    if (!customUpAttack) {
-        // Qualquer outra situação (andar, soco pros lados, raio, etc.)
-        super.draw(g2);
+   
+// Grito de frente na CUTSCENE (gameState de cutscene + olhando pra baixo + frame 3)
+boolean customFrontRoar  = gp.gameState == gp.cutsceneState
+        && !attacking
+        && !beamAttacking
+        && "down".equals(direction)
+        && spriteNum == 3
+        && cutsceneRoarFront != null;
 
-        // Overlay do RAIO (grito + feixe) por cima de tudo
+
+    // 1) Ataque pra cima (overlay especial)
+    if (customUpAttack) {
+        drawUpAttackOverlay(g2);
+
         if (beamAttacking && "right".equals(direction)) {
             drawBeamOverlay(g2);
         }
         return;
     }
 
-    // Se chegou aqui, é o ataque pra CIMA com sprite especial
-    drawUpAttackOverlay(g2);
+    // 2) Grito de frente na cutscene
+    if (customFrontRoar) {
+        drawFrontRoarOverlay(g2);
+        // nessa cena não tem raio junto, então podemos sair aqui
+        return;
+    }
 
-    // (Na prática, beamAttacking nunca é true junto com esse ataque,
-    //  mas deixo aqui por segurança; se um dia misturar estados, funciona.)
+    // 3) Todo o resto (andar, soco pros lados, etc.) usa draw padrão
+    super.draw(g2);
+
+    // Overlay do raio (lateral direita)
     if (beamAttacking && "right".equals(direction)) {
         drawBeamOverlay(g2);
     }
 }
+
+private void drawFrontRoarOverlay(Graphics2D g2) {
+
+    BufferedImage image = cutsceneRoarFront != null ? cutsceneRoarFront : down3;
+    if (image == null) {
+        // segurança: se algo der errado, desenha do jeito padrão
+        super.draw(g2);
+        return;
+    }
+
+    // Mesmo ponto de referência usado no Entity.draw()
+    int screenX = getScreenX();
+    int screenY = getScreenY();
+
+    // Sprites normais do macaco (andar) = 200x200
+    final int BODY_SIZE = 200;
+
+    // Queremos manter o pé no MESMO lugar da sprite normal:
+    //
+    // bottom normal  = screenY + BODY_SIZE
+    // bottom grito   = drawY   + image.getHeight()
+    // => drawY = screenY + BODY_SIZE - image.getHeight()
+    int drawX = screenX;                             // não desloca pro lado
+    int drawY = screenY + BODY_SIZE - image.getHeight();
+
+    // Efeito de invencível igual ao Entity.draw()
+    if (invencible) {
+        g2.setComposite(
+            AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.4f)
+        );
+    }
+
+    g2.drawImage(image, drawX, drawY, null);
+
+    // reset alpha
+    g2.setComposite(
+        AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f)
+    );
+
+    // HP bar / animação de morte (quase nunca usados na cutscene, mas fica consistente)
+    if (invencible) {
+        hpBarOn = true;
+        hpBarCounter = 0;
+    }
+    if (dying) {
+        dyingAnimation(g2);
+    }
+}
+
 
 
 
