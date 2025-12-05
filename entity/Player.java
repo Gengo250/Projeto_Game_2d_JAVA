@@ -36,6 +36,8 @@ public class Player extends Entity {
   private BufferedImage ugabugaAuraBuf;
   private int ugabugaAuraW = -1, ugabugaAuraH = -1;
 
+  private boolean wasGodModeOn = false;
+
 
   public Player(GamePanel gp, KeyHandler keyH) {
     super(gp);
@@ -284,6 +286,34 @@ public class Player extends Entity {
   }
 
   public void update() {
+
+    // ===== GOD MODE BUFFS =====
+    boolean godMode = keyH.godModeOn;
+
+    if (godMode) {
+      // status turbinado
+      attack = 50;                  // dano fixo 50
+      speed = defualtSpeed * 2;     // velocidade aumentada
+
+      // imortalidade
+      invencible = true;
+      transparent = false;
+      invencibleCounter = 0;
+      life = maxLife;
+      mana = maxMana;
+
+      // dardos (e qualquer recurso) "infinitos"
+      ammo = 999;
+    } else if (wasGodModeOn) {
+      // acabou de desligar o god mode -> volta pro normal
+      attack = getAttack();         // recalcula ataque normal
+      speed = defualtSpeed;
+      invencible = false;
+      transparent = false;
+      invencibleCounter = 0;
+    }
+
+    wasGodModeOn = godMode;
     if (knokBack == true) {
       collisionOn = false;
       gp.cChecker.checkTile(this);
@@ -351,9 +381,10 @@ public class Player extends Entity {
       contactMonster(monsterIndex); // dano por contato, etc.
 
       // CHECK EVENT
-      if (!invencible)
-        gp.eHandler.checkEvent();
-
+      if (!invencible || keyH.godModeOn){
+         gp.eHandler.checkEvent();
+      }
+      
       // IF COLLISION IS FALSE, PLAYER CAN MOVE
       if (collisionOn == false && gp.keyH.enterPressed == false) {
         switch (direction) {
@@ -482,7 +513,7 @@ public class Player extends Entity {
     if (invencible == true) {
 
       // Se NÃO estiver em modo Ugabuga, usa o timer normal de i-frame
-      if (!ugabugaActive) {
+      if (!ugabugaActive && !keyH.godModeOn) {
         invencibleCounter++;
         if (invencibleCounter > 60) {
           invencible = false;
@@ -569,9 +600,10 @@ public class Player extends Entity {
     }
   }
 
-  public void contactMonster(int i) {
+   public void contactMonster(int i) {
     if (i != 999) {
-      if (invencible == false && gp.monster[gp.currentMap][i].dying == false) {
+      // Em God Mode o contato não causa dano
+      if (!keyH.godModeOn && invencible == false && gp.monster[gp.currentMap][i].dying == false) {
         gp.playeSE(6);
 
         int damage = gp.monster[gp.currentMap][i].attack - defense;
@@ -584,6 +616,7 @@ public class Player extends Entity {
       }
     }
   }
+
 
   public void damageMonter(int i, Entity attacker, int attack, int knokBackPower) {
     if (i != 999) {
