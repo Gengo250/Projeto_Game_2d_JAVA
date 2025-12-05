@@ -365,12 +365,67 @@ public class KeyHandler implements KeyListener {
         }
       }
   }
+    // chamada no update: if(gp.gameState == gp.mapState) mapState(code);
   public void mapState(int code){
-    if(code == KeyEvent.VK_M){
+
+    // se foi aberto pela estátua azul
+    if (gp.map.fastTravelOn) {
+      fastTravelControls(code);
+      return;
+    }
+
+    // mapa normal (só visualizar, tipo apertar M em qualquer lugar)
+    if (code == KeyEvent.VK_M || code == KeyEvent.VK_ESCAPE) {
       gp.gameState = gp.playState;
-      
     }
   }
+
+  // CONTROLES DO FAST TRAVEL NO MAPA MUNDI
+  private void fastTravelControls(int code){
+
+    int size = gp.map.fastTravelStatues.size();
+    if (size == 0) {
+      gp.map.closeFastTravel();
+      return;
+    }
+
+    int moveSE = 9; // mesmo SE do inventário
+
+    // pra baixo/direita -> próxima estátua
+    if (code == KeyEvent.VK_S || code == KeyEvent.VK_DOWN ||
+        code == KeyEvent.VK_D || code == KeyEvent.VK_RIGHT) {
+
+      gp.map.fastTravelCursorIndex++;
+      if (gp.map.fastTravelCursorIndex >= size) {
+        gp.map.fastTravelCursorIndex = 0;
+      }
+      gp.playeSE(moveSE);
+    }
+
+    // pra cima/esquerda -> estátua anterior
+    else if (code == KeyEvent.VK_W || code == KeyEvent.VK_UP ||
+             code == KeyEvent.VK_A || code == KeyEvent.VK_LEFT) {
+
+      gp.map.fastTravelCursorIndex--;
+      if (gp.map.fastTravelCursorIndex < 0) {
+        gp.map.fastTravelCursorIndex = size - 1;
+      }
+      gp.playeSE(moveSE);
+    }
+
+    // ENTER -> teleporta
+    else if (code == KeyEvent.VK_ENTER) {
+      gp.map.confirmFastTravelSelection();
+    }
+
+    // ESC ou M -> sai do fast travel sem teleportar
+    else if (code == KeyEvent.VK_ESCAPE || code == KeyEvent.VK_M) {
+      gp.playeSE(moveSE);
+      gp.map.closeFastTravel();
+    }
+  }
+
+
   public void playerInventory(int code){
      if(code == KeyEvent.VK_W){
       if(gp.ui.playerslotRow != 0){

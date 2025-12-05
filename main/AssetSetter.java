@@ -5,6 +5,7 @@ import entity.NPC_BigRock;
 import entity.NPC_Merchant;
 import entity.NPC_OldMan;
 import entity.NPC_TamanduaStatue;
+import entity.NPC_TamanduaStatueBlue;
 import monster.MON_GreenSlime;
 import monster.MON_Monkey;
 import monster.MON_Orc;
@@ -62,6 +63,17 @@ public class AssetSetter {
     gp.npc[mapNum][i].worldX = gp.tileSize * 173; // posição exemplo
     gp.npc[mapNum][i].worldY = gp.tileSize * 117; // ajusta o col/row que quiser
     i++;
+      // exemplo: mapa 0, perto da vila
+    gp.npc[0][i] = new NPC_TamanduaStatueBlue(gp);
+    gp.npc[0][i].worldX = gp.tileSize * 172; // ajusta pos
+    gp.npc[0][i].worldY = gp.tileSize * 117;
+    i++;
+
+    gp.npc[0][i] = new NPC_TamanduaStatueBlue(gp);
+    gp.npc[0][i].worldX = gp.tileSize * 184; // ajusta pos
+    gp.npc[0][i].worldY = gp.tileSize * 119;
+    i++;
+
 
     //MAP 1 // sala do mercador
     mapNum = 1;

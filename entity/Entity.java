@@ -58,6 +58,7 @@ public class Entity {
   public boolean drawing = true;
   public boolean shotThisAttack = false;
   public boolean useAttackOffsets = false; 
+   public boolean fastTravelPoint = false;
 
 
   // COUNTER

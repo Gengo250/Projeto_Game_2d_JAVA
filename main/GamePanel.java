@@ -65,7 +65,7 @@ public class GamePanel  extends JPanel implements Runnable{
   Config config = new Config(this);
   public PathFind pFinder = new PathFind(this);
   EnvironmentManager eManager = new EnvironmentManager(this);
-  Map map = new Map(this);
+  public Map map = new Map(this);
   public SaveLoad saveLoad = new SaveLoad(this);
   public EntityGenerator eGenerator = new EntityGenerator(this);
   public CutsceneManager csManager = new CutsceneManager(this);
@@ -109,6 +109,11 @@ public class GamePanel  extends JPanel implements Runnable{
   private Random screenShakeRandom = new Random();
 
 
+  // FAST TRAVEL
+  public boolean fastTravelMode = false;
+  public Entity fastTravelOriginStatue = null;
+  public ArrayList<Entity> fastTravelStatues = new ArrayList<>();
+  public int fastTravelCursorIndex = 0;
 
 
   // AREA
@@ -179,6 +184,69 @@ public class GamePanel  extends JPanel implements Runnable{
       eManager.lighting.resetDay();
     }
   }
+    public void openFastTravelFromStatue(Entity origin) {
+
+    // monta a lista de estátuas do mapa atual
+    fastTravelStatues.clear();
+    for (int i = 0; i < npc[currentMap].length; i++) {
+      Entity e = npc[currentMap][i];
+      if (e != null && e.fastTravelPoint) {
+        fastTravelStatues.add(e);
+      }
+    }
+
+    if (fastTravelStatues.isEmpty()) {
+      // não tem nada pra teleportar, só mostra mensagem
+      ui.addMessage("Nenhuma outra estátua neste mapa.");
+      return;
+    }
+
+    fastTravelMode = true;
+    fastTravelOriginStatue = origin;
+
+    // cursor começa na estátua onde o player está
+    fastTravelCursorIndex = 0;
+    for (int i = 0; i < fastTravelStatues.size(); i++) {
+      if (fastTravelStatues.get(i) == origin) {
+        fastTravelCursorIndex = i;
+        break;
+      }
+    }
+
+    // entra no estado de mapa (já existe no GamePanel)
+    gameState = mapState;  // usa o mapState padrão
+  }
+
+  public void closeFastTravel() {
+    fastTravelMode = false;
+    fastTravelOriginStatue = null;
+    fastTravelStatues.clear();
+    gameState = playState;
+  }
+
+  public void teleportToStatue(Entity target) {
+    if (target == null) return;
+
+    // teleporta só dentro do mapa atual (mesmo currentMap)
+    player.worldX = target.worldX;
+    player.worldY = target.worldY;
+    player.direction = "down";
+
+    // atualiza área atual (mesma lógica do resetGame)
+    if (currentMap == 1) {
+      currentArea = indoor;
+    } else if (currentMap == 2 || currentMap == 3) {
+      currentArea = dungeon;
+    } else {
+      currentArea = outside;
+    }
+
+    // som de teleporte (mesmo SE do teleport do EventHandler)
+    playeSE(13);  // o mesmo usado no método teleport do EventHandler :contentReference[oaicite:2]{index=2}
+
+    closeFastTravel();
+  }
+
   public void setFullScreen(){
     //GET LOCAL SCREEN DEVICE
     GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
