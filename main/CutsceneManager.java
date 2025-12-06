@@ -330,7 +330,7 @@ public void scene_intro() {
         drawCurrentIntroBlock(1f);
 
         // espera ~3 segundos antes de começar a descer
-        if (counterReached(180)) { // 180 frames ≈ 3s (se estiver em 60 FPS)
+        if (counterReached(300)) { // 300 frames ≈ 5s (se estiver em 60 FPS)
             scenePhase++;
         }
     }

@@ -151,7 +151,7 @@ public class KeyHandler implements KeyListener {
       if (code == KeyEvent.VK_ENTER) {
         if (gp.ui.commandNum == 0) {
           gp.ui.titleScreenState = 1;
-          gp.playMusic(23);
+          //gp.playMusic(23);
         }
         if (gp.ui.commandNum == 1) {
           gp.saveLoad.load();
