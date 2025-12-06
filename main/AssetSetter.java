@@ -78,13 +78,10 @@ public class AssetSetter {
     i++;
 
 
-    //MAP 1 // sala do mercador
+    //MAP 1 // Casa
     mapNum = 1;
     i = 0;
-    gp.npc[mapNum][i] = new NPC_Merchant(gp);
-    gp.npc[mapNum][i].worldX = gp.tileSize*21;
-    gp.npc[mapNum][i].worldY = gp.tileSize*21;
-    i++;
+   
 
     mapNum = 2;
     i = 0;

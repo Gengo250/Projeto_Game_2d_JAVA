@@ -62,10 +62,10 @@ public class Player extends Entity {
 
   public void setDefaultValues() {
 
-    // outside
-    gp.currentMap = 0;
-    worldX = gp.tileSize * 179;
-    worldY = gp.tileSize * 119;
+    // casa
+    gp.currentMap = 1;
+    worldX = gp.tileSize * 26;
+    worldY = gp.tileSize * 10;
 
     // Dungeon B2
     // gp.currentMap = 3;

@@ -62,8 +62,8 @@ public class EventHandler {
     if (canTouchEvent == true) {
       // if(hit(27, 16, "right") == true){damagePit(gp.dialogueState);}
       if (hit(0, 23, 12, "up") == true) {healingPool(gp.dialogueState);} 
-        else if (hit(0, 24, 44, "any") == true) {teleport(1, 21, 27,gp.indoor);} // to the merchant's house
-        else if (hit(1, 21, 27, "any") == true) {teleport(0, 24, 44,gp.outside);} //to outside
+        //else if (hit(0, 24, 44, "any") == true) {teleport(1, 21, 27,gp.indoor);} // to the casa house
+        else if (hit(1, 26, 16, "any") == true) {teleport(0, 77, 196,gp.outside);} //to outside casa -> mapa principal
 
         else if (hit(1, 21, 23, "up") == true) {speak(gp.npc[1][0]);} //mercador falando na mesa 
 

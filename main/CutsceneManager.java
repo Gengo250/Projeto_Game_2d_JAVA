@@ -18,6 +18,11 @@ public class CutsceneManager {
   float alpha = 0f;
   int y;
   String endCredit;
+  // INTRO
+  String introStory;
+  String[] introLines;
+  int introLinesToShow = 0;
+
 
   // CENA DO BOSS MACACO
   MON_Monkey monkeyBoss;
@@ -35,6 +40,7 @@ public class CutsceneManager {
   public final int NA = 0;
   public final int macaco = 1;
   public final int ending = 2;
+  public final int intro  = 3;
 
   public CutsceneManager(GamePanel gp){
     this.gp = gp;
@@ -47,6 +53,22 @@ public class CutsceneManager {
       "Guilherme Mascarete\n" +
       "\n\n\n\n\n\n\n\n\n" +
       "THANK YOU FOR PLAYING!";
+
+     introStory =
+    "No coração do Tocantins, onde o cerrado encontra a floresta,\n"
+  + "espíritos antigos observam tudo em silêncio.\n\n"
+  + "Algo estranho começou a corromper rios, animais\n"
+  + "e criaturas que antes eram pacíficas.\n\n"
+  + "Sua aldeia sente que uma força sombria desperta\n"
+  + "e um macaco ancestral foi tomado pela fúria.\n\n"
+  + "Você é o jovem guerreiro escolhido pelo seu povo.\n"
+  + "Explore a floresta, enfrente criaturas enfurecidas\n"
+  + "e descubra a origem dessa corrupção.\n\n"
+  + "Colete artefatos sagrados, proteja sua aldeia\n"
+  + "e restaure o equilíbrio da terra dos ancestrais.";
+
+
+     introLines = introStory.split("\n\n");
   }
   public void draw(Graphics2D g2){
     this.g2 = g2;
@@ -54,6 +76,7 @@ public class CutsceneManager {
     switch(sceneNum){
       case macaco: scene_macaco(); break;
       case ending: scene_ending(); break;
+      case intro: scene_intro(); break;
     }
   }
 public void scene_macaco(){
@@ -257,6 +280,120 @@ if (scenePhase == 5) {
         gp.playMusic(22);
     }
 }
+private void drawCurrentIntroBlock(float alpha) {
+    if (introLines == null || introLines.length == 0) return;
+    if (introLinesToShow < 0 || introLinesToShow >= introLines.length) return;
+
+    String block = introLines[introLinesToShow].trim();
+    // usa o 'y' atual como posição do bloco
+    drawString(alpha, 28f, y, block, 34);
+}
+
+public void scene_intro() {
+
+    // FASE 0: configura tudo só uma vez
+    if (scenePhase == 0) {
+        gp.stopMusic();
+        gp.playMusic(0); // música da intro
+
+        alpha   = 0f;
+        counter = 0;
+
+        introLinesToShow = 0;         // começa no primeiro bloco ("No coração...")
+        y = gp.screenHeight / 2;      // centro da tela (posição inicial do parágrafo)
+
+        scenePhase++;
+    }
+
+    // FASE 1: fade-in do fundo + primeiro bloco PARADO
+    else if (scenePhase == 1) {
+
+        if (alpha < 1f) {
+            alpha += 0.02f;
+            if (alpha > 1f) alpha = 1f;
+        }
+
+        drawBlackground(alpha);
+        drawCurrentIntroBlock(alpha);
+
+        // Quando a tela já estiver totalmente escura, vai para a fase de pausa
+        if (alpha >= 1f) {
+            counter = 0;
+            scenePhase++;
+        }
+    }
+
+    // FASE 2: bloco atual PARADO (tempo pra ler)
+    else if (scenePhase == 2) {
+
+        drawBlackground(1f);
+        drawCurrentIntroBlock(1f);
+
+        // espera ~3 segundos antes de começar a descer
+        if (counterReached(180)) { // 180 frames ≈ 3s (se estiver em 60 FPS)
+            scenePhase++;
+        }
+    }
+
+    // FASE 3: bloco DESCENDO pra fora da tela
+    else if (scenePhase == 3) {
+
+        drawBlackground(1f);
+
+        // move o bloco pra baixo (efeito "crédito de filme")
+        y += 1;
+        drawCurrentIntroBlock(1f);
+
+        // quando o bloco passar bem pra baixo da tela
+        if (y > gp.screenHeight + gp.tileSize * 2) {
+
+            introLinesToShow++;  // vai pro PRÓXIMO bloco
+
+            if (introLinesToShow >= introLines.length) {
+                // ACABARAM OS BLOCOS -> vai pra transição final
+                scenePhase = 4;
+                counter = 0;
+                alpha = 1f;
+            } else {
+                // ainda tem mais blocos
+                // reseta posição pra aparecer de novo no meio
+                y = gp.screenHeight / 2;
+                counter = 0;
+                scenePhase = 2; // volta pra fase parado, agora com o próximo bloco
+            }
+        }
+    }
+
+    // FASE 4: tela preta parada (fim da intro, antes do jogo começar)
+    else if (scenePhase == 4) {
+
+        drawBlackground(1f);
+
+        if (counterReached(90)) { // ~1.5 segundos de tela preta
+            scenePhase++;
+        }
+    }
+
+    // FASE 5: fade-out do preto e libera o jogo
+    else if (scenePhase == 5) {
+
+        if (alpha > 0f) {
+            drawBlackground(alpha);
+            alpha -= 0.02f;
+            if (alpha < 0f) alpha = 0f;
+        } else {
+            // acabou a intro → começa o jogo
+            sceneNum   = NA;
+            scenePhase = 0;
+
+            gp.gameState = gp.playState;
+
+            gp.stopMusic();
+            gp.playMusic(23); // música da fase
+        }
+    }
+}
+
 
 
 

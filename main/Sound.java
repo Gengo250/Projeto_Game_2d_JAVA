@@ -11,7 +11,7 @@ public class Sound {
   float volume;
 
   public Sound(){
-    soundURL[0] = getClass().getResource("/res/sound/BlueBoyAdventure.wav");
+    soundURL[0] = getClass().getResource("/res/sound/jungle-adventure.wav");
     soundURL[1] = getClass().getResource("/res/sound/coin.wav");
     soundURL[2] = getClass().getResource("/res/sound/powerup.wav");
     soundURL[3] = getClass().getResource("/res/sound/unlock.wav");
