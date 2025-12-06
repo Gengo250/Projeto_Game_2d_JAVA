@@ -77,7 +77,7 @@ public class KeyHandler implements KeyListener {
           if (gp.ui.commandNum == 0) {
             System.out.println("Do some fighter specific stuff!");
             gp.gameState = gp.playState;
-            // NOVO GAME + INTRO
+            // NOVO GAME + INTRO ---> colocar quando finalizar
             gp.resetGame(true);                // garante jogo novo, player na posição padrão
             gp.csManager.sceneNum = gp.csManager.intro;
             gp.csManager.scenePhase = 0;

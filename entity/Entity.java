@@ -568,24 +568,28 @@ public int getCenterY() {
     }
 
     // 2) Fase ativa do golpe (onde sai o dano)
-    if (spriteCounter > motion1_duration && spriteCounter <= motion2_duration) {
+if (spriteCounter > motion1_duration && spriteCounter <= motion2_duration) {
 
-      // Se a entidade tiver 3 sprites de ataque, dividimos essa fase em 2 metades:
-      // primeira metade = frame 2, segunda metade = frame 3.
-      boolean has3AttackFrames = attackUp3 != null || attackDown3 != null ||
-          attackLeft3 != null || attackRight3 != null;
+    // verifica se ESSA direção tem frame 3
+    boolean has3AttackFrames = false;
+    switch (direction) {
+        case "up":    has3AttackFrames = (attackUp3    != null); break;
+        case "down":  has3AttackFrames = (attackDown3  != null); break;
+        case "left":  has3AttackFrames = (attackLeft3  != null); break;
+        case "right": has3AttackFrames = (attackRight3 != null); break;
+    }
 
-      if (has3AttackFrames) {
+    if (has3AttackFrames) {
         int mid = motion1_duration + (motion2_duration - motion1_duration) / 2;
         if (spriteCounter <= mid) {
-          spriteNum = 2;
+            spriteNum = 2;
         } else {
-          spriteNum = 3;
+            spriteNum = 3;
         }
-      } else {
-        // Comportamento antigo (Skeleton Lord, player, etc.)
+    } else {
+        // direção só tem 2 sprites de ataque → fica no 2
         spriteNum = 2;
-      }
+    }
 
       // ======= CÓDIGO ORIGINAL DE HITBOX / DANO =======
       int currentWordX = worldX;
@@ -593,20 +597,25 @@ public int getCenterY() {
       int solidAreaWidth = solidArea.width;
       int solidAreaHeight = solidArea.height;
 
-      switch (direction) {
-        case "up":
-          worldY -= attackArea.height;
-          break;
-        case "down":
-          worldY += attackArea.height;
-          break;
-        case "left":
-          worldX -= attackArea.width;
-          break;
-        case "right":
-          worldX += attackArea.width;
-          break;
-      }
+ switch (direction) {
+  case "up":
+    // área acima do corpo
+    worldY -= attackArea.height;
+    break;
+  case "down":
+    // começa logo depois da base do corpo
+    worldY += solidArea.height;
+    break;
+  case "left":
+    // área à esquerda do corpo
+    worldX -= attackArea.width;
+    break;
+  case "right":
+    // começa logo depois da lateral direita do corpo
+    worldX += solidArea.width;
+    break;
+}
+
 
       solidArea.width = attackArea.width;
       solidArea.height = attackArea.height;
@@ -720,29 +729,32 @@ public int getCenterY() {
 
         switch (direction) {
             case "up":
-                if (attacking) {
-                    offsetY = -80;  // puxa pra cima (ajuste se precisar)
-                    if (spriteNum == 1) image = attackUp1;
-                    else if (spriteNum == 2) image = attackUp2;
-                } else {
-                    if (spriteNum == 1) image = up1;
-                    else if (spriteNum == 2) image = up2;
-                    else if (spriteNum == 3 && up3 != null) image = up3;
-                }
-                break;
+    if (attacking) {
+        offsetY = -80;  // se não quiser deslocar, pode zerar
+        if (spriteNum == 1)      image = attackUp1;
+        else if (spriteNum == 2) image = attackUp2;
+        else if (spriteNum == 3 && attackUp3 != null) image = attackUp3;
+    } else {
+        if (spriteNum == 1)      image = up1;
+        else if (spriteNum == 2) image = up2;
+        else if (spriteNum == 3 && up3 != null) image = up3;
+    }
+    break;
 
-            case "down":
-                if (attacking) {
-                    offsetY = -60;  // ESSENCIAL: evita descer no ataque down
-                    offsetX = -50;  // centraliza horizontalmente
-                    if (spriteNum == 1) image = attackDown1;
-                    else if (spriteNum == 2) image = attackDown2;
-                } else {
-                    if (spriteNum == 1) image = down1;
-                    else if (spriteNum == 2) image = down2;
-                    else if (spriteNum == 3 && down3 != null) image = down3;
-                }
-                break;
+case "down":
+    if (attacking) {
+        offsetY = -60;
+        offsetX = -50;
+        if (spriteNum == 1)      image = attackDown1;
+        else if (spriteNum == 2) image = attackDown2;
+        else if (spriteNum == 3 && attackDown3 != null) image = attackDown3;
+    } else {
+        if (spriteNum == 1)      image = down1;
+        else if (spriteNum == 2) image = down2;
+        else if (spriteNum == 3 && down3 != null) image = down3;
+    }
+    break;
+
 
             case "left":
                 if (attacking) {

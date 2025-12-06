@@ -9,10 +9,13 @@ import entity.NPC_TamanduaStatueBlue;
 import monster.MON_GreenSlime;
 import monster.MON_Monkey;
 import monster.MON_Orc;
+import monster.MON_PlantaCarnivora;
 import monster.MON_SkeletonLord;
 import object.OBJ_Axe;
 import object.OBJ_BlueHeart;
+import object.OBJ_Chest;
 import object.OBJ_Door_Iron;
+import object.OBJ_Zarabatana;
 import tile_interactive.IT_DryTree;
 import tile_interactive.IT_MetalPlate;
 
@@ -28,11 +31,6 @@ public class AssetSetter {
     
     int mapNum = 0;
     int i = 0;
-
-    gp.obj[mapNum][i] = new OBJ_Axe(gp);
-    gp.obj[mapNum][i].worldX = gp.tileSize*28;
-    gp.obj[mapNum][i].worldY = gp.tileSize*58;
-    i++;
     
     /* gp.obj[mapNum][i] = new OBJ_Door_Iron(gp);
     gp.obj[mapNum][i].worldX = gp.tileSize*18;
@@ -42,6 +40,15 @@ public class AssetSetter {
     gp.obj[mapNum][i] = new OBJ_Door_Iron(gp);
     gp.obj[mapNum][i].worldX = gp.tileSize*169;
     gp.obj[mapNum][i].worldY = gp.tileSize*119;
+    i++;
+
+    mapNum = 1;
+    i = 0;
+
+    gp.obj[mapNum][i] = new OBJ_Chest(gp);
+    gp.obj[mapNum][i].setLoot(new OBJ_Zarabatana(gp));
+    gp.obj[mapNum][i].worldX = gp.tileSize*26;
+    gp.obj[mapNum][i].worldY = gp.tileSize*11;
     i++;
 
 
@@ -114,6 +121,11 @@ public class AssetSetter {
     gp.monster[mapNum][i] = new MON_Orc(gp);
     gp.monster[mapNum][i].worldX = gp.tileSize*37;
     gp.monster[mapNum][i].worldY = gp.tileSize*55;
+    i++;
+
+    gp.monster[mapNum][i] = new MON_PlantaCarnivora(gp);
+    gp.monster[mapNum][i].worldX = gp.tileSize * 76; 
+    gp.monster[mapNum][i].worldY = gp.tileSize * 166;
     i++;
 
     mapNum = 2;
