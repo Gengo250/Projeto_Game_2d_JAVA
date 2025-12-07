@@ -11,6 +11,7 @@ import monster.MON_Monkey;
 import monster.MON_Orc;
 import monster.MON_PlantaCarnivora;
 import monster.MON_PlantaCarnivora2;
+import monster.MON_PlantaCarnivora3;
 import monster.MON_SkeletonLord;
 import object.OBJ_Axe;
 import object.OBJ_BlueHeart;
@@ -132,6 +133,11 @@ public class AssetSetter {
      gp.monster[mapNum][i] = new MON_PlantaCarnivora2(gp);
     gp.monster[mapNum][i].worldX = gp.tileSize * 76; 
     gp.monster[mapNum][i].worldY = gp.tileSize * 164;
+    i++;
+
+    gp.monster[mapNum][i] = new MON_PlantaCarnivora3(gp);
+    gp.monster[mapNum][i].worldX = gp.tileSize * 76; 
+    gp.monster[mapNum][i].worldY = gp.tileSize * 165;
     i++;
 
     mapNum = 2;

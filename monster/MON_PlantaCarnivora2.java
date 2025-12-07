@@ -47,7 +47,7 @@ public class MON_PlantaCarnivora2 extends Entity {
 
        
       // alcance da mordida (hitbox maior, pegando o dash inteiro)
-      attackArea.width  = gp.tileSize * 3; // mais alcance na horizontal
+      attackArea.width  = gp.tileSize ; // mais alcance na horizontal
       attackArea.height = gp.tileSize ; // mais “grossura” vertical
 
 

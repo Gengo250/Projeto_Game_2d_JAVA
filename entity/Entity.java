@@ -17,12 +17,15 @@ import main.GamePanel;
 public class Entity {
 
   GamePanel gp;
-  public BufferedImage up1, up2, up3, down1, down2, down3, left1, left2, left3, right1, right2, right3;
-  public BufferedImage attackUp1, attackUp2, attackUp3,
-      attackDown1, attackDown2, attackDown3,
-      attackLeft1, attackLeft2, attackLeft3,
-      attackRight1, attackRight2, attackRight3,
-      guardUp, guardDown, guardLeft, guardRight, parryUp, parryDown, parryLeft, parryRight;
+public BufferedImage up1, up2, up3, down1, down2, down3, left1, left2, left3, right1, right2, right3;
+
+// agora ataques podem ter até 4 frames por direção
+public BufferedImage attackUp1, attackUp2, attackUp3, attackUp4,
+    attackDown1, attackDown2, attackDown3, attackDown4,
+    attackLeft1, attackLeft2, attackLeft3, attackLeft4,
+    attackRight1, attackRight2, attackRight3, attackRight4,
+    guardUp, guardDown, guardLeft, guardRight, parryUp, parryDown, parryLeft, parryRight;
+
   public BufferedImage image, image2, image3, image4, image5, image6;
   public Rectangle solidArea = new Rectangle(0, 0, 48, 48);
   public Rectangle attackArea = new Rectangle(0, 0, 0, 0);
@@ -559,102 +562,126 @@ public int getCenterY() {
     return oppossiteDirection;
   }
 
-  public void attacking() {
+ public void attacking() {
     spriteCounter++;
 
     // 1) Wind-up
     if (spriteCounter <= motion1_duration) {
-      spriteNum = 1;
+        spriteNum = 1;
+        return;
     }
 
     // 2) Fase ativa do golpe (onde sai o dano)
-if (spriteCounter > motion1_duration && spriteCounter <= motion2_duration) {
+    if (spriteCounter > motion1_duration && spriteCounter <= motion2_duration) {
 
-    // verifica se ESSA direção tem frame 3
-    boolean has3AttackFrames = false;
-    switch (direction) {
-        case "up":    has3AttackFrames = (attackUp3    != null); break;
-        case "down":  has3AttackFrames = (attackDown3  != null); break;
-        case "left":  has3AttackFrames = (attackLeft3  != null); break;
-        case "right": has3AttackFrames = (attackRight3 != null); break;
-    }
+        // Descobre quantos frames de ataque ESSA direção tem (2, 3 ou 4)
+        int attackFrames = 2;
+        switch (direction) {
+            case "up":
+                if (attackUp3 != null) attackFrames = 3;
+                if (attackUp4 != null) attackFrames = 4;
+                break;
+            case "down":
+                if (attackDown3 != null) attackFrames = 3;
+                if (attackDown4 != null) attackFrames = 4;
+                break;
+            case "left":
+                if (attackLeft3 != null) attackFrames = 3;
+                if (attackLeft4 != null) attackFrames = 4;
+                break;
+            case "right":
+                if (attackRight3 != null) attackFrames = 3;
+                if (attackRight4 != null) attackFrames = 4;
+                break;
+        }
 
-    if (has3AttackFrames) {
-        int mid = motion1_duration + (motion2_duration - motion1_duration) / 2;
-        if (spriteCounter <= mid) {
+        int activeDuration = motion2_duration - motion1_duration;
+        int localFrame = spriteCounter - motion1_duration;
+
+        // Define spriteNum 2/3/4 de acordo com a quantidade de frames
+        if (attackFrames <= 2) {
             spriteNum = 2;
+        } else if (attackFrames == 3) {
+            if (localFrame <= activeDuration / 2) {
+                spriteNum = 2;
+            } else {
+                spriteNum = 3;
+            }
+        } else { // 4 frames → 2, 3, 4
+            int third = activeDuration / 3;
+            if (localFrame <= third) {
+                spriteNum = 2;
+            } else if (localFrame <= 2 * third) {
+                spriteNum = 3;
+            } else {
+                spriteNum = 4;
+            }
+        }
+
+        // ======= CÓDIGO ORIGINAL DE HITBOX / DANO =======
+        int currentWordX = worldX;
+        int currentWordY = worldY;
+        int solidAreaWidth = solidArea.width;
+        int solidAreaHeight = solidArea.height;
+
+        switch (direction) {
+            case "up":
+                // área acima do corpo
+                worldY -= attackArea.height;
+                break;
+            case "down":
+                // começa logo depois da base do corpo
+                worldY += solidArea.height;
+                break;
+            case "left":
+                // área à esquerda do corpo
+                worldX -= attackArea.width;
+                break;
+            case "right":
+                // começa logo depois da lateral direita do corpo
+                worldX += solidArea.width;
+                break;
+        }
+
+        solidArea.width = attackArea.width;
+        solidArea.height = attackArea.height;
+
+        if (type == type_monster) {
+            if (gp.cChecker.checkPlayer(this)) {
+                damagePlayer(attack);
+            }
         } else {
-            spriteNum = 3;
-        }
-    } else {
-        // direção só tem 2 sprites de ataque → fica no 2
-        spriteNum = 2;
-    }
+            int monsterIndex = gp.cChecker.checkEntity(this, gp.monster);
+            gp.player.damageMonter(monsterIndex, this, attack, currenWeapon.knokBackPower);
 
-      // ======= CÓDIGO ORIGINAL DE HITBOX / DANO =======
-      int currentWordX = worldX;
-      int currentWordY = worldY;
-      int solidAreaWidth = solidArea.width;
-      int solidAreaHeight = solidArea.height;
+            int iTileIndex = gp.cChecker.checkEntity(this, gp.iTile);
+            gp.player.damageInteractiveTile(iTileIndex);
 
- switch (direction) {
-  case "up":
-    // área acima do corpo
-    worldY -= attackArea.height;
-    break;
-  case "down":
-    // começa logo depois da base do corpo
-    worldY += solidArea.height;
-    break;
-  case "left":
-    // área à esquerda do corpo
-    worldX -= attackArea.width;
-    break;
-  case "right":
-    // começa logo depois da lateral direita do corpo
-    worldX += solidArea.width;
-    break;
-}
+            // Só destrói projétil se NÃO for o player usando a zarabatana
+            if (!(this == gp.player
+                    && gp.player.currenWeapon != null
+                    && gp.player.currenWeapon.type == type_zarabatana)) {
 
-
-      solidArea.width = attackArea.width;
-      solidArea.height = attackArea.height;
-
-      if (type == type_monster) {
-        if (gp.cChecker.checkPlayer(this)) {
-          damagePlayer(attack);
-        }
-      } else {
-        int monsterIndex = gp.cChecker.checkEntity(this, gp.monster);
-        gp.player.damageMonter(monsterIndex, this, attack, currenWeapon.knokBackPower);
-
-        int iTileIndex = gp.cChecker.checkEntity(this, gp.iTile);
-        gp.player.damageInteractiveTile(iTileIndex);
-
-        // Só destrói projétil se NÃO for o player usando a zarabatana
-        if (!(this == gp.player
-            && gp.player.currenWeapon != null
-            && gp.player.currenWeapon.type == type_zarabatana)) {
-
-          int projectileIndex = gp.cChecker.checkEntity(this, gp.projectile);
-          gp.player.damageProjectile(projectileIndex);
+                int projectileIndex = gp.cChecker.checkEntity(this, gp.projectile);
+                gp.player.damageProjectile(projectileIndex);
+            }
         }
 
-      }
-
-      worldX = currentWordX;
-      worldY = currentWordY;
-      solidArea.width = solidAreaWidth;
-      solidArea.height = solidAreaHeight;
+        worldX = currentWordX;
+        worldY = currentWordY;
+        solidArea.width = solidAreaWidth;
+        solidArea.height = solidAreaHeight;
+        return;
     }
 
     // 3) Fim do ataque
     if (spriteCounter > motion2_duration) {
-      spriteNum = 1;
-      spriteCounter = 0;
-      attacking = false;
+        spriteNum = 1;
+        spriteCounter = 0;
+        attacking = false;
     }
-  }
+}
+
 
   public void damagePlayer(int attack) {
     if (gp.player.invencible == false) {
@@ -728,61 +755,69 @@ if (spriteCounter > motion1_duration && spriteCounter <= motion2_duration) {
         int offsetY = 0;
 
         switch (direction) {
-            case "up":
+case "up":
     if (attacking) {
-        offsetY = -80;  // se não quiser deslocar, pode zerar
-        if (spriteNum == 1)      image = attackUp1;
+        offsetY = -80;
+        if      (spriteNum == 1) image = attackUp1;
         else if (spriteNum == 2) image = attackUp2;
         else if (spriteNum == 3 && attackUp3 != null) image = attackUp3;
+        else if (spriteNum == 4 && attackUp4 != null) image = attackUp4;
     } else {
-        if (spriteNum == 1)      image = up1;
+        if      (spriteNum == 1) image = up1;
         else if (spriteNum == 2) image = up2;
         else if (spriteNum == 3 && up3 != null) image = up3;
     }
     break;
 
+
 case "down":
     if (attacking) {
         offsetY = -60;
         offsetX = -50;
-        if (spriteNum == 1)      image = attackDown1;
+        if      (spriteNum == 1) image = attackDown1;
         else if (spriteNum == 2) image = attackDown2;
         else if (spriteNum == 3 && attackDown3 != null) image = attackDown3;
+        else if (spriteNum == 4 && attackDown4 != null) image = attackDown4;
     } else {
-        if (spriteNum == 1)      image = down1;
+        if      (spriteNum == 1) image = down1;
         else if (spriteNum == 2) image = down2;
         else if (spriteNum == 3 && down3 != null) image = down3;
     }
     break;
 
 
-            case "left":
-                if (attacking) {
-                    offsetX = -100; // compensa o braço esticado pra esquerda
-                    offsetY = -60;
-                    if (spriteNum == 1) image = attackLeft1;
-                    else if (spriteNum == 2) image = attackLeft2;
-                    else if (spriteNum == 3 && attackLeft3 != null) image = attackLeft3;
-                } else {
-                    if (spriteNum == 1) image = left1;
-                    else if (spriteNum == 2) image = left2;
-                    else if (spriteNum == 3 && left3 != null) image = left3;
-                }
-                break;
 
-            case "right":
-                if (attacking) {
-                    offsetX = -20; // compensa o braço esticado pra esquerda
-                    offsetY = -60;
-                    if (spriteNum == 1) image = attackRight1;
-                    else if (spriteNum == 2) image = attackRight2;
-                    else if (spriteNum == 3 && attackRight3 != null) image = attackRight3;
-                } else {
-                    if (spriteNum == 1) image = right1;
-                    else if (spriteNum == 2) image = right2;
-                    else if (spriteNum == 3 && right3 != null) image = right3;
-                }
-                break;
+      case "left":
+    if (attacking) {
+        offsetX = -100; // compensa o braço esticado pra esquerda
+        offsetY = -60;
+        if      (spriteNum == 1) image = attackLeft1;
+        else if (spriteNum == 2) image = attackLeft2;
+        else if (spriteNum == 3 && attackLeft3 != null) image = attackLeft3;
+        else if (spriteNum == 4 && attackLeft4 != null) image = attackLeft4;
+    } else {
+        if      (spriteNum == 1) image = left1;
+        else if (spriteNum == 2) image = left2;
+        else if (spriteNum == 3 && left3 != null) image = left3;
+    }
+    break;
+
+
+        case "right":
+    if (attacking) {
+        offsetX = -20;
+        offsetY = -60;
+        if      (spriteNum == 1) image = attackRight1;
+        else if (spriteNum == 2) image = attackRight2;
+        else if (spriteNum == 3 && attackRight3 != null) image = attackRight3;
+        else if (spriteNum == 4 && attackRight4 != null) image = attackRight4;
+    } else {
+        if      (spriteNum == 1) image = right1;
+        else if (spriteNum == 2) image = right2;
+        else if (spriteNum == 3 && right3 != null) image = right3;
+    }
+    break;
+
         }
 
         // Aplicar offsets apenas no ataque

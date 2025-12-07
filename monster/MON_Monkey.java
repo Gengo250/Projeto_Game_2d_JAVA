@@ -142,44 +142,73 @@ public class MON_Monkey extends Entity {
         }
     }
 
-    public void getAttackImage() {
-        
+   public void getAttackImage() {
 
-        if (!inRage) {
-            attackUp1 = setup("/monster/monkey/mksd01", 300, 300);
-            attackUp2 = setup("/monster/monkey/mksd02", 300, 300);
-            attackUp3 = setup("/monster/monkey/mksd03", 300, 300);
-            attackDown1 = setup("/monster/monkey/mksu01", 300, 300);
-            attackDown2 = setup("/monster/monkey/mksu02", 300, 300);
-            attackLeft1 = setup("/monster/monkey/mksl01", 300, 300);
-            attackLeft2 = setup("/monster/monkey/mksl02", 300, 300);
-            attackLeft3 = setup("/monster/monkey/mksl03", 300, 300);
-            attackRight1 = setup("/monster/monkey/mksr01", 300, 300);
-            attackRight2 = setup("/monster/monkey/mksr02", 300, 300);
-            attackRight3 = setup("/monster/monkey/mksr03", 300, 300);
-        } //else {
-           // attackDown1 = setup("/monster/monkey/rage_attack_down_1", 200, 200);
-            //attackDown2 = setup("/monster/monkey/rage_attack_down_2", 200, 200);
-           // attackLeft1 = setup("/monster/monkey/rage_attack_left_1", 200, 200);
-            //attackLeft2 = setup("/monster/monkey/rage_attack_left_2", 200, 200);
-           // attackRight1 = setup("/monster/monkey/rage_attack_right_1", 200, 200);
-            //attackRight2 = setup("/monster/monkey/rage_attack_right_2", 200, 200);
-        //}
+    if (!inRage) {
+        // Fase 1 – igual estava antes
+        attackUp1 = setup("/monster/monkey/mksd01", 300, 300);
+        attackUp2 = setup("/monster/monkey/mksd02", 300, 300);
+        attackUp3 = setup("/monster/monkey/mksd03", 300, 300);
+
+        attackDown1 = setup("/monster/monkey/mksu01", 300, 300);
+        attackDown2 = setup("/monster/monkey/mksu02", 300, 300);
+
+        attackLeft1 = setup("/monster/monkey/mksl01", 300, 300);
+        attackLeft2 = setup("/monster/monkey/mksl02", 300, 300);
+        attackLeft3 = setup("/monster/monkey/mksl03", 300, 300);
+        attackLeft4 = null;
+
+        attackRight1 = setup("/monster/monkey/mksr01", 300, 300);
+        attackRight2 = setup("/monster/monkey/mksr02", 300, 300);
+        attackRight3 = setup("/monster/monkey/mksr03", 300, 300);
+        attackRight4 = null;
+
+    } else {
+        // Fase 2 (rage) – novos socos com 4 frames pra esquerda e direita
+
+        // Para cima/baixo você ainda pode usar os mesmos sprites
+        attackUp1 = setup("/monster/monkey/mksd01", 300, 300);
+        attackUp2 = setup("/monster/monkey/mksd02", 300, 300);
+        attackUp3 = setup("/monster/monkey/mksd03", 300, 300);
+
+        attackDown1 = setup("/monster/monkey/mksu01", 300, 300);
+        attackDown2 = setup("/monster/monkey/mksu02", 300, 300);
+
+        // ESQUERDA – 4 frames (usando os PNG que você mandou)
+        attackLeft1 = setup("/monster/monkey/mkrse01", 300, 300);
+        attackLeft2 = setup("/monster/monkey/mkrse02", 300, 300);
+        attackLeft3 = setup("/monster/monkey/mkrse03", 300, 300);
+        attackLeft4 = setup("/monster/monkey/mrse04", 300, 300);
+
+        // DIREITA – 4 frames
+        attackRight1 = setup("/monster/monkey/mrsd01", 300, 300);
+        attackRight2 = setup("/monster/monkey/mkrsd02", 300, 300);
+        attackRight3 = setup("/monster/monkey/mkrsd03", 300, 300);
+        attackRight4 = setup("/monster/monkey/mkrsd04", 300, 300);
+    }
+}
+
+private void getBeamImages() {
+
+    // CABEÇA / BOCA DO RAIO (direita / esquerda)
+    if (!inRage) {
+        // Fase normal
+        beamHead     = setup("/monster/monkey/mk_beam",      300, 300); // direita
+        beamHeadLeft = setup("/monster/monkey/mk_beam_left", 300, 300); // esquerda
+    } else {
+        // Fase rage – usa os sprites novos que você mandou
+        beamHead     = setup("/monster/monkey/mkrbeame",      300, 300); // DIREITA
+        beamHeadLeft = setup("/monster/monkey/mkragebeamd",   300, 300); // ESQUERDA
     }
 
-         private void getBeamImages() {
+    // CORPO DO RAIO (mantém o mesmo, só recarrega sempre)
+    int beamWidth  = gp.tileSize * 3;
+    int beamHeight = gp.tileSize;
 
-        // Boca aberta com início do raio (mesmo tamanho dos outros ataques do boss)
-        beamHead     = setup("/monster/monkey/mk_beam",       300, 300); // direita
-        beamHeadLeft = setup("/monster/monkey/mk_beam_left",  300, 300); // esquerda (nova)
+    beamBody1 = setup("/monster/monkey/mkbeam01", beamWidth, beamHeight);
+    beamBody2 = setup("/monster/monkey/mkbeam02", beamWidth, beamHeight);
+}
 
-        // Segmentos do raio (vamos repetir para formar o feixe)
-        int beamWidth  = gp.tileSize * 3;
-        int beamHeight = gp.tileSize;
-
-        beamBody1 = setup("/monster/monkey/mkbeam01", beamWidth, beamHeight);
-        beamBody2 = setup("/monster/monkey/mkbeam02", beamWidth, beamHeight);
-    }
 
 
 
@@ -340,7 +369,7 @@ if (tileDist < 10) {
 @Override
 public void attacking() {
 
-    // 0) Ataque de RAIO usa lógica separada
+    // 0) Ataque de RAIO continua usando lógica separada
     if (beamAttacking) {
         updateBeamAttack();
         return;
@@ -357,20 +386,48 @@ public void attacking() {
     // 2) Fase ativa do soco (onde realmente sai o dano)
     if (spriteCounter > motion1_duration && spriteCounter <= motion2_duration) {
 
-        // Animação: se tiver 3 frames de ataque, usa 2 depois 3
-        boolean has3AttackFrames =
-                attackUp3 != null || attackDown3 != null ||
-                attackLeft3 != null || attackRight3 != null;
+        // Descobre quantos frames essa direção tem (2, 3 ou 4)
+        int attackFrames = 2;
+        switch (direction) {
+            case "up":
+                if (attackUp3 != null) attackFrames = 3;
+                if (attackUp4 != null) attackFrames = 4;
+                break;
+            case "down":
+                if (attackDown3 != null) attackFrames = 3;
+                if (attackDown4 != null) attackFrames = 4;
+                break;
+            case "left":
+                if (attackLeft3 != null) attackFrames = 3;
+                if (attackLeft4 != null) attackFrames = 4;
+                break;
+            case "right":
+                if (attackRight3 != null) attackFrames = 3;
+                if (attackRight4 != null) attackFrames = 4;
+                break;
+        }
 
-        if (has3AttackFrames) {
-            int mid = motion1_duration + (motion2_duration - motion1_duration) / 2;
-            if (spriteCounter <= mid) {
+        int activeDuration = motion2_duration - motion1_duration;
+        int localFrame = spriteCounter - motion1_duration;
+
+        // Define spriteNum 2/3/4 de acordo com a quantidade de frames
+        if (attackFrames <= 2) {
+            spriteNum = 2;
+        } else if (attackFrames == 3) {
+            if (localFrame <= activeDuration / 2) {
                 spriteNum = 2;
             } else {
                 spriteNum = 3;
             }
-        } else {
-            spriteNum = 2;
+        } else { // 4 frames → 2, 3, 4
+            int third = activeDuration / 3;
+            if (localFrame <= third) {
+                spriteNum = 2;
+            } else if (localFrame <= 2 * third) {
+                spriteNum = 3;
+            } else {
+                spriteNum = 4;
+            }
         }
 
         // ---- HITBOX ESPECIAL DO MACACO (GRANDE) ----
@@ -379,9 +436,7 @@ public void attacking() {
         int solidWidth    = solidArea.width;
         int solidHeight   = solidArea.height;
 
-        // Em vez de usar attackArea.width/height como deslocamento,
-        // usamos o TAMANHO DA HITBOX do corpo.
-        // Assim o ataque começa encostado no corpo e se estende pra fora.
+        // Começa o hitbox um corpo pra frente, na direção do soco
         switch (direction) {
             case "up":
                 worldY -= solidHeight;
@@ -411,6 +466,8 @@ public void attacking() {
         worldY = currentWorldY;
         solidArea.width  = solidWidth;
         solidArea.height = solidHeight;
+
+        return;
     }
 
     // 3) Fim do ataque
@@ -420,6 +477,7 @@ public void attacking() {
         attacking = false;
     }
 }
+
 
 
     private void updateBeamAttack() {
