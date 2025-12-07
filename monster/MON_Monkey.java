@@ -21,11 +21,12 @@ public class MON_Monkey extends Entity {
 
     private boolean bananaIdleLoaded = false;
 
-        // === ATAQUE DE RAIO (só lado direito) ===
     private boolean beamAttacking = false;
     private int beamCounter = 0;
 
     private BufferedImage beamHead;
+    private BufferedImage beamHeadLeft;
+
     private BufferedImage beamBody1;
     private BufferedImage beamBody2;
 
@@ -166,18 +167,20 @@ public class MON_Monkey extends Entity {
         //}
     }
 
-        private void getBeamImages() {
+         private void getBeamImages() {
 
         // Boca aberta com início do raio (mesmo tamanho dos outros ataques do boss)
-        beamHead = setup("/monster/monkey/mk_beam", 300, 300);
+        beamHead     = setup("/monster/monkey/mk_beam",       300, 300); // direita
+        beamHeadLeft = setup("/monster/monkey/mk_beam_left",  300, 300); // esquerda (nova)
 
         // Segmentos do raio (vamos repetir para formar o feixe)
-        int beamWidth = gp.tileSize * 3;
+        int beamWidth  = gp.tileSize * 3;
         int beamHeight = gp.tileSize;
 
         beamBody1 = setup("/monster/monkey/mkbeam01", beamWidth, beamHeight);
         beamBody2 = setup("/monster/monkey/mkbeam02", beamWidth, beamHeight);
     }
+
 
 
     public void setDialogue() {
@@ -269,23 +272,36 @@ public class MON_Monkey extends Entity {
             direction = (py < my) ? "up" : "down";
         }
 
-        int tileDist = getTileDistance(gp.player);
+         int tileDist = getTileDistance(gp.player);
 
         // ----------------------------
-        // 1) Tentativa de ataque de RAIO (somente pra DIREITA)
+        // 1) Tentativa de ataque de RAIO (direita ou esquerda)
         // ----------------------------
         boolean playerOnRight = px > mx && Math.abs(py - my) < gp.tileSize * 3;
+        boolean playerOnLeft  = px < mx && Math.abs(py - my) < gp.tileSize * 3;
 
+        // Raio para a DIREITA (já existia)
         if (direction.equals("right") && playerOnRight && tileDist >= 3) {
 
-            // Fora da rage o raio é mais raro, na rage é mais frequente
             int beamRate = inRage ? 35 : 80; // quanto MENOR, mais chance de usar o raio
 
             if (new java.util.Random().nextInt(beamRate) == 0) {
-                startBeamAttack();
-                return; // nesse frame não tenta o ataque corpo-a-corpo
+                startBeamAttack(); // mantém exatamente o que já tinha
+                return;
             }
         }
+
+        // Raio para a ESQUERDA (NOVO)
+        if (direction.equals("left") && playerOnLeft && tileDist >= 3) {
+
+            int beamRate = inRage ? 35 : 80;
+
+            if (new java.util.Random().nextInt(beamRate) == 0) {
+                startBeamAttackLeft();
+                return;
+            }
+        }
+
 
       // 2) Ataque corpo-a-corpo normal com alcance maior (boss grandão)
 // ----------------------------
@@ -301,14 +317,25 @@ if (tileDist < 10) {
 
     }
 
-        private void startBeamAttack() {
+       private void startBeamAttack() {
         attacking = true;
         beamAttacking = true;
         beamCounter = 0;
         spriteCounter = 0;
         spriteNum = 1;
-        direction = "right"; // garante que o raio SEMPRE sai pra direita
+        direction = "right"; // mantém o raio antigo exatamente igual
     }
+
+    // NOVO: versão para a ESQUERDA
+    private void startBeamAttackLeft() {
+        attacking = true;
+        beamAttacking = true;
+        beamCounter = 0;
+        spriteCounter = 0;
+        spriteNum = 1;
+        direction = "left"; // garante que o raio sai pra esquerda
+    }
+
 
 @Override
 public void attacking() {
@@ -410,7 +437,13 @@ public void attacking() {
         // 2) Raio ativo
         else if (beamCounter <= windup + duration) {
             spriteNum = 2; // mantém pose de boca aberta
-            applyBeamDamage();
+             if ("right".equals(direction)) {
+                // comportamento antigo, intacto
+                applyBeamDamage();
+            } else if ("left".equals(direction)) {
+                // novo lado esquerdo
+                applyBeamDamageLeft();
+            }
         }
         // 3) Fim do ataque
         else {
@@ -442,6 +475,29 @@ int endX = startX + beamWidthPixels;
 
         if (px >= startX && px <= endX && py >= topY && py <= bottomY) {
             int beamDamage = attack + (inRage ? 5 : 0); // raio bate um pouco mais forte na rage
+            damagePlayer(beamDamage);
+        }
+    }
+     // NOVO: mesma lógica espelhada para a ESQUERDA
+    private void applyBeamDamageLeft() {
+
+        int rangeTiles       = inRage ? BEAM_RANGE_TILES_RAGE : BEAM_RANGE_TILES_NORMAL;
+        int beamWidthPixels  = rangeTiles * gp.tileSize;
+        int beamHeightPixels = BEAM_HEIGHT_TILES * gp.tileSize;
+
+        // ORIGEM DO RAIO = BOCA (lado esquerdo)
+        int startX  = getLeftX() - BEAM_MOUTH_OFFSET_X;
+        int centerY = getCenterY() + BEAM_MOUTH_OFFSET_Y;
+
+        int topY    = centerY - beamHeightPixels / 2;
+        int bottomY = centerY + beamHeightPixels / 2;
+        int endX    = startX - beamWidthPixels;
+
+        int px = gp.player.getCenterX();
+        int py = gp.player.getCenterY();
+
+        if (px <= startX && px >= endX && py >= topY && py <= bottomY) {
+            int beamDamage = attack + (inRage ? 5 : 0);
             damagePlayer(beamDamage);
         }
     }
@@ -490,7 +546,7 @@ boolean customFrontRoar  = gp.gameState == gp.cutsceneState
     super.draw(g2);
 
     // Overlay do raio (lateral direita)
-    if (beamAttacking && "right".equals(direction)) {
+     if (beamAttacking && ("right".equals(direction) || "left".equals(direction))) {
         drawBeamOverlay(g2);
     }
 }
@@ -602,57 +658,93 @@ private void drawUpAttackOverlay(Graphics2D g2) {
 }
 
 
-private void drawBeamOverlay(Graphics2D g2) {
+    private void drawBeamOverlay(Graphics2D g2) {
 
-    // Boca aberta (beamHead) por cima do corpo
-    if (beamHead != null) {
-
-        int headX = getScreenX();
-        int headY = getScreenY();
-
-        // Mesmo offset do ataque para a direita em Entity.draw
-        if (attacking && useAttackOffsets) {
-            headX += -20;
-            headY += -60;
+        // 1) Boca aberta do raio, por cima do corpo
+        BufferedImage headImage = beamHead;
+        if ("left".equals(direction) && beamHeadLeft != null) {
+            headImage = beamHeadLeft;
         }
 
-        g2.drawImage(beamHead, headX, headY, null);
+                if (headImage != null) {
+
+            int headX = getScreenX();
+            int headY = getScreenY();
+
+            // Usa os MESMOS offsets do Entity.draw pra cada lado
+            if (attacking && useAttackOffsets) {
+                if ("right".equals(direction)) {
+                    // mesmo que o ataqueRight lá no Entity
+                    headX += -20;
+                    headY += -60;
+                } else if ("left".equals(direction)) {
+                    // mesmo que o ataqueLeft lá no Entity
+                    headX += -100;
+                    headY += -60;
+                }
+            }
+
+            g2.drawImage(headImage, headX, headY, null);
+        }
+
+
+        // Durante o windup só a boca aparece (sem feixe)
+        int windup = inRage ? BEAM_WINDUP_RAGE : BEAM_WINDUP_NORMAL;
+        if (beamCounter <= windup || beamBody1 == null) {
+            return;
+        }
+
+        int rangeTiles      = inRage ? BEAM_RANGE_TILES_RAGE : BEAM_RANGE_TILES_NORMAL;
+        int beamWidthPixels = rangeTiles * gp.tileSize;
+
+        // Origem do feixe: boca
+        int startWorldX;
+        int centerWorldY = getCenterY() + BEAM_MOUTH_OFFSET_Y;
+
+        if ("right".equals(direction)) {
+            startWorldX = getRightX() + BEAM_MOUTH_OFFSET_X;
+        } else { // "left"
+            startWorldX = getLeftX() - BEAM_MOUTH_OFFSET_X;
+        }
+
+        int startScreenX  = startWorldX - gp.player.worldX + gp.player.screenX;
+        int centerScreenY = centerWorldY - gp.player.worldY + gp.player.screenY;
+
+        // Alterna entre mkbeam01 e mkbeam02 pra animar
+        BufferedImage slice = (beamBody2 != null && (beamCounter / 5) % 2 == 1)
+                ? beamBody2
+                : beamBody1;
+
+        int sliceW = slice.getWidth();
+        int sliceH = slice.getHeight();
+        int y      = centerScreenY - sliceH / 2;
+
+        int drawn = 0;
+
+        if ("right".equals(direction)) {
+            int x = startScreenX;
+            while (drawn < beamWidthPixels) {
+                g2.drawImage(slice, x, y, null);
+                x     += sliceW;
+                drawn += sliceW;
+            }
+        } else { // ESQUERDA
+            // desenha espelhado para a esquerda
+            int x = startScreenX;
+            while (drawn < beamWidthPixels) {
+                // desenha slice invertido horizontalmente
+                g2.drawImage(slice,
+                        x, y,
+                        x - sliceW, y + sliceH,
+                        0, 0,
+                        sliceW, sliceH,
+                        null);
+                x     -= sliceW;
+                drawn += sliceW;
+            }
+        }
     }
 
-    // Durante o windup só o grito aparece (sem feixe)
-    int windup = inRage ? BEAM_WINDUP_RAGE : BEAM_WINDUP_NORMAL;
-    if (beamCounter <= windup || beamBody1 == null) {
-        return;
-    }
-
-    int rangeTiles = inRage ? BEAM_RANGE_TILES_RAGE : BEAM_RANGE_TILES_NORMAL;
-    int beamWidthPixels = rangeTiles * gp.tileSize;
-
-    // Origem do feixe: boca (como já calibramos com BEAM_MOUTH_OFFSET_*)
-    int startWorldX = getRightX() + BEAM_MOUTH_OFFSET_X;
-    int centerWorldY = getCenterY() + BEAM_MOUTH_OFFSET_Y;
-
-    int startScreenX = startWorldX - gp.player.worldX + gp.player.screenX;
-    int centerScreenY = centerWorldY - gp.player.worldY + gp.player.screenY;
-
-    // Alterna entre mkbeam01 e mkbeam02 pra animar
-    BufferedImage slice = (beamBody2 != null && (beamCounter / 5) % 2 == 1)
-            ? beamBody2
-            : beamBody1;
-
-    int sliceW = slice.getWidth();
-    int sliceH = slice.getHeight();
-    int y = centerScreenY - sliceH / 2;
-
-    int drawn = 0;
-    int x = startScreenX;
-
-    while (drawn < beamWidthPixels) {
-        g2.drawImage(slice, x, y, null);
-        x += sliceW;
-        drawn += sliceW;
-    }
-}
 
 
 
