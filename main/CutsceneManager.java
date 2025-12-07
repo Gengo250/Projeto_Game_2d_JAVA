@@ -41,6 +41,8 @@ public class CutsceneManager {
   public final int macaco = 1;
   public final int ending = 2;
   public final int intro  = 3;
+   public final int macacoDeath = 4; 
+
 
   public CutsceneManager(GamePanel gp){
     this.gp = gp;
@@ -77,6 +79,7 @@ public class CutsceneManager {
       case macaco: scene_macaco(); break;
       case ending: scene_ending(); break;
       case intro: scene_intro(); break;
+      case macacoDeath: scene_macacoDeath(); break;
     }
   }
 public void scene_macaco(){
@@ -280,6 +283,248 @@ if (scenePhase == 5) {
         gp.playMusic(22);
     }
 }
+  // ---------------------------------------------------------
+  // CUTSCENE DA MORTE DO MACACO
+  // ---------------------------------------------------------
+  public void scene_macacoDeath() {
+
+    // FASE 0 – prepara dummy do player, acha o boss e começa o fade
+    if (scenePhase == 0) {
+
+      // Guarda posição atual do player num PlayerDummy
+      for (int i = 0; i < gp.npc[1].length; i++) {
+        if (gp.npc[gp.currentMap][i] == null) {
+          gp.npc[gp.currentMap][i] = new PlayerDummy(gp);
+          gp.npc[gp.currentMap][i].worldX   = gp.player.worldX;
+          gp.npc[gp.currentMap][i].worldY   = gp.player.worldY;
+          gp.npc[gp.currentMap][i].direction = gp.player.direction;
+          break;
+        }
+      }
+
+      // Esconde o player real
+      gp.player.drawing = false;
+
+      // Acha o boss macaco no mapa atual
+      monkeyBoss = null;
+      for (int i = 0; i < gp.monster[1].length; i++) {
+        if (gp.monster[gp.currentMap][i] != null &&
+            gp.monster[gp.currentMap][i].name == MON_Monkey.monName) {
+          monkeyBoss = (MON_Monkey) gp.monster[gp.currentMap][i];
+          break;
+        }
+      }
+
+      // Se por algum motivo não achar o boss, só aplica o XP pendente e sai
+      if (monkeyBoss == null) {
+        gp.player.drawing = true;
+        gp.player.resolvePendingBossRewards();
+        sceneNum = NA;
+        scenePhase = 0;
+        gp.gameState = gp.playState;
+        return;
+      }
+
+      // Garante que ele está "parado" em down1
+      monkeyBoss.direction = "down";
+      monkeyBoss.spriteNum = 1;
+      monkeyBoss.attacking = false;
+      monkeyBoss.sleep = false;
+
+      // Começa fade-in para preto (transição para a cutscene)
+      alpha = 0f;
+      counter = 0;
+
+      scenePhase = 1;
+    }
+
+      // FASE 1 – tela escurece, depois move câmera para o macaco
+    else if (scenePhase == 1) {
+
+        // Transição mais lenta (~2.5s), parecida com o teleport
+        int fadeDuration = (int)(gp.FPS * 2.5f);  // 60 FPS → 150 frames
+
+        if (counter < fadeDuration) {
+            alpha = (float)counter / (float)fadeDuration;
+            if (alpha > 1f) alpha = 1f;
+
+            drawBlackground(alpha);  // desenha o preto por cima de TUDO
+            counter++;
+        }
+        else {
+            // Garante que a tela está totalmente preta
+            alpha = 1f;
+            drawBlackground(alpha);
+
+            // Quando estiver tudo escuro, "teleporta" a câmera pro boss
+            if (monkeyBoss != null) {
+                gp.player.worldX = monkeyBoss.worldX;
+                gp.player.worldY = monkeyBoss.worldY;
+            }
+
+            counter = 0;
+            scenePhase = 2;
+        }
+    }
+
+
+    // FASE 2 – fade-out suave + murmúrio de dor + começa em down1
+    else if (scenePhase == 2) {
+
+      if (counter == 0) {
+        // som de dor do boss (pode trocar por 25 se quiser o grito)
+        gp.playeSE(6);
+      }
+
+      // Garante que começa na segunda fase (inRage) em down1
+      if (monkeyBoss != null) {
+        monkeyBoss.inRage = true;
+        monkeyBoss.direction = "down";
+        monkeyBoss.spriteNum = 1;
+        monkeyBoss.getImage();
+        monkeyBoss.getAttackImage();
+        monkeyBoss.getBeamImages();
+      }
+
+      if (alpha > 0f) {
+        drawBlackground(alpha);
+        alpha -= 0.05f;
+        if (alpha < 0f) alpha = 0f;
+      }
+
+      counter++;
+
+      // depois de um tempo, começa a piscar (transição fase 2 → fase 1)
+      if (counter > 30) {
+        monkeyCounter = 0;
+        scenePhase = 3;
+      }
+    }
+
+    // FASE 3 – macaco piscando entre rage / normal por alguns segundos
+    else if (scenePhase == 3) {
+
+      if (monkeyBoss != null) {
+        monkeyCounter++;
+
+        // a cada 8 frames troca entre inRage true/false e pisca transparência
+        if (monkeyCounter % 30 == 0) {
+          monkeyBoss.inRage = !monkeyBoss.inRage;
+          monkeyBoss.transparent = !monkeyBoss.transparent;
+          monkeyBoss.getImage();
+          monkeyBoss.getAttackImage();
+          monkeyBoss.getBeamImages();
+        }
+
+        // depois de ~1.5s fixa na fase 1 (sem rage)
+        if (monkeyCounter > 90) {
+          monkeyBoss.inRage = false;
+          monkeyBoss.transparent = false;
+          monkeyBoss.getImage();
+          monkeyBoss.getAttackImage();
+          monkeyBoss.getBeamImages();
+
+          // configura o diálogo final
+          gp.ui.npc = monkeyBoss;
+          monkeyBoss.dialogueSet = 1;   // usa dialogues[1][..] = fala de morte
+          monkeyBoss.dialogueIndex = 0;
+
+          scenePhase = 4;
+        }
+      } else {
+        // fallback, se algo der errado, pula pro fim
+        scenePhase = 5;
+      }
+    }
+
+    // FASE 4 – diálogo: "aprovo a sua bravura... tome esta banana..."
+    else if (scenePhase == 4) {
+      gp.ui.drawDialogueScreen();
+      // Quando o jogador terminar o diálogo,
+      // o próprio UI vai incrementar scenePhase++
+      // (mesma lógica usada na cutscene do boss inicial)
+    }
+
+   // FASE 5 – some, dá banana e drops direto pro inventário, aplica EXP e volta pro jogo
+else if (scenePhase == 5) {
+
+    if (monkeyBoss != null) {
+
+        // Efeito de partícula opcional
+        monkeyBoss.generatorParticule(monkeyBoss, monkeyBoss);
+
+        // Dá recompensa de itens direto no inventário
+        monkeyBoss.giveRewardsToPlayerDirect();
+
+        // Aplica o XP e level-up que ficaram pendentes
+        gp.player.resolvePendingBossRewards();
+
+        // Marca o boss como realmente morto (GamePanel.update vai limpar)
+        monkeyBoss.alive = false;
+        monkeyBoss.dying = false;
+    }
+
+    // Volta o player para uma posição um pouco mais afastada do boss
+    for (int i = 0; i < gp.npc[1].length; i++) {
+        if (gp.npc[gp.currentMap][i] != null &&
+            gp.npc[gp.currentMap][i].name != null &&
+            gp.npc[gp.currentMap][i].name.equals(PlayerDummy.npcName)) {
+
+            int dummyX = gp.npc[gp.currentMap][i].worldX;
+            int dummyY = gp.npc[gp.currentMap][i].worldY;
+
+            // Calcula a direção do player em relação ao boss
+            int bossCol;
+            int bossRow;
+            if (monkeyBoss != null) {
+                bossCol = monkeyBoss.worldX / gp.tileSize;
+                bossRow = monkeyBoss.worldY / gp.tileSize;
+            } else {
+                bossCol = dummyX / gp.tileSize;
+                bossRow = dummyY / gp.tileSize;
+            }
+
+            int playerCol = dummyX / gp.tileSize;
+            int playerRow = dummyY / gp.tileSize;
+
+            int dCol = playerCol - bossCol;
+            int dRow = playerRow - bossRow;
+
+            int offsetTiles = 2;  // QUANTO o player vai se afastar do macaco
+
+            // Afasta mais 2 tiles na direção em que o player já estava
+            if (Math.abs(dCol) >= Math.abs(dRow)) {
+                if (dCol >= 0) playerCol += offsetTiles;
+                else           playerCol -= offsetTiles;
+            } else {
+                if (dRow >= 0) playerRow += offsetTiles;
+                else           playerRow -= offsetTiles;
+            }
+
+            gp.player.worldX = playerCol * gp.tileSize;
+            gp.player.worldY = playerRow * gp.tileSize;
+            gp.player.direction = gp.npc[gp.currentMap][i].direction;
+
+            gp.npc[gp.currentMap][i] = null;
+            break;
+        }
+    }
+
+    gp.player.drawing = true;
+
+    // Garante que a boss battle acabou e volta música da área
+    gp.bossBattleON = false;
+    gp.stopMusic();
+    gp.playMusic(23);
+
+    // Finaliza a cutscene
+    sceneNum = NA;
+    scenePhase = 0;
+    gp.gameState = gp.playState;
+}
+
+  }
+
 private void drawCurrentIntroBlock(float alpha) {
     if (introLines == null || introLines.length == 0) return;
     if (introLinesToShow < 0 || introLinesToShow >= introLines.length) return;

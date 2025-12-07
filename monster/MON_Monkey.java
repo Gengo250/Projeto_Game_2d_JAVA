@@ -19,6 +19,8 @@ public class MON_Monkey extends Entity {
     GamePanel gp;
     public static final String monName = "Macaco";
 
+      private boolean rewardsGivenInCutscene = false;
+
     private boolean bananaIdleLoaded = false;
 
     private boolean beamAttacking = false;
@@ -188,7 +190,7 @@ public class MON_Monkey extends Entity {
     }
 }
 
-private void getBeamImages() {
+public void getBeamImages() {
 
     // CABEÇA / BOCA DO RAIO (direita / esquerda)
     if (!inRage) {
@@ -212,11 +214,18 @@ private void getBeamImages() {
 
 
 
-    public void setDialogue() {
-        dialogues[0][0] = "QUEM OUSA ENTRAR NO MEU REINO?!";
-        dialogues[0][1] = "ESSA BANANA É MINHA!!!";
-        dialogues[0][2] = "VOCÊ VAI VIRAR COMIDA DE MACACO!";
-    }
+     public void setDialogue() {
+    // Diálogo da INTRO do boss
+    dialogues[0][0] = "QUEM OUSA ENTRAR NO MEU REINO?!";
+    dialogues[0][1] = "ESSA BANANA É MINHA!!!";
+    dialogues[0][2] = "VOCÊ VAI VIRAR COMIDA DE MACACO!";
+
+    // Diálogo da MORTE (fase 2 → fase 1 → fala final)
+    dialogues[1][0] = "*Um murmúrio de dor ecoa pela caverna...*";
+    dialogues[1][1] = "Agh... você provou sua bravura,\n bravo guerreiro...";
+    dialogues[1][2] = "Tome esta banana... \ne suma da minha frente!";
+  }
+
 
         @Override
     public void update() {
@@ -804,23 +813,66 @@ private void drawUpAttackOverlay(Graphics2D g2) {
     }
 
 
+  // Entrega a recompensa final direto para o inventário do player
+  public void giveRewardsToPlayerDirect() {
+    if (rewardsGivenInCutscene) return;
+    rewardsGivenInCutscene = true;
 
-
-
-    public void checkDrop() {
-        // Desativa boss fight
-        gp.bossBattleON = false;
-
-        // Dropa a Banana Dourada 100%
-        dropItem(new OBJ_Bananao(gp));
-
-        // Drops extras (opcional)
-        for (int i = 0; i < 15; i++) {
-            dropItem(new OBJ_Coin_Bronze(gp));
-        }
-        dropItem(new OBJ_Heart(gp));
-
-        gp.stopMusic();
-        gp.playMusic(23);
+    // Banana sempre
+    Entity banana = new OBJ_Bananao(gp);
+    if (!gp.player.canObtainItem(banana)) {
+      // se inventário cheio, cai no chão
+      dropItem(banana);
     }
+
+    // Se chegou até a segunda fase (inRage), dá recompensa cheia
+    if (inRage) {
+      Entity heart = new OBJ_Heart(gp);
+      if (!gp.player.canObtainItem(heart)) {
+        dropItem(heart);
+      }
+
+      // Várias moedas – tenta colocar no inventário, se não couber, derrama no chão
+      for (int i = 0; i < 15; i++) {
+        Entity coin = new OBJ_Coin_Bronze(gp);
+        if (!gp.player.canObtainItem(coin)) {
+          dropItem(coin);
+        }
+      }
+    }
+
+    gp.ui.addMessage("Os tesouros do Macaco Ancestral!");
+  }
+
+
+
+      public void checkDrop() {
+
+    // Se a cutscene final já cuidou das recompensas,
+    // aqui só garantimos que a boss battle foi encerrada.
+    if (rewardsGivenInCutscene) {
+      gp.bossBattleON = false;
+      gp.stopMusic();
+      gp.playMusic(23);
+      return;
+    }
+
+    // --- COMPORTAMENTO PADRÃO (fallback, caso por algum motivo não tenha cutscene) ---
+
+    // Desativa boss fight
+    gp.bossBattleON = false;
+
+    // Dropa a Banana Dourada 100%
+    dropItem(new OBJ_Bananao(gp));
+
+    // Drops extras
+    for (int i = 0; i < 15; i++) {
+      dropItem(new OBJ_Coin_Bronze(gp));
+    }
+    dropItem(new OBJ_Heart(gp));
+
+    gp.stopMusic();
+    gp.playMusic(23);
+  }
+
 }

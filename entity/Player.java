@@ -37,6 +37,10 @@ public class Player extends Entity {
   private int ugabugaAuraW = -1, ugabugaAuraH = -1;
 
   private boolean wasGodModeOn = false;
+    // --- RECOMPENSA DE BOSS (aplicada só depois da cutscene) ---
+  public int pendingBossExp = 0;
+  public String pendingBossKillName = null;
+  public boolean bossRewardPending = false;
 
 
   public Player(GamePanel gp, KeyHandler keyH) {
@@ -88,6 +92,9 @@ public class Player extends Entity {
     dexterity = 1; // the more dexterity he has, the less damage he receives
     exp = 0;
     nextLevelExp = 5;
+    pendingBossExp = 0;
+    pendingBossKillName = null;
+    bossRewardPending = false;
     coin = 1000;
     currenWeapon = new OBJ_Sword_Normal(gp);
     currentyShield = new OBJ_Shield_Wood(gp);
@@ -618,7 +625,7 @@ public class Player extends Entity {
   }
 
 
-  public void damageMonter(int i, Entity attacker, int attack, int knokBackPower) {
+    public void damageMonter(int i, Entity attacker, int attack, int knokBackPower) {
     if (i != 999) {
       if (gp.monster[gp.currentMap][i].invencible == false) {
         gp.playeSE(5);
@@ -638,13 +645,48 @@ public class Player extends Entity {
         gp.monster[gp.currentMap][i].invencible = true;
         gp.monster[gp.currentMap][i].damageReaction();
 
-        if (gp.monster[gp.currentMap][i].life <= 0) {
-          gp.monster[gp.currentMap][i].dying = true;
-          gp.ui.addMessage("killed the " + gp.monster[gp.currentMap][i].name + "!");
-          gp.ui.addMessage("EXP " + gp.monster[gp.currentMap][i].exp);
-          exp += gp.monster[gp.currentMap][i].exp;
-          checkLevelUp();
+        // --- MORTE DO MONSTRO ---
+        // --- MORTE DO MONSTRO ---
+if (gp.monster[gp.currentMap][i].life <= 0) {
+
+    Entity killed = gp.monster[gp.currentMap][i];
+
+    // CASO ESPECIAL: BOSS MACACO → ativa cutscene de morte
+    if (killed.boss && "Macaco".equals(killed.name)) {
+
+        // evita animação de morte padrão
+        killed.life = 1;
+        killed.dying = false;
+
+        // garante que ele não fique transparente ou piscando
+        killed.invencible = false;
+        killed.transparent = false;
+
+        // guarda o XP para aplicar depois da cutscene
+        pendingBossExp += killed.exp;
+        pendingBossKillName = killed.name;
+        bossRewardPending = true;
+
+        // para a música da batalha antes da transição de tela
+        gp.stopMusic();
+
+        // entra no modo cutscene de morte do macaco
+        if (gp.csManager.sceneNum != gp.csManager.macacoDeath) {
+            gp.csManager.sceneNum = gp.csManager.macacoDeath;
+            gp.csManager.scenePhase = 0;
+            gp.gameState = gp.cutsceneState;
         }
+
+    } else {
+        // comportamento normal para qualquer outro monstro
+        killed.dying = true;
+        gp.ui.addMessage("killed the " + killed.name + "!");
+        gp.ui.addMessage("EXP " + killed.exp);
+        exp += killed.exp;
+        checkLevelUp();
+    }
+}
+
       }
     }
   }
@@ -717,6 +759,25 @@ public class Player extends Entity {
       startDialogue(this, 0);
     }
   }
+
+    // Aplica o XP que ficou "guardado" para bosses com cutscene de morte
+  public void resolvePendingBossRewards() {
+    if (!bossRewardPending) return;
+
+    if (pendingBossKillName != null) {
+      gp.ui.addMessage("killed the " + pendingBossKillName + "!");
+    }
+    gp.ui.addMessage("EXP " + pendingBossExp);
+
+    exp += pendingBossExp;
+    checkLevelUp();
+
+    // limpa estado
+    bossRewardPending = false;
+    pendingBossExp = 0;
+    pendingBossKillName = null;
+  }
+
 
   public void startUgabuga() {
     ugabugaActive = true;
