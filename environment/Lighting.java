@@ -95,7 +95,7 @@ public class Lighting {
 
       dayCounter ++;
 
-      if(dayCounter > 36000){ //time definetion // 10 minutos = 36000 // 600 = 10 segundos
+      if(dayCounter > 1200){ //time definetion // 10 minutos = 36000 // 600 = 10 segundos
         dayState = dusk;
         dayCounter = 0;
       }
@@ -124,22 +124,40 @@ public class Lighting {
         }
      }
   }
-  public void draw(Graphics2D g2){
-    if(gp.currentArea == gp.outside){
-       g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, filterAlpha));
+public void draw(Graphics2D g2) {
+
+    if (gp.currentArea == gp.outside) {
+        // Usa o alpha do ciclo dia/noite...
+        float alpha = filterAlpha;
+
+        // ...mas limita o máximo para não “matar” o mapa.
+        // Você pode testar 0.7f, 0.75f, 0.8f…
+        if (alpha > 0.8f) {
+            alpha = 0.8f;
+        }
+
+        g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
     }
-    if(gp.currentArea == gp.outside || gp.currentArea == gp.dungeon){
-     g2.drawImage(darknessFilter, 0,0, null);
+    else if (gp.currentArea == gp.dungeon) {
+        // Dungeon continua com o efeito antigo: filtro 100% forte
+        g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
     }
+
+    // Aplica o filtro escuro nos lugares onde ele existe
+    if (gp.currentArea == gp.outside || gp.currentArea == gp.dungeon) {
+        g2.drawImage(darknessFilter, 0, 0, null);
+    }
+
+    // Reseta a transparência pro resto do desenho
     g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
 
-    // DEBUG 
+    // DEBUG (se quiser manter)
     String situation = "";
-    switch(dayState){
-      case day: situation = "Day";break;
-      case dusk: situation = "Dusk"; break;
-      case night: situation = "Night"; break;
-      case dawn: situation = "Dawn"; break;
+    switch (dayState) {
+        case day:  situation = "Day";  break;
+        case dusk: situation = "Dusk"; break;
+        case night:situation = "Night";break;
+        case dawn: situation = "Dawn"; break;
     }
     g2.setColor(Color.white);
     g2.setFont(g2.getFont().deriveFont(46f));
