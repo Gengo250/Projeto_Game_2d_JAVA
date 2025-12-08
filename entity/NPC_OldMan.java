@@ -42,15 +42,16 @@ public class NPC_OldMan extends Entity{
 
   }
   public void setDialogue(){
-    dialogues[0][0] = "Hello, lad.";
-    dialogues[0][1] = "So you've come to this island to \nfind the treasure?.";
-    dialogues[0][2] = "I used to be a great wizard but now...\nI'm a bit too old for talking an adventure.";
-    dialogues[0][3] = "Well, good luck on you.";
+    dialogues[0][0] = "As trevas estão se espalhando\npor estas terras, jovem.";
+    dialogues[0][1] = "A floresta chora em silêncio…\nrios e bichos estão sofrendo.";
+    dialogues[0][2] = "Um macaco ancestral foi tomado\npela fúria da corrupção.";
+    dialogues[0][3] = "Você foi escolhido.\nNão tema, caminhe com coragem.";
 
-    dialogues[1][0] = "If you become tired, rest ate the water";
-    dialogues[1][1] = "So you've come to this island to \nfind the treasure?.";
-    dialogues[1][2] = "I used to be a great wizard but now...\nI'm a bit too old for talking an adventure.";
-    dialogues[1][3] = "Well, good luck on you.";
+    dialogues[1][0] = "Se o cansaço te alcançar,\ndescansa perto da água.";
+    dialogues[1][1] = "Escute o som do rio,\né a voz dos ancestrais.";
+    dialogues[1][2] = "As estátuas sagradas guardam\ncaminhos de viagem rápida.";
+    dialogues[1][3] = "Use a força com sabedoria,\nou virará parte da escuridão.";
+
   }
   public void setAction(){ 
     if(onPath == true){

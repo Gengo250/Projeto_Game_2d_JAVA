@@ -123,9 +123,9 @@ public class Player extends Entity {
         worldY = gp.tileSize * 13;
         break; // Indoor (exemplo)
       case 2:
-        worldX = gp.tileSize * 23;
-        worldY = gp.tileSize * 21;
-        break; // Dungeons B1
+        worldX = gp.tileSize * 71;
+        worldY = gp.tileSize * 94;
+        break; // caverna
       case 3:
         worldX = gp.tileSize * 25;
         worldY = gp.tileSize * 29;

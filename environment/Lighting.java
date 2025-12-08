@@ -126,25 +126,34 @@ public class Lighting {
   }
 public void draw(Graphics2D g2) {
 
-    if (gp.currentArea == gp.outside) {
-        // Usa o alpha do ciclo dia/noite...
-        float alpha = filterAlpha;
+    boolean drawFilter = false;
 
-        // ...mas limita o máximo para não “matar” o mapa.
-        // Você pode testar 0.7f, 0.75f, 0.8f…
+    if (gp.currentArea == gp.outside) {
+        // Usa o alpha do ciclo dia/noite, mas limitado
+        float alpha = filterAlpha;
         if (alpha > 0.8f) {
             alpha = 0.8f;
         }
 
         g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
+        drawFilter = true;
     }
     else if (gp.currentArea == gp.dungeon) {
-        // Dungeon continua com o efeito antigo: filtro 100% forte
-        g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
+
+        // EXCEÇÃO: arena do MACACO no MAPA 2 durante a boss battle
+        if (gp.bossBattleON && gp.currentMap == 2) {
+            // NÃO desenha filtro de escuridão aqui → fica claro
+            drawFilter = false;
+            g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
+        } else {
+            // Dungeon normal: escuro 100%
+            g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
+            drawFilter = true;
+        }
     }
 
-    // Aplica o filtro escuro nos lugares onde ele existe
-    if (gp.currentArea == gp.outside || gp.currentArea == gp.dungeon) {
+    // Aplica o filtro escuro só quando for pra desenhar
+    if (drawFilter) {
         g2.drawImage(darknessFilter, 0, 0, null);
     }
 
@@ -162,5 +171,6 @@ public void draw(Graphics2D g2) {
     g2.setColor(Color.white);
     g2.setFont(g2.getFont().deriveFont(46f));
     g2.drawString(situation, 800, 500);
-  }
+}
+
 }

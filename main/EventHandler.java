@@ -76,10 +76,16 @@ public class EventHandler {
         else if (hit(0, 41, 73, "any") == true){teleport(2, 71, 97, gp.dungeon);} //caverna
         
         else if (hit(2, 71, 97, "any") == true){teleport(0, 39, 73, gp.outside);} //outside
+        else if (hit(3, 26, 22, "any") == true){teleport(0, 185, 119, gp.outside);} //outside
 
 
+               // BOSS MACACO - entrada da arena no MAPA 2
+        else if (hit(2, 76, 49, "any") == true) { monkeyBoss(); }
+        else if (hit(2, 77, 49, "any") == true) { monkeyBoss(); }
+        else if (hit(2, 78, 49, "any") == true) { monkeyBoss(); }
+        else if (hit(2, 79, 49, "any") == true) { monkeyBoss(); }
+        else if (hit(2, 80, 49, "any") == true) { monkeyBoss(); }
 
-        else if (hit(0, 61, 86, "any") == true){monkeyBoss();} // BOSS MACACO
 
        
     }
@@ -166,11 +172,17 @@ public void monkeyBoss() {
         }
     }
 
-    // 2) Se NÃO existir mais boss, marca o evento como concluído pra nunca mais disparar
-    if (!bossAlive) {
-        eventRect[0][61][86].eventDone = true;
-        return;
-    }
+
+    // 2) Se NÃO existir mais boss, marca TODAS as entradas da arena como concluídas
+if (!bossAlive) {
+    eventRect[2][76][49].eventDone = true;
+    eventRect[2][77][49].eventDone = true;
+    eventRect[2][78][49].eventDone = true;
+    eventRect[2][79][49].eventDone = true;
+    eventRect[2][80][49].eventDone = true;
+    return;
+}
+
 
     // 3) Se o boss ainda existe e não estamos em batalha, inicia a cutscene
     if (!gp.bossBattleON) {

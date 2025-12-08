@@ -85,67 +85,68 @@ public class CutsceneManager {
 public void scene_macaco(){
 
     // FASE 0: fecha porta, cria dummy e configura câmera usando a posição REAL do boss
-    if (scenePhase == 0) {
-        gp.bossBattleON = true;
+ // FASE 0: fecha portas, cria dummy e configura câmera SUBINDO até (77,26)
+if (scenePhase == 0) {
+    gp.bossBattleON = true;
 
-        // Fecha a porta de ferro
+    // 1) Fecha a "parede" de portas de ferro na linha 51, colunas 76..80 (mapa 2)
+    int[] doorCols = {76, 77, 78, 79, 80};
+    for (int c = 0; c < doorCols.length; c++) {
         for (int i = 0; i < gp.obj[1].length; i++) {
             if (gp.obj[gp.currentMap][i] == null) {
                 gp.obj[gp.currentMap][i] = new OBJ_Door_Iron(gp);
-                gp.obj[gp.currentMap][i].worldX = gp.tileSize * 25;
-                gp.obj[gp.currentMap][i].worldY = gp.tileSize * 28;
+                gp.obj[gp.currentMap][i].worldX = gp.tileSize * doorCols[c];
+                gp.obj[gp.currentMap][i].worldY = gp.tileSize * 51; // posição das portas
                 gp.obj[gp.currentMap][i].temp   = true;
-                gp.playeSE(21);
                 break;
             }
         }
-
-        // Procura um slot vazio para o dummy do player
-        for (int i = 0; i < gp.npc[1].length; i++) {
-            if (gp.npc[gp.currentMap][i] == null) {
-                gp.npc[gp.currentMap][i] = new PlayerDummy(gp);
-                gp.npc[gp.currentMap][i].worldX   = gp.player.worldX;
-                gp.npc[gp.currentMap][i].worldY   = gp.player.worldY;
-                gp.npc[gp.currentMap][i].direction = gp.player.direction;
-                break;
-            }
-        }
-
-        // Esconde o player real (a câmera continua centrada nele)
-        gp.player.drawing = false;
-
-        // *** AQUI: acha o boss e usa a posição dele para centralizar a câmera ***
-        for (int i = 0; i < gp.monster[1].length; i++) {
-            if (gp.monster[gp.currentMap][i] != null &&
-                gp.monster[gp.currentMap][i].name == MON_Monkey.monName) {
-
-                monkeyBoss = (MON_Monkey) gp.monster[gp.currentMap][i];
-
-                int bossCol = monkeyBoss.worldX / gp.tileSize;
-                int bossRow = monkeyBoss.worldY / gp.tileSize;
-
-                // Queremos vir da direita (coluna 61) mas alinhado na mesma LINHA do boss
-                monkeyCamStartCol = 61;
-                monkeyCamStartRow = bossRow;
-
-                // Alvo final: exatamente em cima do boss
-                monkeyCamEndCol = bossCol;
-                monkeyCamEndRow = bossRow;
-
-                // Define posição inicial da câmera (player) em tiles → pixels
-                gp.player.worldX = monkeyCamStartCol * gp.tileSize;
-                gp.player.worldY = monkeyCamStartRow * gp.tileSize;
-
-                // Define o alvo em pixels (usado na FASE 1)
-                monkeyCamTargetX = monkeyCamEndCol * gp.tileSize;
-                monkeyCamTargetY = monkeyCamEndRow * gp.tileSize;
-
-                break;
-            }
-        }
-
-        scenePhase++;
     }
+    gp.playeSE(21); // som das portas fechando
+
+    // 2) Cria o dummy do player na posição original
+    for (int i = 0; i < gp.npc[1].length; i++) {
+        if (gp.npc[gp.currentMap][i] == null) {
+            gp.npc[gp.currentMap][i] = new PlayerDummy(gp);
+            gp.npc[gp.currentMap][i].worldX   = gp.player.worldX;
+            gp.npc[gp.currentMap][i].worldY   = gp.player.worldY;
+            gp.npc[gp.currentMap][i].direction = gp.player.direction;
+            break;
+        }
+    }
+
+    // 3) Esconde o player real (a câmera continua seguindo ele)
+    gp.player.drawing = false;
+
+    // 4) Acha o boss macaco no mapa atual (para as fases seguintes)
+    monkeyBoss = null;
+    for (int i = 0; i < gp.monster[1].length; i++) {
+        if (gp.monster[gp.currentMap][i] != null &&
+            gp.monster[gp.currentMap][i].name == MON_Monkey.monName) {
+
+            monkeyBoss = (MON_Monkey) gp.monster[gp.currentMap][i];
+            break;
+        }
+    }
+
+    // 5) Caminho da câmera:
+    //    começa em (77, 49) e SOBE até (77, 26)
+    monkeyCamStartCol = 77;
+    monkeyCamStartRow = 49; // linha do gatilho da arena
+    monkeyCamEndCol   = 77;
+    monkeyCamEndRow   = 26; // posição alvo lá em cima (onde está o boss/arena)
+
+    // posição inicial da câmera (em pixels)
+    gp.player.worldX = monkeyCamStartCol * gp.tileSize;
+    gp.player.worldY = monkeyCamStartRow * gp.tileSize;
+
+    // alvo em pixels
+    monkeyCamTargetX = monkeyCamEndCol * gp.tileSize;
+    monkeyCamTargetY = monkeyCamEndRow * gp.tileSize;
+
+    scenePhase++;
+}
+
 
     // FASE 1: câmera deslizando de (61, bossRow) até exatamente o tile do boss
     if (scenePhase == 1) {
