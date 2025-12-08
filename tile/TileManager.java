@@ -70,6 +70,7 @@ public class TileManager {
     loadMap("/res/maps/tocantins.txt", 0);
     loadMap("/res/maps/casa.txt", 1);
     loadMap("/res/maps/caverna.txt", 2);
+     loadMap("/res/maps/mercador.txt", 3);
     //loadMap("/res/maps/dungeonfinal.txt", 3);
 
   }

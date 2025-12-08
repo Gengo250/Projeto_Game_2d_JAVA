@@ -160,13 +160,17 @@ public class GamePanel  extends JPanel implements Runnable{
     
     stopMusic();
     playMusic(23);
-    if (currentMap == 1) {
+  if (currentMap == 1 || currentMap == 3) {
+    // 1 = sua casa, 3 = casa do mercador
     currentArea = indoor;
-    } else if (currentMap == 2 || currentMap == 3) {
-        currentArea = dungeon;
-    } else {
-        currentArea = outside;
-    }
+} else if (currentMap == 2) {
+    // 2 continua sendo dungeon/caverna
+    currentArea = dungeon;
+} else {
+    // qualquer outro mapa novo -> outside
+    currentArea = outside;
+}
+
     removeTempEntity();
     bossBattleON = false;
     player.setDefaultPositions();
@@ -246,6 +250,40 @@ public class GamePanel  extends JPanel implements Runnable{
 
     closeFastTravel();
   }
+ // Teleporta o jogador para QUALQUER mapa/posição (em tiles)
+public void teleportPlayerToMap(int targetMap, int targetCol, int targetRow) {
+
+    // Define o mapa de destino
+    currentMap = targetMap;
+
+    // Converte col/row para coordenadas em pixels
+    player.worldX = tileSize * targetCol;
+    player.worldY = tileSize * targetRow;
+    player.direction = "down";
+
+  if (currentMap == 1 || currentMap == 3) {
+    // 1 = sua casa, 3 = casa do mercador
+    currentArea = indoor;
+} else if (currentMap == 2) {
+    // 2 continua sendo dungeon/caverna
+    currentArea = dungeon;
+} else {
+    // qualquer outro mapa novo -> outside
+    currentArea = outside;
+}
+
+
+
+    // Força o update da iluminação
+    player.lightUpdated = true;
+
+    // Som de “teleporte/escada”
+    playeSE(13);
+
+    // Garante que o jogo continue no estado de gameplay
+    gameState = playState;
+}
+
 
   public void setFullScreen(){
     //GET LOCAL SCREEN DEVICE

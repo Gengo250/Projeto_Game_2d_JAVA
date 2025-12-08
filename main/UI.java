@@ -525,14 +525,15 @@ private void unlockIronDoorFromPaperPuzzle() {
         currentDialogue = combinedText;
       }
 
-      if (gp.keyH.enterPressed == true) {
-        charIndex = 0;
-        combinedText = "";
-        if (gp.gameState == gp.dialogueState || gp.gameState == gp.cutsceneState) {
-          npc.dialogueIndex++;
-        }
-        gp.keyH.enterPressed = false;
-      }
+      if (gp.keyH.enterPressed == true &&
+    (gp.gameState == gp.dialogueState || gp.gameState == gp.cutsceneState)) {
+
+    charIndex = 0;
+    combinedText = "";
+    npc.dialogueIndex++;
+    gp.keyH.enterPressed = false;
+}
+
     } else {
       npc.dialogueIndex = 0;
       if (gp.gameState == gp.dialogueState) {

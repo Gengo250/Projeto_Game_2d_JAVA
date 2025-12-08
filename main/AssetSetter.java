@@ -3,6 +3,8 @@ package main;
 import data.Progress;
 import entity.NPC_BigRock;
 import entity.NPC_Merchant;
+import entity.NPC_MerchantStatue;
+import entity.NPC_MerchantStatue2;
 import entity.NPC_OldMan;
 import entity.NPC_TamanduaStatue;
 import entity.NPC_TamanduaStatueBlue;
@@ -86,6 +88,16 @@ public class AssetSetter {
     gp.npc[mapNum][i].worldY = gp.tileSize * 89;
     i++;
 
+    gp.npc[0][i] = new NPC_MerchantStatue(gp);
+    gp.npc[0][i].worldX = gp.tileSize * 180;
+    gp.npc[0][i].worldY = gp.tileSize * 119;
+    i++;
+
+    gp.npc[0][i] = new NPC_MerchantStatue2(gp);
+    gp.npc[0][i].worldX = gp.tileSize * 180;
+    gp.npc[0][i].worldY = gp.tileSize * 121;
+    i++;
+
 
     //MAP 1 // Casa
     mapNum = 1;
@@ -105,6 +117,14 @@ public class AssetSetter {
     gp.npc[mapNum][i] = new NPC_BigRock(gp);
     gp.npc[mapNum][i].worldX = gp.tileSize*23;
     gp.npc[mapNum][i].worldY = gp.tileSize*14;
+    i++;
+
+    mapNum = 3;
+    i = 0;
+
+    gp.npc[mapNum][i] = new NPC_Merchant(gp);
+    gp.npc[mapNum][i].worldX = gp.tileSize * 26;
+    gp.npc[mapNum][i].worldY = gp.tileSize * 18;
     i++;
 
 
@@ -146,12 +166,7 @@ public class AssetSetter {
 
     mapNum = 3;
     i++;
-    if(Progress.skeletonLordDefeated == false){
-      gp.monster[mapNum][i] = new MON_SkeletonLord(gp);
-      gp.monster[mapNum][i].worldX = gp.tileSize*23;
-      gp.monster[mapNum][i].worldY = gp.tileSize*16;
-      i++;
-    }
+  
   
     
 

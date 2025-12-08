@@ -65,7 +65,7 @@ public class EventHandler {
         //else if (hit(0, 24, 44, "any") == true) {teleport(1, 21, 27,gp.indoor);} // to the casa house
         else if (hit(1, 26, 16, "any") == true) {teleport(0, 77, 196,gp.outside);} //to outside casa -> mapa principal
 
-        else if (hit(1, 21, 23, "up") == true) {speak(gp.npc[1][0]);} //mercador falando na mesa 
+        else if (hit(3, 26, 20, "up") == true) {speak(gp.npc[3][0]);} //mercador falando na mesa 
 
         else if (hit(0, 35, 73, "any") == true){teleport(2, 71, 97, gp.dungeon);} //caverna
         else if (hit(0, 36, 73, "any") == true){teleport(2, 71, 97, gp.dungeon);} //caverna
