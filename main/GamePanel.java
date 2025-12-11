@@ -157,37 +157,62 @@ public class GamePanel  extends JPanel implements Runnable{
 }
 
   public void resetGame(boolean restart){
-    
+
     stopMusic();
     playMusic(27);
-  if (currentMap == 1 || currentMap == 3) {
-    // 1 = sua casa, 3 = casa do mercador
-    currentArea = indoor;
-} else if (currentMap == 2) {
-    // 2 continua sendo dungeon/caverna
-    currentArea = dungeon;
-} else {
-    // qualquer outro mapa novo -> outside
-    currentArea = outside;
-}
+
+    if (currentMap == 1 || currentMap == 3) {
+        currentArea = indoor;
+    } else if (currentMap == 2) {
+        currentArea = dungeon;
+    } else {
+        currentArea = outside;
+    }
 
     removeTempEntity();
     bossBattleON = false;
     player.setDefaultPositions();
     player.lightUpdated = true;
     player.restoreStatus();
-    prepareRespawn(); 
+    prepareRespawn();
     player.resetCounter();
+
+    // Limpamos NPCs e monstros do mapa atual,
+    // para recarregar "do zero" esse mapa.
+    for (int i = 0; i < npc[currentMap].length; i++) {
+        npc[currentMap][i] = null;
+    }
+    for (int i = 0; i < monster[currentMap].length; i++) {
+        monster[currentMap][i] = null;
+    }
+
+    // Recarrega só do mapa atual (lazy)
     aSetter.setNPC();
     aSetter.setMonster();
 
-    if(restart == true){
-      player.setDefaultValues();
-      aSetter.setObject();
-      aSetter.setInteractiveTile();
-      eManager.lighting.resetDay();
+    if (restart == true) {
+        // "Novo Jogo": limpa objetos e tiles interativos de todos os mapas
+        for (int mapNum = 0; mapNum < maxMap; mapNum++) {
+            for (int i = 0; i < obj[mapNum].length; i++) {
+                obj[mapNum][i] = null;
+            }
+            for (int i = 0; i < iTile[mapNum].length; i++) {
+                iTile[mapNum][i] = null;
+            }
+        }
+
+        player.setDefaultValues();
+        currentMap = 1;
+
+        // Carrega o mapa inicial do zero
+        aSetter.setObject();
+        aSetter.setInteractiveTile();
+        aSetter.setNPC();
+        aSetter.setMonster();
+        eManager.lighting.resetDay();
     }
-  }
+}
+
     public void openFastTravelFromStatue(Entity origin) {
 
     // monta a lista de estátuas do mapa atual
@@ -282,6 +307,11 @@ public void teleportPlayerToMap(int targetMap, int targetCol, int targetRow) {
 
     // Garante que o jogo continue no estado de gameplay
     gameState = playState;
+
+    aSetter.setObject();
+    aSetter.setInteractiveTile();
+    aSetter.setNPC();
+    aSetter.setMonster();
 }
 
 
@@ -548,23 +578,32 @@ private void updateScreenShake() {
     }
 }
 
-  public void changeArea(){
-    if(nextArea != currentArea){
-      stopMusic();
-      if(nextArea == outside){
-        playMusic(27);
-      }
-       if(nextArea == indoor){
-        playMusic(18);
-      }
-       if(nextArea == dungeon){
-        playMusic(19);
-      }
-      aSetter.setNPC();
+  public void changeArea() {
+
+    if (nextArea != currentArea) {
+        stopMusic();
+
+        if (nextArea == outside) {
+            playMusic(27);
+        }
+        if (nextArea == indoor) {
+            playMusic(18);
+        }
+        if (nextArea == dungeon) {
+            playMusic(19);
+        }
     }
+
     currentArea = nextArea;
+
+    // Aqui, o EventHandler já deve ter mudado o currentMap.
+    // Então carregamos TUDO relacionado ao mapa atual, de forma lazy.
+    aSetter.setObject();
+    aSetter.setInteractiveTile();
+    aSetter.setNPC();
     aSetter.setMonster();
-  }
+}
+
   public void removeTempEntity(){
     for(int mapNum = 0; mapNum < maxMap; mapNum++){
       for(int i = 0; i < obj[1].length; i++){

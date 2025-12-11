@@ -1253,11 +1253,18 @@ int x;
           npc.startDialogue(npc, 2);
         } else {
           if (gp.player.canObtainItem(npc.inventory.get(itemIndex)) == true) {
-            gp.player.coin -= npc.inventory.get(itemIndex).price;
-          } else {
-            subState = 0;
-            npc.startDialogue(npc, 3);
-          }
+    gp.player.coin -= npc.inventory.get(itemIndex).price;
+
+    // Opcional: pequena mensagem de feedback
+    gp.ui.addMessage("Você comprou: " + npc.inventory.get(itemIndex).name);
+
+    // Volta pro menu principal do trade
+    subState = 0;
+} else {
+    subState = 0;
+    npc.startDialogue(npc, 3); // inventário cheio
+}
+
         }
       }
     }

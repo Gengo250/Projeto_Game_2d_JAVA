@@ -67,7 +67,7 @@ dialogues[4][0] = "Você não pode vender\n"
     inventory.add(new OBJ_Potion_Red(gp));
     inventory.add(new OBJ_Paper_mercador(gp));
     inventory.add(new OBJ_Tent(gp));
-    inventory.add(new OBJ_Ugabuga(gp));
+    //inventory.add(new OBJ_Ugabuga(gp));
     inventory.add(new OBJ_Key(gp));
   }
   public void speak(){

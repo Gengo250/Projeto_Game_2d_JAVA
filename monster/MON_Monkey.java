@@ -68,10 +68,10 @@ public class MON_Monkey extends Entity {
         speed = defualtSpeed;
         maxLife = 140;
         life = maxLife;
-        attack = 20;
-        defense = 10;
-        exp = 600;
-        knokBackPower = 10;
+        attack = 15;
+        defense = 5;
+        exp = 1000;
+        knokBackPower = 7;
 
         // Tamanho grande (3x3 tiles)
         // Hitbox PROPORCIONAL ao sprite 200x200 (3x3 tiles)
@@ -83,12 +83,12 @@ public class MON_Monkey extends Entity {
         solidAreaDefaultY = solidArea.y;
 
         // Área de ataque mais ampla (boss grande)
-        attackArea.width = 160;
-        attackArea.height = 160;
+        attackArea.width = 100;
+        attackArea.height = 100;
 
 
-        motion1_duration = 20;  // wind-up
-        motion2_duration = 45;  // ataque ativo
+        motion1_duration = 30;  // wind-up
+        motion2_duration = 65;  // ataque ativo
 
         getImage();
         getAttackImage();

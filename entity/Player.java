@@ -748,6 +748,7 @@ if (gp.monster[gp.currentMap][i].life <= 0) {
       maxLife += 6;
       strength++;
       dexterity++;
+      
 
       leveled = true;
     }
@@ -814,9 +815,13 @@ if (gp.monster[gp.currentMap][i].life <= 0) {
     getGuardImage();
   }
 
-  private void applyUgabugaAreaDamage() {
+   private void applyUgabugaAreaDamage() {
 
     int raio = gp.tileSize * 2; // ~2 tiles de alcance
+
+    // dano fixo do UGABUGA
+    // em God Mode ele fica ainda mais forte
+    int ugaDamage = keyH.godModeOn ? 50 : 25;
 
     for (int i = 0; i < gp.monster[gp.currentMap].length; i++) {
       Entity m = gp.monster[gp.currentMap][i];
@@ -835,11 +840,12 @@ if (gp.monster[gp.currentMap][i].life <= 0) {
 
       int dist2 = dx * dx + dy * dy;
       if (dist2 <= raio * raio) {
-        // usa o mesmo sistema de dano do player
-        damageMonter(i, this, attack, 0);
+        // DANO FIXO EM ÁREA DO UGABUGA (independente da arma/attack do player)
+        damageMonter(i, this, ugaDamage, 0);
       }
     }
   }
+
 
   public void selectItem() {
     int itemIndex = gp.ui.getItemIndexOnSlot(gp.ui.playerslotCol, gp.ui.playerslotRow);

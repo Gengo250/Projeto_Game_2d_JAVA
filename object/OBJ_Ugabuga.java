@@ -16,7 +16,7 @@ public class OBJ_Ugabuga extends Entity {
         name = objName;
         down1 = setup("/res/objects/ugabuga", gp.tileSize, gp.tileSize);
         description = "[Ugabuga!!!]\nMáscara de ritual que te deixa insano por 15 segundos.";
-        price = 35;
+        price = 350;
         stackble = true;
 
         setDialogue();

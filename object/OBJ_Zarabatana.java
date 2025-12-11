@@ -20,7 +20,7 @@ public class OBJ_Zarabatana extends Entity {
         down1 = setup("/res/objects/zarabatana", gp.tileSize, gp.tileSize);
 
         // Status da arma (multiplicado pela força do player em getAttack())
-        attackValue = 1;              // ajusta depois se quiser mais dano
+        attackValue = 3;              // ajusta depois se quiser mais dano
         attackArea.width = gp.tileSize;
         attackArea.height = gp.tileSize;
     
