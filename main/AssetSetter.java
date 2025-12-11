@@ -58,14 +58,11 @@ public class AssetSetter {
     gp.obj[mapNum][i].worldY = gp.tileSize*56;
     i++; 
 
-<<<<<<< HEAD
-=======
     gp.obj[mapNum][i] = new OBJ_BlueHeart(gp);
     gp.obj[mapNum][i].worldX = gp.tileSize*18;
     gp.obj[mapNum][i].worldY = gp.tileSize*47;
     i++; 
 
->>>>>>> 687082e (BIG UPDATE)
 
     
     
@@ -91,15 +88,9 @@ public class AssetSetter {
     gp.npc[mapNum][i].worldY = gp.tileSize * 77;
     i++;
 
-<<<<<<< HEAD
-    gp.npc[0][i] = new NPC_MerchantStatue(gp);
-    gp.npc[0][i].worldX = gp.tileSize * 191;
-    gp.npc[0][i].worldY = gp.tileSize * 86;
-=======
     gp.npc[mapNum][i] = new NPC_MerchantStatue(gp);
     gp.npc[mapNum][i].worldX = gp.tileSize * 191;
     gp.npc[mapNum][i].worldY = gp.tileSize * 86;
->>>>>>> 687082e (BIG UPDATE)
     i++;
 
 
@@ -155,9 +146,6 @@ public class AssetSetter {
     int mapNum = 0;
     int i = 0;
 
-<<<<<<< HEAD
-   
-=======
     gp.monster[mapNum][i] = new MON_GreenSlime(gp);
     gp.monster[mapNum][i].worldX = gp.tileSize*73;
     gp.monster[mapNum][i].worldY = gp.tileSize*179;
@@ -259,7 +247,6 @@ public class AssetSetter {
     gp.monster[mapNum][i].worldX = gp.tileSize*29;
     gp.monster[mapNum][i].worldY = gp.tileSize*82;
     i++;
->>>>>>> 687082e (BIG UPDATE)
 
     gp.monster[mapNum][i] = new MON_Orc(gp);
     gp.monster[mapNum][i].worldX = gp.tileSize*136;
@@ -409,8 +396,6 @@ public class AssetSetter {
 
     mapNum = 2;
     i = 0;
-<<<<<<< HEAD
-=======
 
     gp.monster[mapNum][i] = new MON_Bat(gp);
     gp.monster[mapNum][i].worldX = gp.tileSize*64;
@@ -457,7 +442,6 @@ public class AssetSetter {
     gp.monster[mapNum][i].worldY = gp.tileSize*27;
     i++;
 
->>>>>>> 687082e (BIG UPDATE)
     gp.monster[mapNum][i] = new MON_Monkey(gp);
     gp.monster[mapNum][i].worldX = gp.tileSize*77;
     gp.monster[mapNum][i].worldY = gp.tileSize*27;
