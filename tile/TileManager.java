@@ -19,7 +19,7 @@ public class TileManager {
   // NOVO: tamanho real de cada mapa
   public int[] mapCols;
   public int[] mapRows;
-  boolean drawPath = true; //DEBUG AGRO = true -> ON || AGRO = false -> Off
+  boolean drawPath = false; //DEBUG AGRO = true -> ON || AGRO = false -> Off
   ArrayList<String> fileNames = new ArrayList<>();
   ArrayList<String> collsionsStatus = new ArrayList<>();
 

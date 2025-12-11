@@ -31,7 +31,7 @@ public void setDialogue() {
     dialogues[0][0] =
         "Resolva em complemento de dois (8 bits):\n"
       + "Converta o número decimal -5 para binário em 8 bits.\n"
-      + "Digite apenas os 8 bits (ex: 11111011).";
+      + "Digite apenas os 8 bits.";
 }
 
 

@@ -522,6 +522,7 @@ else if (scenePhase == 5) {
     sceneNum = NA;
     scenePhase = 0;
     gp.gameState = gp.playState;
+    gp.teleportPlayerToMap(2, 19, 55);
 }
 
   }
@@ -635,7 +636,7 @@ public void scene_intro() {
             gp.gameState = gp.playState;
 
             gp.stopMusic();
-            gp.playMusic(23); // música da fase
+            gp.playMusic(27); // música da fase
         }
     }
 }
@@ -684,14 +685,16 @@ public void scene_intro() {
         alpha = 1f;
       }
 
-      String text = "After the fierce battle with the Skeleton Loard,\n" + 
-                    "the Cearence finally found the legendary treasure\n" +
-                    "But this not the end of his journey.\n" +
-                    "The Cearence adventure has just begun";
-      drawString(alpha, 38f, 200, text, 70);
+String text = "Após a batalha feroz contra o Macaco Ancestral,\n" + 
+              "o jovem guerreiro enfim recuperou o tesouro sagrado da floresta.\n" +
+              "Mas esse não é o fim de sua jornada.\n" +
+              "A verdadeira aventura do guerreiro está apenas começando.";
+
+
+      drawString(alpha, 28f, 200, text, 70);
 
       if(counterReached(600) == true){
-        gp.playMusic(0);
+        gp.playMusic(26);
         scenePhase++;
       }
     }

@@ -78,10 +78,10 @@ public class KeyHandler implements KeyListener {
             System.out.println("Do some fighter specific stuff!");
             gp.gameState = gp.playState;
             // NOVO GAME + INTRO ---> colocar quando finalizar
-            //gp.resetGame(true);                // garante jogo novo, player na posição padrão
-            //gp.csManager.sceneNum = gp.csManager.intro;
-            //gp.csManager.scenePhase = 0;
-            //gp.gameState = gp.cutsceneState;
+            gp.resetGame(true);                // garante jogo novo, player na posição padrão
+            gp.csManager.sceneNum = gp.csManager.intro;
+            gp.csManager.scenePhase = 0;
+            gp.gameState = gp.cutsceneState;
           }
           if (gp.ui.commandNum == 1) {
             System.out.println("Do some thief specific stuff!");
@@ -149,14 +149,18 @@ public class KeyHandler implements KeyListener {
         }
       }
       if (code == KeyEvent.VK_ENTER) {
-        if (gp.ui.commandNum == 0) {
-          gp.ui.titleScreenState = 1;
-          //gp.playMusic(23);
-        }
+          if (gp.ui.commandNum == 0) {
+          // NEW GAME direto pro jogo/cutscene
+          gp.resetGame(true);                // começa novo jogo
+          gp.csManager.sceneNum = gp.csManager.intro;  // cena da intro
+          gp.csManager.scenePhase = 0;
+          gp.gameState = gp.cutsceneState;   // vai direto pra cutscene (ou use playState se quiser já jogando)
+      }
+
         if (gp.ui.commandNum == 1) {
           gp.saveLoad.load();
           gp.gameState = gp.playState;
-          gp.playMusic(23);
+          gp.playMusic(27);
         }
         if (gp.ui.commandNum == 2) {
           System.exit(0);

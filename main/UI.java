@@ -23,7 +23,8 @@ public class UI {
   public Font minecraft, vRCOSD;
   BufferedImage heart_full, heart_half, heart_blank, crystal_full, crystal_blanck, coin;
   BufferedImage[] heartStage; 
-static final int HEART_STEPS = 6;
+  static final int HEART_STEPS = 6;
+  BufferedImage titleBackground;
   public boolean messageOn = false;
   ArrayList<String> message = new ArrayList<>();
   ArrayList<Integer> messageCounter = new ArrayList<>();
@@ -63,8 +64,12 @@ static final int HEART_STEPS = 6;
       e.printStackTrace();
     }
 
-    // CREATE HEART
+      // CREATE HEART
       Entity loader = new Entity(gp);
+
+      // Fundo da tela de título (imagem da capa)
+      titleBackground = loader.setup("/res/ui/capa", gp.screenWidth, gp.screenHeight);
+
 
       heartStage = new BufferedImage[7];
       // Índices: 6=cheia ... 1=quase vazia, 0=vazia
@@ -356,9 +361,17 @@ private void unlockIronDoorFromPaperPuzzle() {
     // --- TELA DE TÍTULO (STATE 0) SIMPLIFICADA ---
     if (titleScreenState == 0) {
       // FUNDO
+       if (titleBackground != null) {
+      g2.drawImage(titleBackground, 0, 0, null);
+  } else {
+      // fallback: se der erro ao carregar, usa o fundo preto
       g2.setColor(Color.BLACK);
       g2.fillRect(0, 0, gp.screenWidth, gp.screenHeight);
+  }
 
+  // Leve escurecida pra destacar o texto e o menu
+  g2.setColor(new Color(0, 0, 0, 120)); // alfa ~ meio transparente
+  g2.fillRect(0, 0, gp.screenWidth, gp.screenHeight);
       // ===== TÍTULO =====
       final int TITLE_SIZE = 72;
       g2.setFont(g2.getFont().deriveFont(Font.BOLD, TITLE_SIZE));
@@ -375,34 +388,20 @@ private void unlockIronDoorFromPaperPuzzle() {
       g2.setColor(Color.WHITE);
       g2.drawString(title, titleX, titleY);
 
-      // ===== BONECO (EMBAIXO DO TÍTULO) =====
-      int boyWidth = gp.tileSize * 2;
-      int boyHeight = gp.tileSize * 2;
+   // ===== MENU (SEM BONECO NO MEIO) =====
+final int MENU_SIZE = 44;
+g2.setFont(g2.getFont().deriveFont(Font.BOLD, MENU_SIZE));
 
-      // gap logo abaixo do título (menor que antes)
-      int gapBelowTitle = gp.tileSize / 2;
+// altura de linha mais compacta (menos "pulado")
+final int lineHeight = (int) (MENU_SIZE * 1.0);
 
-      // centraliza horizontalmente
-      int boyX = (gp.screenWidth - boyWidth) / 2;
+// distância do menu em relação ao título
+final int menuTopGap = (int) (gp.tileSize * 3.0);
+// começa o menu um pouco abaixo do título
+int y = titleY + menuTopGap;
 
-      // posiciona logo abaixo da linha de base do título
-      // (usa a descida da fonte pra não colar demais)
-      int boyY = titleY + g2.getFontMetrics().getDescent() + gapBelowTitle;
-
-      g2.drawImage(gp.player.down1, boyX, boyY, boyWidth, boyHeight, null);
-
-      // ===== MENU (ESPACAMENTO MAIS JUSTO) =====
-      final int MENU_SIZE = 44;
-      g2.setFont(g2.getFont().deriveFont(Font.BOLD, MENU_SIZE));
-
-      // altura de linha mais compacta (menos "pulado")
-      final int lineHeight = (int) (MENU_SIZE * 1.0);
-
-      final int menuTopGap = (int) (gp.tileSize * 1.6);
-      int y = boyY + boyHeight + menuTopGap;
-
-      String text;
-      int x;
+String text;
+int x;
 
       // NEW GAME
       text = "NEW GAME";

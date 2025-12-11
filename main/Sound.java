@@ -29,14 +29,16 @@ public class Sound {
     soundURL[15] = getClass().getResource("/res/sound/blocked.wav");
     soundURL[16] = getClass().getResource("/res/sound/parry.wav");
     soundURL[17] = getClass().getResource("/res/sound/speak.wav");
-    soundURL[18] = getClass().getResource("/res/sound/Merchant.wav");
-    soundURL[19] = getClass().getResource("/res/sound/Dungeon.wav");
+    soundURL[18] = getClass().getResource("/res/sound/mercador.wav"); // mercador
+    soundURL[19] = getClass().getResource("/res/sound/caverna.wav"); //caverna 
     soundURL[20] = getClass().getResource("/res/sound/chipwall.wav");
     soundURL[21] = getClass().getResource("/res/sound/dooropen.wav");
-    soundURL[22] = getClass().getResource("/res/sound/FinalBattle.wav");
+    soundURL[22] = getClass().getResource("/res/sound/macacov1.wav"); // batalha boss primeira fase 
     soundURL[23] = getClass().getResource("/res/sound/indio.wav");
-    soundURL[24] = getClass().getResource("/res/sound/mkragemusic.wav");
+    soundURL[24] = getClass().getResource("/res/sound/macacov2.wav"); //batalha boss segunda fase 
     soundURL[25] = getClass().getResource("/res/sound/grito.wav");
+    soundURL[26] = getClass().getResource("/res/sound/dentro-da-hilux.wav");
+    soundURL[27] = getClass().getResource("/res/sound/floresta.wav");
   }
 
   public void setFile(int i){

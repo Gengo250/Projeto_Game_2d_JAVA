@@ -12,8 +12,10 @@ import object.OBJ_Dardo;
 import object.OBJ_Key;
 import object.OBJ_Lantern;
 import object.OBJ_Paper;
+import object.OBJ_Paper_mercador;
 import object.OBJ_Shield_Wood;
 import object.OBJ_Sword_Normal;
+import object.OBJ_Tent;
 import object.OBJ_Ugabuga;
 import object.OBJ_Zarabatana;
 
@@ -87,7 +89,7 @@ public class Player extends Entity {
     maxMana = 4;
     mana = maxMana;
     ammo = 20;
-    strength = 20; // the more strenght he has, the more damage he gives ---> para testes colocar:
+    strength = 1; // the more strenght he has, the more damage he gives ---> para testes colocar:
                    // 20
     dexterity = 1; // the more dexterity he has, the less damage he receives
     exp = 0;
@@ -164,6 +166,8 @@ public class Player extends Entity {
     inventory.add(new OBJ_Zarabatana(gp));
     inventory.add(new OBJ_Ugabuga(gp));
     inventory.add(new OBJ_Paper(gp));
+    inventory.add(new OBJ_Paper_mercador(gp));
+    inventory.add(new OBJ_Tent(gp));
   }
 
   public int getAttack() {

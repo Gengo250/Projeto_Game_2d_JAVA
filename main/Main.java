@@ -10,7 +10,7 @@ public class Main {
     window = new JFrame();
     window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     window.setResizable(false);
-    window.setTitle("2D Tocantins");
+    window.setTitle("Tocantins");
     
     new Main().setIcon();
     

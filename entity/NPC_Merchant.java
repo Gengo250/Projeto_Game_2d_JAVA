@@ -5,8 +5,11 @@ import java.awt.Rectangle;
 import main.GamePanel;
 import object.OBJ_Axe;
 import object.OBJ_Key;
+import object.OBJ_Paper_mercador;
 import object.OBJ_Potion_Red;
 import object.OBJ_Shield_Blue;
+import object.OBJ_Tent;
+import object.OBJ_Ugabuga;
 
 public class NPC_Merchant extends Entity{
    public NPC_Merchant(GamePanel gp){
@@ -51,7 +54,9 @@ public class NPC_Merchant extends Entity{
     inventory.add(new OBJ_Key(gp));
     inventory.add(new OBJ_Axe(gp));
     inventory.add(new OBJ_Potion_Red(gp));
-    inventory.add(new OBJ_Shield_Blue(gp));
+    inventory.add(new OBJ_Paper_mercador(gp));
+    inventory.add(new OBJ_Tent(gp));
+    inventory.add(new OBJ_Ugabuga(gp));
     inventory.add(new OBJ_Key(gp));
   }
   public void speak(){

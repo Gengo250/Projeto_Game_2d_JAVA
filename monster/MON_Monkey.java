@@ -14,6 +14,7 @@ import java.awt.AlphaComposite;
 import object.OBJ_Bananao;
 import object.OBJ_Coin_Bronze;
 import object.OBJ_Heart;
+import object.OBJ_Key;
 
 public class MON_Monkey extends Entity {
     GamePanel gp;
@@ -169,12 +170,12 @@ public class MON_Monkey extends Entity {
         // Fase 2 (rage) – novos socos com 4 frames pra esquerda e direita
 
         // Para cima/baixo você ainda pode usar os mesmos sprites
-        attackUp1 = setup("/monster/monkey/mksd01", 300, 300);
-        attackUp2 = setup("/monster/monkey/mksd02", 300, 300);
-        attackUp3 = setup("/monster/monkey/mksd03", 300, 300);
+        attackUp1 = setup("/monster/monkey/mkrup01", 300, 300);
+        attackUp2 = setup("/monster/monkey/mkrup02", 300, 300);
+        attackUp3 = setup("/monster/monkey/mkrup03", 300, 300);
 
-        attackDown1 = setup("/monster/monkey/mksu01", 300, 300);
-        attackDown2 = setup("/monster/monkey/mksu02", 300, 300);
+        attackDown1 = setup("/monster/monkey/mkrdown01", 300, 300);
+        attackDown2 = setup("/monster/monkey/mkrdown02", 300, 300);
 
         // ESQUERDA – 4 frames (usando os PNG que você mandou)
         attackLeft1 = setup("/monster/monkey/mkrse01", 300, 300);
@@ -864,6 +865,8 @@ private void drawUpAttackOverlay(Graphics2D g2) {
 
     // Dropa a Banana Dourada 100%
     dropItem(new OBJ_Bananao(gp));
+
+    dropItem(new OBJ_Key(gp));
 
     // Drops extras
     for (int i = 0; i < 15; i++) {

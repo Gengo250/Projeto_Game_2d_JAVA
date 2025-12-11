@@ -73,9 +73,9 @@ public class GamePanel  extends JPanel implements Runnable{
  
   //ENTITY AND OBJECT
   public Player player = new Player(this,keyH);
-  public Entity obj[][] = new Entity[maxMap][20];
+  public Entity obj[][] = new Entity[maxMap][200];
   public Entity npc[][] = new Entity[maxMap][10];
-  public Entity monster[][] = new Entity[maxMap][20];
+  public Entity monster[][] = new Entity[maxMap][1000];
   public InteractiveTile iTile[][] = new InteractiveTile[maxMap][50];
   public Entity projectile[][] = new Entity[maxMap][20];
   public ArrayList<Entity> particleList = new ArrayList<>();
@@ -159,7 +159,7 @@ public class GamePanel  extends JPanel implements Runnable{
   public void resetGame(boolean restart){
     
     stopMusic();
-    playMusic(23);
+    playMusic(27);
   if (currentMap == 1 || currentMap == 3) {
     // 1 = sua casa, 3 = casa do mercador
     currentArea = indoor;
@@ -552,7 +552,7 @@ private void updateScreenShake() {
     if(nextArea != currentArea){
       stopMusic();
       if(nextArea == outside){
-        playMusic(23);
+        playMusic(27);
       }
        if(nextArea == indoor){
         playMusic(18);
