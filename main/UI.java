@@ -376,7 +376,7 @@ private void unlockIronDoorFromPaperPuzzle() {
       final int TITLE_SIZE = 72;
       g2.setFont(g2.getFont().deriveFont(Font.BOLD, TITLE_SIZE));
 
-      String title = "TOCANTINS'S LEGENDS";
+      String title = "TOCANTINS LEGENDS";
       int titleX = getXforCenteredText(title);
       int titleY = gp.tileSize * 3;
 

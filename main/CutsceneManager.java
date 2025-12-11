@@ -52,7 +52,7 @@ public class CutsceneManager {
       "ART/MUSIC\n" +
       "Luccas Zibordi\n\n" +
       "MAPS/SLIDES\n" +
-      "Guilherme Mascarete\n" +
+      "Guilherme Mascaretti\n" +
       "\n\n\n\n\n\n\n\n\n" +
       "THANK YOU FOR PLAYING!";
 
@@ -701,7 +701,7 @@ String text = "Após a batalha feroz contra o Macaco Ancestral,\n" +
     if(scenePhase == 6){
       drawBlackground(1f);
 
-      drawString(1f, 80f, gp.screenHeight/2, "TOCANTIN'S LEGENDY'S", 40);
+      drawString(1f, 80f, gp.screenHeight/2, "TOCANTINS LEGENDS", 40);
 
       if(counterReached(480) == true){
         scenePhase++;
