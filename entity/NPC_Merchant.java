@@ -43,11 +43,22 @@ public class NPC_Merchant extends Entity{
 
   }
   public void setDialogue(){
-    dialogues[0][0] = "He he, so you found me.\nI have some good items for sale\nDo you want trade?.";
-    dialogues[1][0] = "Come back \nanytime!";
-    dialogues[2][0] = "You don't have enough coin\nyou need more coin.";
-    dialogues[3][0] = "You cannot any more";
-    dialogues[4][0] = "You can't sell \nequipped items!";
+dialogues[0][0] = "Hehe, então você me encontrou.\n"
+                + "Tenho ótimos itens da floresta.\n"
+                + "Quer fazer negócio?";
+
+dialogues[1][0] = "Volte sempre, guerreiro.\n"
+                + "A selva sempre muda... e meu estoque também.";
+
+dialogues[2][0] = "Você não tem moedas suficientes.\n"
+                + "Precisa juntar mais antes de comprar isso.";
+
+dialogues[3][0] = "Você não pode carregar mais nada.\n"
+                + "Seu inventário está cheio.";
+
+dialogues[4][0] = "Você não pode vender\n"
+                + "um item que está equipado!";
+
   }
   public void setItems(){
     inventory.add(new OBJ_Potion_Red(gp));
