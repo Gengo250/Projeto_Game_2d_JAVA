@@ -1,147 +1,140 @@
-# 🗺️ 2D Adventure RPG — **Java Edition**
+# 🌿 Tocantins Legends
+**2D Action-Adventure RPG em Java (engine própria, tilemap, IA, cutscenes, inventário e bosses)**
 
-## 🌟 Visão & Objetivos
-
-![Preview Geral do Jogo](assets/screens/game_start_screen.png)
-
-A proposta deste projeto é **materializar um engine 2D completo em Java puro**, unindo práticas de engenharia de software a técnicas clássicas de game‑design. Durante o desenvolvimento foram explorados, em profundidade:
-
-- **POO avançada** — modelagem de entidades, herança e polimorfismo aplicados a objetos de jogo.
-- **Arquitetura de game engines** — *game loop* de passo fixo, gerenciamento de cena e culling.
-- **Matemática & física** — colisão AABB, transformação de coordenadas e lógica vetorial básica.
-- **Gestão de recursos** — pipeline de sprites, áudio PCM e mapas em texto.
-
-Todo o projeto foi desenvolvido acompanhando a playlist do RyiSnow, seguindo fielmente o conteúdo proposto pelo autor como forma de aprendizado prático.
+> Projeto de estudo e construção de uma engine 2D completa em **Java puro**, inspirado no bioma do Tocantins (cerrado + floresta), com foco em **arquitetura de jogo**, **POO**, **otimização de render** e sistemas clássicos de RPG.
 
 ---
 
-## 🧱 Estrutura do Código
+## 🎮 O que é o jogo
+
+Você controla um jovem guerreiro indígena em uma jornada para investigar uma corrupção que se espalha pela mata. Entre trilhas, ruínas e arenas, você enfrenta criaturas alteradas e bosses que exigem leitura de padrão e posicionamento.
+
+**Destaques do gameplay**
+- Exploração por **múltiplos mapas** (mundo externo, casa/mercador, dungeon/labirinto, arena de boss).
+- Combate em tempo real com inimigos variados e padrões de ataque.
+- Progressão por itens, loot, consumíveis e equipamentos.
+
+---
+
+## ✨ Principais features já no projeto
+
+### 🧠 Engine e sistemas
+- **Game Loop** (update + render) com controle de FPS
+- **Tilemap** por arquivos `.txt` em `/res/maps` (mundo grande e múltiplas áreas)
+- **Câmera** mundo → tela (viewport) com renderização otimizada (culling)
+- **Colisão AABB** (tiles, objetos, entidades)
+- **Sistema de eventos** por `EventHandler` + `EventRect` (gatilhos por tile/área)
+- **Iluminação / dia-noite** com `Lighting` + `EnvironmentManager`
+- **IA / Pathfinding** em `ai/` (`Node`, `PathFind`)
+- **Partículas** e efeitos (feedback visual)
+
+### 🧰 RPG (UI, inventário, comércio)
+- **Inventário** + equipamentos + consumíveis
+- **Merchant / Trade UI** (buy, sell, leave) com NPCs de mercador
+- Itens e equipamentos (ex.: poções, escudos, espada, lanterna, etc.)
+- **Sistema de save/load** (`SaveLoad`, `DataStorage`, `save.data`, `config.txt`)
+
+### 🧟 Inimigos e bosses
+- Monstros comuns (ex.: slime, orc, bat, planta carnívora)
+- Boss (**Monkey Boss** com fases e ataques especiais)
+- **Cutscenes** com controle de câmera, transições e música
+
+---
+
+## 🕹️ Controles
+
+Os atalhos podem variar conforme o `KeyHandler.java`. Em geral:
+- **WASD / Setas**: mover
+- **ENTER / E**: interagir (NPC/objeto)
+- **ESC**: menu/voltar
+
+Dica: abra `main/KeyHandler.java` para ver o mapeamento exato e ajustar ao seu gosto.
+
+---
+
+## 🧱 Estrutura do projeto (visão rápida)
 
 ```text
-📂 Projeto_Game_2d_JAVA
-├─ entity/         # Entidades móveis (Player e superclasse Entity)
-│  ├─ Entity.java
-│  └─ Player.java
-├─ main/           # Engine central, entrada, utilitários e áudio
-│  ├─ AssetSetter.java
-│  ├─ CollisionChecker.java
-│  ├─ GamePanel.java
-│  ├─ KeyHandler.java
-│  ├─ Main.java
-│  ├─ Sound.java
-│  ├─ UI.java
-│  └─ UtilityTool.java
-├─ object/         # Objetos coletáveis/interativos
-│  ├─ OBJ_Boots.java
-│  ├─ OBJ_Chest.java
-│  ├─ OBJ_Door.java
-│  ├─ OBJ_Key.java
-│  └─ SuperObject.java
-├─ tile/           # Definição de tile e gerência de mapa
-│  ├─ Tile.java
-│  └─ TileManager.java
-├─ res/            # Recursos externos
-│  ├─ maps/        # Mapas .txt com layout numérico
-│  ├─ objects/     # Sprites de itens
-│  ├─ player/      # Frames de animação do jogador
-│  ├─ sound/       # WAVs (BGM & SFX)
-│  └─ tiles/       # Sprite-sheet dos tiles
+📦 Projeto_Game_2d_JAVA
+├─ ai/                 # Pathfinding (Node, PathFind)
+├─ assets/             # Organização local de assets (opcional)
+├─ data/               # Save/Load e progresso (DataStorage, SaveLoad, Progress)
+├─ entity/             # Entity base, Player, NPCs, Projectile, Particle
+├─ environment/        # Iluminação, ciclo de ambiente (Lighting, EnvironmentManager)
+├─ main/               # Engine (GamePanel), UI, som, eventos, utilitários
+├─ monster/            # Monstros e bosses (Monkey, SkeletonLord, Plantas, etc.)
+├─ object/             # Itens/objetos do mundo (chaves, portas, armas, loot)
+├─ tile/               # Map/Tile/TileManager
+├─ tile_interactive/   # Tiles interativos (trunk, metalplate, drytree, etc.)
+└─ res/                # Recursos do jogo (maps, player, npc, monster, objects, sound, tiles, ui)
 ```
 
 ---
 
-![Exemplo de Gameplay com Porta](assets/screens/door_unlock.png)
-![Personagem andando](assets/screens/boots_item.png)
+## 🚀 Como rodar
 
-## ✨ Funcionalidades Já Implementadas
+### Requisitos
+- **JDK 21+** recomendado (ajuste conforme seu ambiente)
+- IDE: IntelliJ, VS Code (Java), Eclipse
 
-- 🎮 Movimentação 4 direções com animação fluida
-- 🔑 Sistema de chaves & portas trancadas
-- 👟 Power‑up de velocidade (Boots)
-- 🗝️ Baú que encerra o jogo com fanfarra
-- 🖥️ HUD: cronômetro + contador de chaves
-- 🔊 Música de fundo + efeitos sonoros
+### Rodando pela IDE
+1. Importe o projeto como **Java Project**
+2. Rode `main/Main.java`
 
----
+### Rodando via terminal (opcional)
+Se o projeto estiver usando preview features:
+```bash
+java --enable-preview -cp bin main.Main
+```
 
-![Coletando Chave e Usando no Baú](assets/screens/chest_approach.png)
-![Coletando chave](assets/screens/key_pickup.png)
-![Interagindo com porta](assets/screens/door_unlock.png)
-![Coletando bota](assets/screens/boots_item.png)
-![Tela de fim de jogo](assets/screens/game_end_screen.png)
-
-## 📚 Fundamentos Teóricos (Deep-Dive)
-
-### 1. Programação Orientada a Objetos
-
-- **Abstração** — entidades encapsulam estado e comportamento.
-- **Encapsulamento** — campos privados com acesso controlado.
-- **Herança** — `Player` ← `Entity`, `OBJ_Key` ← `SuperObject`.
-- **Polimorfismo** — coleções genéricas tratam múltiplos subtipos.
-
-### 2. Arquitetura de Jogo-2D
-
-- **Game Loop** fixo (60 FPS) — `update()` → `draw()`.
-- **Mapa** em **.txt** → matriz `int[][]` → sprite-sheet escalado.
-- **Câmera** — posição relativa (mundo → tela) para mapas extensos.
-- **Culling** — render só do que está no viewport para alta performance.
-
-### 3. Matemática & Física
-
-- Conversão mundo/tela suave.
-- Colisão **AABB** em `CollisionChecker`.
-- Vetorização pensada para futuras mecânicas (knockback etc.).
-
-### 4. Gestão de Recursos
-
-- Carregamento preguiçoso de imagens.
-- Escalonamento de sprites (`UtilityTool.scaleImage`).
-- Sons bufferizados para latência zero.
-
-### 5. SOLID & Clean Code
-
-- **SRP** em cada pacote; métodos concisos e comentários explicativos.
+> Se você quiser deixar “plug and play” para qualquer máquina, o próximo passo ideal é adicionar **Gradle/Maven**.
 
 ---
 
-## 🧩 Design Patterns Aplicados
+## 🧩 Arquitetura em poucas linhas
 
-| Padrão                | Onde                                      |
-| --------------------- | ----------------------------------------- |
-| **Game Loop**         | `GamePanel` (thread dedicada)             |
-| **Factory/Spawner**   | `AssetSetter` cria objetos via ID de mapa |
-| **Observer**          | `KeyHandler` → eventos Swing              |
-| **Singleton (sound)** | Controle global de mixagem e volume       |
+- `GamePanel`: loop do jogo, update, draw e controle de FPS
+- `TileManager`: carrega mapas e desenha tiles
+- `CollisionChecker`: colisões (tiles/objetos/entidades)
+- `Entity` (base): animação, vida, hitbox, estados
+- `UI`: HUD, inventário, trade, mensagens e telas
+- `Sound`: música e SFX
+- `CutsceneManager`: cenas, transições e câmera
+- `EventHandler`: gatilhos por área (teleportes, portas, boss events)
+- `SaveLoad` + `DataStorage`: persistência de progresso
 
 ---
 
-![DEBUG draw time em ação durante o jogo](assets/screens/debug_draw_time.png)
+## 🗺️ Conteúdo (atual e em expansão)
 
-## 🔍 Principais Classes
+- ✅ múltiplos mapas e áreas temáticas
+- ✅ NPCs (mercador, pajé, estátuas/teleportes)
+- ✅ sistema de dungeon + arena de boss
+- ✅ ciclo de iluminação (dia/noite) com estilo mais “azulado” à noite
+- ✅ bosses com padrões e cutscenes
 
-| Classe                     | Responsabilidade                              |
-| -------------------------- | --------------------------------------------- |
-| `Main`                     | Cria a janela (`JFrame`) e injeta `GamePanel` |
-| `GamePanel`                | Loop, atualização, desenho, controle de FPS   |
-| `KeyHandler`               | Buffer de teclas (WASD, Enter)                |
-| `TileManager`              | Lê `.txt`, converte IDs em sprites            |
-| `CollisionChecker`         | AABB: jogador x objetos/tiles                 |
-| `Entity` & `Player`        | Movimento + animação + inventário             |
-| `SuperObject` & subclasses | Itens: chave, porta, baú, botas               |
-| `UI`                       | HUD: tempo, mensagens contextuais             |
+---
+
+## 🤝 Contribuição
+
+1. Abra uma **Issue** descrevendo bug/sugestão
+2. Faça um **fork** e envie um **Pull Request**
 
 ---
 
 ## 🙌 Créditos
 
-- Curso base: **RyiSnow** — YouTube
-- Sprites & SFX: **Kenney.nl**, **OpenGameArt**
-- Código: **Miguel de Castilho Gengo** — Eng. Computação @ PUC-Campinas
+- Base de estudo: **RyiSnow** (YouTube), expandido com sistemas próprios
+- Código e direção: **Miguel de Castilho Gengo**
+- Sprites/SFX: https://github.com/LuccasZibordi
 
 ---
 
 ## 📜 Licença
 
-Distribuído sob **MIT License** — consulte [`LICENSE`](LICENSE).
+MIT. Veja `LICENSE`.
 
-> *Feel free to open issues, forks and pull requests!*
+---
+
+### ⭐ Se isso te ajudou
+Dá uma estrela no repositório e, se você curte game-dev em Java, bora trocar ideia (issues e PRs são bem-vindos).
