@@ -122,7 +122,7 @@ java --enable-preview -cp bin main.Main
 ## 🎬 Cutscenes
 
 - 🎥 [Cutscene (Introdução)](https://youtu.be/YBRMJ_EmShY)
-- 🐒🔥 [Cutscene (Boss Macaco)](assets/previews/Cutscene-Macaco.mp4)
+- 🐒🔥 [Cutscene (Boss Macaco)](https://youtu.be/ictpfQeZkYM)
 
 ## 📸 Screenshots
 
