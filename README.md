@@ -115,6 +115,77 @@ java --enable-preview -cp bin main.Main
 
 ---
 
+## 🎬 Cutscenes
+
+- 🎥 [Cutscene (Introdução)](assets/previews/Cutscene.mp4)
+- 🐒🔥 [Cutscene (Boss Macaco)](assets/previews/Cutscene-Macaco.mp4)
+
+## 📸 Screenshots
+
+<p align="center">
+  <img src="assets/screens/01_home_interior.png" width="420" />
+  <img src="assets/screens/02_world_map_press_m.png" width="420" />
+</p>
+<p align="center">
+  <img src="assets/screens/03_status_inventory_dusk.png" width="420" />
+  <img src="assets/screens/04_combat_plants_dusk.png" width="420" />
+</p>
+<p align="center">
+  <img src="assets/screens/05_dungeon_lighting_dusk.png" width="420" />
+  <img src="assets/screens/06_statue_tamandua_dialogue.png" width="420" />
+</p>
+<p align="center">
+  <img src="assets/screens/07_puzzle_twos_complement.png" width="420" />
+  <img src="assets/screens/08_boss_monkey_phase1.png" width="420" />
+</p>
+<p align="center">
+  <img src="assets/screens/09_boss_monkey_beam.png" width="420" />
+  <img src="assets/screens/10_boss_monkey_phase2_punch.png" width="420" />
+</p>
+<p align="center">
+  <img src="assets/screens/11_boss_dialogue_murmurio.png" width="420" />
+  <img src="assets/screens/12_merchant_house_dusk.png" width="420" />
+</p>
+<p align="center">
+  <img src="assets/screens/13_merchant_dialogue_buy_sell_leave.png" width="420" />
+  <img src="assets/screens/14_trade_screen_buy.png" width="420" />
+</p>
+<p align="center">
+  <img src="assets/screens/15_inventory_key_description.png" width="420" />
+  <img src="assets/screens/16_overworld_dusk_minimap.png" width="420" />
+</p>
+<p align="center">
+  <img src="assets/screens/17_fast_travel_map.png" width="420" />
+  <img src="assets/screens/18_fast_travel_statue.png" width="420" />
+</p>
+<p align="center">
+  <img src="assets/screens/19_merchant_statue_night.png" width="420" />
+  <img src="assets/screens/20_hilux_night.png" width="420" />
+</p>
+<p align="center">
+  <img src="assets/screens/21_title_screen_tocantins_legends.png" width="420" />
+  <img src="assets/screens/22_credits_screen.png" width="420" />
+</p>
+
+### Extras (itens e telas)
+
+<p align="center">
+  <img src="assets/screens/game_start_screen.png" width="420" />
+  <img src="assets/screens/game_end_screen.png" width="420" />
+</p>
+<p align="center">
+  <img src="assets/screens/boots_item.png" width="420" />
+  <img src="assets/screens/key_pickup.png" width="420" />
+</p>
+<p align="center">
+  <img src="assets/screens/door_unlock.png" width="420" />
+  <img src="assets/screens/chest_approach.png" width="420" />
+</p>
+<p align="center">
+  <img src="assets/screens/debug_draw_time.png" width="420" />
+</p>
+
+
 ## 🤝 Contribuição
 
 1. Abra uma **Issue** descrevendo bug/sugestão
