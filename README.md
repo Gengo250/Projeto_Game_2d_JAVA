@@ -5,6 +5,10 @@
 
 ---
 
+<p align="center">
+  <img src="assets/screens/Intro.png" width="420" />
+</p>
+
 ## 🎮 O que é o jogo
 
 Você controla um jovem guerreiro indígena em uma jornada para investigar uma corrupção que se espalha pela mata. Entre trilhas, ruínas e arenas, você enfrenta criaturas alteradas e bosses que exigem leitura de padrão e posicionamento.
