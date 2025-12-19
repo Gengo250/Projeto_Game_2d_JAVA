@@ -183,9 +183,16 @@ java --enable-preview -cp bin main.Main
 
 ## 🙌 Créditos
 
-- Base de estudo: **RyiSnow** (YouTube), expandido com sistemas próprios
-- Código e direção: **Miguel de Castilho Gengo**
-- Sprites/SFX: https://github.com/LuccasZibordi
+- Base de estudo: **RyiSnow** (YouTube)  
+  [![YouTube](https://img.shields.io/badge/YouTube-RyiSnow-red?logo=youtube&logoColor=white)](https://www.youtube.com/watch?v=om59cwR7psI&list=PL_QPQmz5C6WUF-pOQDsbsKbaBZqXj4qSq)  
+  expandido com sistemas próprios (playlist acima)
+
+- Código e direção: **Miguel de Castilho Gengo**  
+  [![GitHub](https://img.shields.io/badge/GitHub-Gengo250-181717?logo=github&logoColor=white)](https://github.com/Gengo250)
+
+- Sprites/SFX:  
+  [![GitHub](https://img.shields.io/badge/GitHub-LuccasZibordi-181717?logo=github&logoColor=white)](https://github.com/LuccasZibordi)
+
 
 ---
 
