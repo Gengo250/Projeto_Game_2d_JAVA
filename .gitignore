@@ -1,1 +1,22 @@
 res/sound/caverna.wav
+# IntelliJ
+.idea/
+*.iml
+
+# VS Code
+.vscode/
+
+# Build outputs
+out/
+bin/
+target/
+build/
+*.class
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Saves / runtime
+*.log
+save.data
