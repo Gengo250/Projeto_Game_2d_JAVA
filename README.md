@@ -1,7 +1,8 @@
+````md
 # 🌿 Tocantins Legends
-**2D Action-Adventure RPG em Java (engine própria, tilemap, IA, cutscenes, inventário e bosses)**
+**2D Action-Adventure RPG in Java (custom engine, tilemap, AI, cutscenes, inventory, and bosses)**
 
-> Projeto de estudo e construção de uma engine 2D completa em **Java puro**, inspirado no bioma do Tocantins (cerrado + floresta), com foco em **arquitetura de jogo**, **POO**, **otimização de render** e sistemas clássicos de RPG.
+> A study project focused on building a complete 2D engine in **pure Java**, inspired by the Tocantins biome (savanna + forest), with emphasis on **game architecture**, **OOP**, **render optimization**, and classic RPG systems.
 
 ---
 
@@ -9,120 +10,124 @@
   <img src="assets/screens/Intro.png" width="420" />
 </p>
 
-## 🎮 O que é o jogo
+## 🎮 What the game is about
 
-Você controla um jovem guerreiro indígena em uma jornada para investigar uma corrupção que se espalha pela mata. Entre trilhas, ruínas e arenas, você enfrenta criaturas alteradas e bosses que exigem leitura de padrão e posicionamento.
+You control a young Indigenous warrior on a journey to investigate a corruption spreading through the forest. Across trails, ruins, and arenas, you face altered creatures and bosses that demand pattern recognition and careful positioning.
 
-**Destaques do gameplay**
-- Exploração por **múltiplos mapas** (mundo externo, casa/mercador, dungeon/labirinto, arena de boss).
-- Combate em tempo real com inimigos variados e padrões de ataque.
-- Progressão por itens, loot, consumíveis e equipamentos.
-
----
-
-## ✨ Principais features já no projeto
-
-### 🧠 Engine e sistemas
-- **Game Loop** (update + render) com controle de FPS
-- **Tilemap** por arquivos `.txt` em `/res/maps` (mundo grande e múltiplas áreas)
-- **Câmera** mundo → tela (viewport) com renderização otimizada (culling)
-- **Colisão AABB** (tiles, objetos, entidades)
-- **Sistema de eventos** por `EventHandler` + `EventRect` (gatilhos por tile/área)
-- **Iluminação / dia-noite** com `Lighting` + `EnvironmentManager`
-- **IA / Pathfinding** em `ai/` (`Node`, `PathFind`)
-- **Partículas** e efeitos (feedback visual)
-
-### 🧰 RPG (UI, inventário, comércio)
-- **Inventário** + equipamentos + consumíveis
-- **Merchant / Trade UI** (buy, sell, leave) com NPCs de mercador
-- Itens e equipamentos (ex.: poções, escudos, espada, lanterna, etc.)
-- **Sistema de save/load** (`SaveLoad`, `DataStorage`, `save.data`, `config.txt`)
-
-### 🧟 Inimigos e bosses
-- Monstros comuns (ex.: slime, orc, bat, planta carnívora)
-- Boss (**Monkey Boss** com fases e ataques especiais)
-- **Cutscenes** com controle de câmera, transições e música
+**Gameplay highlights**
+- Exploration through **multiple maps** (overworld, house/merchant, dungeon/maze, boss arena).
+- Real-time combat with varied enemies and attack patterns.
+- Progression through items, loot, consumables, and equipment.
 
 ---
 
-## 🕹️ Controles
+## ✨ Main features already in the project
 
-Os atalhos podem variar conforme o `KeyHandler.java`. Em geral:
-- **WASD / Setas**: mover
-- **ENTER / E**: interagir (NPC/objeto)
-- **ESC**: menu/voltar
+### 🧠 Engine and systems
+- **Game Loop** (update + render) with FPS control
+- **Tilemap** based on `.txt` files in `/res/maps` (large world and multiple areas)
+- **Camera** world → screen (viewport) with optimized rendering (culling)
+- **AABB collision** (tiles, objects, entities)
+- **Event system** using `EventHandler` + `EventRect` (tile/area triggers)
+- **Lighting / day-night cycle** with `Lighting` + `EnvironmentManager`
+- **AI / Pathfinding** in `ai/` (`Node`, `PathFind`)
+- **Particles** and effects (visual feedback)
 
-Dica: abra `main/KeyHandler.java` para ver o mapeamento exato e ajustar ao seu gosto.
+### 🧰 RPG (UI, inventory, trading)
+- **Inventory** + equipment + consumables
+- **Merchant / Trade UI** (buy, sell, leave) with merchant NPCs
+- Items and equipment (e.g. potions, shields, sword, lantern, etc.)
+- **Save/load system** (`SaveLoad`, `DataStorage`, `save.data`, `config.txt`)
+
+### 🧟 Enemies and bosses
+- Common monsters (e.g. slime, orc, bat, carnivorous plant)
+- Boss (**Monkey Boss** with phases and special attacks)
+- **Cutscenes** with camera control, transitions, and music
 
 ---
 
-## 🧱 Estrutura do projeto (visão rápida)
+## 🕹️ Controls
+
+Shortcuts may vary depending on `KeyHandler.java`. In general:
+- **WASD / Arrow Keys**: move
+- **ENTER / E**: interact (NPC/object)
+- **ESC**: menu/back
+
+Tip: open `main/KeyHandler.java` to see the exact key mapping and adjust it to your liking.
+
+---
+
+## 🧱 Project structure (quick overview)
 
 ```text
 📦 Projeto_Game_2d_JAVA
 ├─ ai/                 # Pathfinding (Node, PathFind)
-├─ assets/             # Organização local de assets (opcional)
-├─ data/               # Save/Load e progresso (DataStorage, SaveLoad, Progress)
-├─ entity/             # Entity base, Player, NPCs, Projectile, Particle
-├─ environment/        # Iluminação, ciclo de ambiente (Lighting, EnvironmentManager)
-├─ main/               # Engine (GamePanel), UI, som, eventos, utilitários
-├─ monster/            # Monstros e bosses (Monkey, SkeletonLord, Plantas, etc.)
-├─ object/             # Itens/objetos do mundo (chaves, portas, armas, loot)
+├─ assets/             # Local asset organization (optional)
+├─ data/               # Save/Load and progress (DataStorage, SaveLoad, Progress)
+├─ entity/             # Base Entity, Player, NPCs, Projectile, Particle
+├─ environment/        # Lighting, environment cycle (Lighting, EnvironmentManager)
+├─ main/               # Engine (GamePanel), UI, sound, events, utilities
+├─ monster/            # Monsters and bosses (Monkey, SkeletonLord, Plants, etc.)
+├─ object/             # World items/objects (keys, doors, weapons, loot)
 ├─ tile/               # Map/Tile/TileManager
-├─ tile_interactive/   # Tiles interativos (trunk, metalplate, drytree, etc.)
-└─ res/                # Recursos do jogo (maps, player, npc, monster, objects, sound, tiles, ui)
-```
+├─ tile_interactive/   # Interactive tiles (trunk, metalplate, drytree, etc.)
+└─ res/                # Game resources (maps, player, npc, monster, objects, sound, tiles, ui)
+````
 
 ---
 
-## 🚀 Como rodar
+## 🚀 How to run
 
-### Requisitos
-- **JDK 21+** recomendado (ajuste conforme seu ambiente)
-- IDE: IntelliJ, VS Code (Java), Eclipse
+### Requirements
 
-### Rodando pela IDE
-1. Importe o projeto como **Java Project**
-2. Rode `main/Main.java`
+* **JDK 21+** recommended (adjust according to your environment)
+* IDE: IntelliJ, VS Code (Java), Eclipse
 
-### Rodando via terminal (opcional)
-Se o projeto estiver usando preview features:
+### Running from the IDE
+
+1. Import the project as a **Java Project**
+2. Run `main/Main.java`
+
+### Running from the terminal (optional)
+
+If the project is using preview features:
+
 ```bash
 java --enable-preview -cp bin main.Main
 ```
 
-> Se você quiser deixar “plug and play” para qualquer máquina, o próximo passo ideal é adicionar **Gradle/Maven**.
+> If you want to make it truly “plug and play” for any machine, the ideal next step is to add **Gradle/Maven**.
 
 ---
 
-## 🧩 Arquitetura em poucas linhas
+## 🧩 Architecture in a few lines
 
-- `GamePanel`: loop do jogo, update, draw e controle de FPS
-- `TileManager`: carrega mapas e desenha tiles
-- `CollisionChecker`: colisões (tiles/objetos/entidades)
-- `Entity` (base): animação, vida, hitbox, estados
-- `UI`: HUD, inventário, trade, mensagens e telas
-- `Sound`: música e SFX
-- `CutsceneManager`: cenas, transições e câmera
-- `EventHandler`: gatilhos por área (teleportes, portas, boss events)
-- `SaveLoad` + `DataStorage`: persistência de progresso
+* `GamePanel`: game loop, update, draw, and FPS control
+* `TileManager`: loads maps and draws tiles
+* `CollisionChecker`: collisions (tiles/objects/entities)
+* `Entity` (base): animation, health, hitbox, states
+* `UI`: HUD, inventory, trade, messages, and screens
+* `Sound`: music and SFX
+* `CutsceneManager`: scenes, transitions, and camera
+* `EventHandler`: area triggers (teleports, doors, boss events)
+* `SaveLoad` + `DataStorage`: progress persistence
 
 ---
 
-## 🗺️ Conteúdo (atual e em expansão)
+## 🗺️ Content (current and expanding)
 
-- ✅ múltiplos mapas e áreas temáticas
-- ✅ NPCs (mercador, pajé, estátuas/teleportes)
-- ✅ sistema de dungeon + arena de boss
-- ✅ ciclo de iluminação (dia/noite) com estilo mais “azulado” à noite
-- ✅ bosses com padrões e cutscenes
+* ✅ multiple maps and themed areas
+* ✅ NPCs (merchant, shaman, statues/teleports)
+* ✅ dungeon system + boss arena
+* ✅ lighting cycle (day/night) with a more “bluish” style at night
+* ✅ bosses with patterns and cutscenes
 
 ---
 
 ## 🎬 Cutscenes
 
-- 🎥 [Cutscene (Introdução)](https://youtu.be/YBRMJ_EmShY)
-- 🐒🔥 [Cutscene (Boss Macaco)](https://youtu.be/ictpfQeZkYM)
+* 🎥 [Cutscene (Introduction)](https://youtu.be/YBRMJ_EmShY)
+* 🐒🔥 [Cutscene (Monkey Boss)](https://youtu.be/ictpfQeZkYM)
 
 ## 📸 Screenshots
 
@@ -171,36 +176,30 @@ java --enable-preview -cp bin main.Main
   <img src="assets/screens/22_credits_screen.png" width="420" />
 </p>
 
+## 🤝 Contribution
 
-
-
-## 🤝 Contribuição
-
-1. Abra uma **Issue** descrevendo bug/sugestão
-2. Faça um **fork** e envie um **Pull Request**
+1. Open an **Issue** describing the bug/suggestion
+2. Create a **fork** and submit a **Pull Request**
 
 ---
 
-## 🙌 Créditos
+## 🙌 Credits
 
-- Base de estudo: **RyiSnow** (YouTube)  
-  [![YouTube](https://img.shields.io/badge/YouTube-RyiSnow-red?logo=youtube&logoColor=white)](https://www.youtube.com/watch?v=om59cwR7psI&list=PL_QPQmz5C6WUF-pOQDsbsKbaBZqXj4qSq)  
-  expandido com sistemas próprios (playlist acima)
+* Study base: **RyiSnow** (YouTube)
+  [![YouTube](https://img.shields.io/badge/YouTube-RyiSnow-red?logo=youtube\&logoColor=white)](https://www.youtube.com/watch?v=om59cwR7psI&list=PL_QPQmz5C6WUF-pOQDsbsKbaBZqXj4qSq)
+  expanded with custom systems (playlist above)
 
-- Código e direção: **Miguel de Castilho Gengo**  
-  [![GitHub](https://img.shields.io/badge/GitHub-Gengo250-181717?logo=github&logoColor=white)](https://github.com/Gengo250)
+* Code and direction: **Miguel de Castilho Gengo**
+  [![GitHub](https://img.shields.io/badge/GitHub-Gengo250-181717?logo=github\&logoColor=white)](https://github.com/Gengo250)
 
-- Sprites/SFX:  
-  [![GitHub](https://img.shields.io/badge/GitHub-LuccasZibordi-181717?logo=github&logoColor=white)](https://github.com/LuccasZibordi)
-
-
----
-
-## 📜 Licença
-
-MIT. Veja `LICENSE`.
+* Sprites/SFX:
+  [![GitHub](https://img.shields.io/badge/GitHub-LuccasZibordi-181717?logo=github\&logoColor=white)](https://github.com/LuccasZibordi)
 
 ---
 
-### ⭐ Se isso te ajudou
-Dá uma estrela no repositório e, se você curte game-dev em Java, bora trocar ideia (issues e PRs são bem-vindos).
+## 📜 License
+
+MIT. See `LICENSE`.
+
+---
+
