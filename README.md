@@ -1,4 +1,4 @@
-````md
+
 # 🌿 Tocantins Legends
 **2D Action-Adventure RPG in Java (custom engine, tilemap, AI, cutscenes, inventory, and bosses)**
 
